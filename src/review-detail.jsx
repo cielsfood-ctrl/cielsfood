@@ -114,7 +114,7 @@ function ImageSlider({ photos }) {
     if (paused || photos.length < 2) return;
     intervalRef.current = setInterval(() => {
       setIdx((i) => (i + 1) % photos.length);
-    }, 5000);
+    }, 2500);
     return () => clearInterval(intervalRef.current);
   }, [paused, photos.length]);
 
