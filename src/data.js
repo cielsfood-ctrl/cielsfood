@@ -217,11 +217,25 @@ const REVIEWS = [
     ]
   },
 
-  // r17 Yardbird
-  { id: "rv17a", restaurantId: "r17", date: "2025-09-20", tastiness: 8, specialness: 6, service: 8, environment: 7, value: 4,
-    body: "Stepping into Tutto, you’re instantly embraced by a warm amber glow. Set within a former banking hall, the space blends features with Deco elegance and a touch of Italian grandeur. Tutto's seasonal menu offers an exquisite blend of rustic Italian classics with refined, modern flair.\n\n\nWe started with a delicate beef carpaccio layered with porcini dressing, pine nuts, and rocket. This was followed by wood-fired king prawns, perfectly grilled and glazed in punchy garlic and chilli butter. The crispy calamari, paired with samphire and a fragrant bergamot mayonnaise, brought a satisfying crunch with a citrus lift.\n\n\nFor mains, the spaghetti vongole impressed with fresh clams, al dente pasta, and a sauce that balanced lightness with depth. The roasted cod puttanesca was lifted by basil and garlic butter, and the chicken Milanese stood out for its crisp, golden coating and rich caper butter.\n\n\nIf there was one drawback, it was a tendency towards heavily salting. Still, the execution and flavour combinations shone through. Minor seasoning aside, Tutto delivered a confident, comforting slice of Italian dining in the heart of the city.",
+  // r17 Tutto
+  { id: "rv17b", restaurantId: "r17", date: "2026-04-05", tastiness: 6, specialness: 6, service: 8, environment: 7, value: 4,
+    body: "A return visit to Tutto. The fritto misto led the table — light, crisp, and properly seasoned, with the lemon and chilli mayo doing exactly what it should. The pappardelle with wild fennel and sausage ragu bianco was the comfort dish of the night: silky pasta, a bright herbal lift cutting through the cream. The lamb special on polenta was generous and well-cooked, though the salsa verde leaned a touch sharp. Grilled hake with puttanesca was the most restrained plate, the fish cleanly handled, the sauce a little quieter than I’d hoped.\n\n\nIt’s still a pleasant room and the service is genuinely warm, but this visit didn’t quite have the spark of the last. Solid rather than thrilling.",
     photos: [
-      { src: photoPlaceholder("YAKITORI · TSUKUNE", 22), caption: "Tsukune, raw yolk." }
+      { src: window.__resources["tutto-apr-0"], caption: "Fritto Misto di Mare (£16)" },
+      { src: window.__resources["tutto-apr-1"], caption: "Pappardelle, wild fennel & sausage ragu bianco (£15)" },
+      { src: window.__resources["tutto-apr-2"], caption: "Special - Lamb & Polenta (£26)" },
+      { src: window.__resources["tutto-apr-3"], caption: "Grilled Hake, puttanesca sauce (£20)" }
+    ]
+  },
+  { id: "rv17a", restaurantId: "r17", date: "2025-09-20", tastiness: 8, specialness: 6, service: 8, environment: 7, value: 4,
+    body: "Stepping into Tutto, you’re instantly embraced by a warm amber glow. Set within a former banking hall, the space blends features with Deco elegance and a touch of Italian grandeur. Tutto’s seasonal menu offers an exquisite blend of rustic Italian classics with refined, modern flair.\n\n\nWe started with a delicate beef carpaccio layered with porcini dressing, pine nuts, and rocket. This was followed by wood-fired king prawns, perfectly grilled and glazed in punchy garlic and chilli butter. The crispy calamari, paired with samphire and a fragrant bergamot mayonnaise, brought a satisfying crunch with a citrus lift.\n\n\nFor mains, the spaghetti vongole impressed with fresh clams, al dente pasta, and a sauce that balanced lightness with depth. The roasted cod puttanesca was lifted by basil and garlic butter, and the chicken Milanese stood out for its crisp, golden coating and rich caper butter.\n\n\nIf there was one drawback, it was a tendency towards heavily salting. Still, the execution and flavour combinations shone through. Minor seasoning aside, Tutto delivered a confident, comforting slice of Italian dining in the heart of the city.",
+    photos: [
+      { src: window.__resources["tutto-sep-0"], caption: "Beef carpaccio, porcini dressing, rocket, pine nut, parmesan (£12.5)" },
+      { src: window.__resources["tutto-sep-1"], caption: "Wood-fried king prawns, chilli & garlic butter (£13)" },
+      { src: window.__resources["tutto-sep-2"], caption: "Crispy-fried calamari, samphire, bergamot mayonnaise pasta (£11.5)" },
+      { src: window.__resources["tutto-sep-3"], caption: "Spaghetti vongole, clams, cherry tomato, garlic, white wine (£19)" },
+      { src: window.__resources["tutto-sep-4"], caption: "Roasted cod puttanesca, basil & garlic butter (£20)" },
+      { src: window.__resources["tutto-sep-5"], caption: "Chicken Milanese, caper butter, parmesan, sage (£20)" }
     ]
   },
 
