@@ -946,6 +946,12 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 .cf-pin:hover .label, .cf-pin.active .label { opacity: 1; }
 .cf-pin.active .stick { background: var(--ink); border-color: var(--ink); }
 
+.detail-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px;
+  padding: 40px 0 80px;
+}
+@media (max-width: 880px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
+
 .slider { position: relative; background: var(--paper-2); border: 1px solid var(--rule); width: 100%; max-width: 626px; aspect-ratio: 626 / 469; overflow: hidden; }
 .slider-track {
   display: flex; height: 100%;
