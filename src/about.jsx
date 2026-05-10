@@ -4,16 +4,9 @@ function AboutPage({ navigate }) {
   return (
     <main className="shell">
       <section className="about-grid">
-        <div>
-          <div className="portrait">
-            <img src={window.photoPlaceholder("PORTRAIT", 22)} alt="Portrait" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-          <div className="about-cap"></div>
-        </div>
-
         <div className="about-body body">
-          <h1 className="h-display" style={{ margin: "10px 0 22px", fontSize: "70px" }}>About</h1>
-          <hr className="rule" style={{ margin: "0 0 28px", maxWidth: "100%", width: "552.953px" }} />
+          <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>About</h1>
+          <hr className="rule" style={{ margin: "0 0 28px", maxWidth: "100%" }} />
           <p className="first-letter">I decided to create my own restaurant guide after struggling to find honest restaurant reviews, combining this with my passion for journaling. My food journey is captured by my phone or my Sony ZV-1 II camera.</p>
           <p>
             Having grown up in Hong Kong and now being based in London, I've been fortunate to
