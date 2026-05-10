@@ -116,7 +116,6 @@ function HomePage({ navigate }) {
             <div className="numeral">{c.id}.</div>
             <h3>{c.name}</h3>
             <p>{c.blurb}</p>
-            <div className="cat-arrow">{c.sub.toUpperCase()} ·  →</div>
           </button>
           )}
       </section>
