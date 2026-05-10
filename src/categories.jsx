@@ -33,8 +33,8 @@ function CategoriesPage() {
       <section className="cat-page-head">
         <span className="eyebrow"></span>
         <h1 className="h-display" style={{ margin: "10px 0 22px", fontSize: "70px" }}>Categories</h1>
-        <hr className="rule" style={{ margin: "0 0 22px", border: 0, borderTop: "1px solid var(--ink)", width: "1168px" }} />
-        <p className="lede" style={{ fontStyle: "normal", color: "var(--ink-2)", maxWidth: "none", width: "1168px" }}>
+        <hr className="rule" style={{ margin: "0 0 22px", border: 0, borderTop: "1px solid var(--ink)", maxWidth: "100%" }} />
+        <p className="lede" style={{ fontStyle: "normal", color: "var(--ink-2)", maxWidth: "100%" }}>
           Every review is biased, and mine is no exception. To provide a clearer picture of how I
           rate each restaurant, the following outlines the categories behind my scoring system.
           Personally, I am not especially particular about categories beyond tastiness, but I've

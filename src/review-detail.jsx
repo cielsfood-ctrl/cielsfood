@@ -55,7 +55,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
 
           <div className="body" style={{ marginTop: 32, maxWidth: "60ch" }}>
             {review.body.split(/\n\n+/).map((para, i) =>
-            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "626.516px", fontSize: "14px", marginTop: i === 0 ? 0 : "1em" }}>
+            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", maxWidth: "626.516px", fontSize: "14px", marginTop: i === 0 ? 0 : "1em" }}>
                 {para}
               </p>
             )}
@@ -89,10 +89,15 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           </div>
 
           <div className="eyebrow" style={{ marginTop: 36, marginBottom: 8, fontSize: "14px" }}>Location</div>
-          <div className="mini-map">
-            <div className="river" />
-            <div className="pin"><div className="stick" /></div>
-            <div className="addr">
+          <div className="mini-map" style={{ padding: 0, background: "var(--paper-2)" }}>
+            <iframe
+              title={`Map of ${rest.name}`}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(rest.address || rest.location)}&output=embed`}
+              style={{ width: "100%", height: "100%", border: 0, display: "block" }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen />
+            <div className="addr" style={{ pointerEvents: "none" }}>
               <div className="city">{rest.location}</div>
               {rest.address}
             </div>
@@ -147,7 +152,7 @@ function ImageSlider({ photos }) {
         }
       </div>
       <div className="slider-meta">
-        <span className="slider-cap" style={{ padding: 0, fontSize: "13px", width: "500px", maxWidth: "100%", fontWeight: 400, fontStyle: "normal" }}>{photos[idx].caption}</span>
+        <span className="slider-cap" style={{ padding: 0, fontSize: "13px", width: "100%", maxWidth: "500px", fontWeight: 400, fontStyle: "normal" }}>{photos[idx].caption}</span>
         <div className="slider-dots">
           {photos.map((_, i) =>
           <span key={i}

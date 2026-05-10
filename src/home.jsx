@@ -153,14 +153,9 @@ function RecentList({ navigate }) {
         const rest = window.restaurantById(rv.restaurantId);
         return (
           <article key={rv.id}
+          className="recent-row"
           onClick={() => navigate("review", { id: rest.id })}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "120px 1fr 1fr auto",
-            gap: 32, padding: "22px 0", cursor: "pointer",
-            borderTop: i === 0 ? 0 : "1px solid var(--rule)",
-            alignItems: "baseline"
-          }}>
+          style={{ borderTop: i === 0 ? 0 : "1px solid var(--rule)" }}>
             <div className="eyebrow">{window.formatDate(rv.date)}</div>
             <div>
               <div style={{ fontSize: 24, lineHeight: 1.1 }}>{rest.name}</div>

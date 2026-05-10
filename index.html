@@ -3,8 +3,24 @@
   <script>window.__resources = {"logo":"assets/logo.png","belly-photo-0":"assets/belly-photo-0.jpg","belly-photo-1":"assets/belly-photo-1.jpg","belly-photo-2":"assets/belly-photo-2.jpg","belly-photo-3":"assets/belly-photo-3.jpg","belly-photo-4":"assets/belly-photo-4.jpg","belly-photo-5":"assets/belly-photo-5.jpg","belly-photo-6":"assets/belly-photo-6.jpg","tutto-apr-0":"assets/tutto-apr-0.jpg","tutto-apr-1":"assets/tutto-apr-1.jpg","tutto-apr-2":"assets/tutto-apr-2.jpg","tutto-apr-3":"assets/tutto-apr-3.jpg","tutto-sep-0":"assets/tutto-sep-0.jpg","tutto-sep-1":"assets/tutto-sep-1.jpg","tutto-sep-2":"assets/tutto-sep-2.jpg","tutto-sep-3":"assets/tutto-sep-3.jpg","tutto-sep-4":"assets/tutto-sep-4.jpg","tutto-sep-5":"assets/tutto-sep-5.jpg"};</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CIELSFOOD — An honest restaurant guide</title>
+  <title>CieL's Food Guide - Restaurant Reviews</title>
+  <meta name="description" content="Honest, personal restaurant reviews across London and beyond. Scored on tastiness, specialness, service, and environment.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.cielsfood.com">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.cielsfood.com">
+  <meta property="og:title" content="CieL's Food Guide - Restaurant Reviews">
+  <meta property="og:description" content="Honest, personal restaurant reviews across London and beyond. Scored on tastiness, specialness, service, and environment.">
+  <meta property="og:image" content="https://www.cielsfood.com/assets/logo.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CieL's Food Guide - Restaurant Reviews">
+  <meta name="twitter:description" content="Honest, personal restaurant reviews across London and beyond. Scored on tastiness, specialness, service, and environment.">
+  <meta name="twitter:image" content="https://www.cielsfood.com/assets/logo.png">
   <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
   
   <style>/* CIELSFOOD — editorial magazine styling */
 
@@ -433,7 +449,8 @@ a.link:hover { color: var(--accent); border-color: var(--accent); }
 
 button { font-family: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
-img { max-width: 100%; display: block; }
+img, iframe { max-width: 100%; }
+img { height: auto; display: block; }
 
 .shell {
   position: relative;
@@ -821,6 +838,7 @@ img { max-width: 100%; display: block; }
 .view-switch button.active { background: var(--ink); color: var(--paper); }
 
 table.reviews-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.reviews-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table.reviews-table th, table.reviews-table td {
   text-align: left; padding: 18px 14px; border-bottom: 1px solid var(--rule);
   vertical-align: baseline;
@@ -859,92 +877,76 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 /* Map view */
 .map-wrap {
   position: relative;
-  border: 1px solid var(--ink);
-  background: var(--paper-2);
-  height: clamp(500px, 70vh, 760px);
+  width: 100%;
+  height: clamp(520px, 70vh, 720px);
   overflow: hidden;
-  margin-top: 18px;
 }
-.map-canvas {
-  position: absolute; inset: 0;
-  background-color: #E8E1CF;
-  background-image:
-    linear-gradient(to right, rgba(31,27,22,0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(31,27,22,0.06) 1px, transparent 1px),
-    radial-gradient(circle at 20% 30%, rgba(122,148,124,0.30), transparent 30%),
-    radial-gradient(circle at 78% 60%, rgba(122,148,124,0.22), transparent 35%),
-    radial-gradient(circle at 50% 75%, rgba(178,168,140,0.30), transparent 40%);
-  background-size: 80px 80px, 80px 80px, auto, auto, auto;
+.map-base {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
-.map-rivers {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(120deg, transparent 38%, rgba(122,148,170,0.55) 38%, rgba(122,148,170,0.55) 41%, transparent 41%),
-    linear-gradient(60deg,  transparent 62%, rgba(122,148,170,0.45) 62%, rgba(122,148,170,0.45) 64%, transparent 64%);
+
+/* Leaflet integration */
+.leaflet-container {
+  background: var(--paper-2) !important;
+  font-family: var(--sans) !important;
 }
-.map-pin {
-  position: absolute; transform: translate(-50%, -100%);
-  cursor: pointer;
+.leaflet-container .leaflet-tile-pane { filter: saturate(0.85) contrast(0.97); }
+.leaflet-container a { color: var(--ink-2); }
+.leaflet-control-zoom a {
+  color: var(--ink) !important;
+  background: var(--paper) !important;
+  border-color: var(--ink) !important;
 }
-.map-pin .stick {
-  width: 22px; height: 28px;
-  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
-  background: var(--accent); border: 1px solid #3A0E15;
-  box-shadow: 0 4px 8px rgba(31,27,22,0.25);
+.leaflet-control-attribution {
+  background: rgba(250, 247, 240, 0.85) !important;
+  color: var(--muted) !important;
+  font-size: 11px;
+}
+
+/* Custom pin (rendered through L.divIcon) */
+.cf-pin-icon { background: transparent; border: 0; overflow: visible; }
+.cf-pin {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.map-pin .stick::after {
-  content: ""; position: absolute; inset: 6px; border-radius: 50%;
+.cf-pin .stick {
+  width: 10px; height: 18px;
+  background: var(--ink-2);
+  border: 1.5px solid var(--ink);
+  border-radius: 2px 2px 0 0;
+  display: block;
+}
+.cf-pin .stick::after {
+  content: "";
+  display: block;
+  width: 4px; height: 4px;
   background: var(--paper);
+  border-radius: 50%;
+  margin: 3px auto 0;
 }
-.map-pin .label {
-  position: absolute; left: 50%; transform: translateX(-50%);
-  top: 4px;
-  background: var(--paper); border: 1px solid var(--ink);
-  font-family: var(--serif); font-size: 14px;
-  padding: 4px 10px; white-space: nowrap;
-  opacity: 0; pointer-events: none;
-  transition: opacity 120ms ease;
+.cf-pin .label {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.02em;
+  padding: 2px 6px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+  top: -30px;
+  position: absolute;
+  width: 100%;
+  display: block;
+  z-index: 1000;
 }
-.map-pin:hover .label, .map-pin.active .label { opacity: 1; }
-.map-pin.active .stick { background: var(--ink); border-color: var(--ink); }
+.cf-pin:hover .label, .cf-pin.active .label { opacity: 1; }
+.cf-pin.active .stick { background: var(--ink); border-color: var(--ink); }
 
-.map-card {
-  position: absolute; right: 20px; bottom: 20px;
-  width: min(360px, 90%); padding: 22px;
-  background: var(--paper); border: 1px solid var(--ink);
-  box-shadow: 0 12px 30px rgba(31,27,22,0.18);
-}
-.map-card h4 { margin: 0 0 4px; font-size: 24px; font-weight: 500; }
-.map-card .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-.map-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--rule); font-size: 15px; }
-.map-card .row:first-of-type { border-top: 0; }
-
-.map-key {
-  position: absolute; left: 16px; top: 16px;
-  background: var(--paper); border: 1px solid var(--ink);
-  padding: 10px 14px;
-  font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-}
-
-/* ---------- Review detail ---------- */
-.detail-head {
-  padding: 48px 0 24px;
-  border-bottom: 1px solid var(--ink);
-}
-.detail-meta {
-  display: flex; gap: 24px; flex-wrap: wrap;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--muted);
-  margin-bottom: 18px;
-}
-.detail-grid {
-  display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px;
-  padding: 40px 0 80px;
-}
-@media (max-width: 880px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
-
-.slider { position: relative; background: var(--paper-2); border: 1px solid var(--rule); width: 626px; height: 469px; max-width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
+.slider { position: relative; background: var(--paper-2); border: 1px solid var(--rule); width: 100%; max-width: 626px; aspect-ratio: 626 / 469; overflow: hidden; }
 .slider-track {
   display: flex; height: 100%;
   transition: transform 480ms cubic-bezier(0.65, 0, 0.35, 1);
@@ -1132,6 +1134,8 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
 }
+.mini-map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
 
 
 /* ============================================================
@@ -1227,6 +1231,32 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .band-dark--hero { padding-top: 4px; }
 }
 
+
+/* Recent list rows */
+.recent-row { display: grid; grid-template-columns: 120px 1fr 1fr auto; gap: 32px; padding: 22px 0; cursor: pointer; align-items: baseline; }
+
+/* ---------- Tablet breakpoint (≤768px) ---------- */
+@media (max-width: 768px) {
+  .hero { padding: 32px 0 24px; }
+  .h-display { font-size: clamp(36px, 8vw, 64px); }
+  .lede { font-size: 18px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .feature-main { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .feature-side { padding-left: 0; }
+  .scores { grid-template-columns: 1fr 1fr; }
+  .score-cell { border-bottom: 1px solid var(--rule); }
+  .score-cell:nth-child(2n) { border-right: 0; }
+  .score-cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .cat-grid { grid-template-columns: 1fr 1fr; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .cat-row { grid-template-columns: 1fr; gap: 14px; }
+  .detail-grid { grid-template-columns: 1fr; gap: 32px; }
+  .reviews-head { grid-template-columns: 1fr; }
+  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); }
+  table.reviews-table { min-width: 720px; }
+  .map-wrap { height: clamp(420px, 60vh, 600px); }
+  .recent-row { grid-template-columns: 1fr auto; gap: 16px; }
+}
 /* ---------- Phone breakpoint (≤560px) ---------- */
 @media (max-width: 560px) {
   :root { --pad-x: clamp(14px, 4vw, 20px); }
@@ -1276,9 +1306,35 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 
   /* Tweaks panel: don't let it dwarf the screen */
 }
+  .recent-row { grid-template-columns: 1fr; gap: 8px; }
 
 /* Prevent horizontal page bleed from full-bleed bands when viewport is very narrow */
 html, body { overflow-x: hidden; }
+
+/* ---------- Phone breakpoint (≤480px) ---------- */
+@media (max-width: 480px) {
+  :root { --pad-x: 16px; }
+  body { font-size: 16px; }
+  .h-display { font-size: clamp(32px, 11vw, 48px); }
+  .h-section { font-size: clamp(24px, 7vw, 32px); }
+  .h-card { font-size: 22px; }
+  .lede { font-size: 17px; line-height: 1.45; }
+  .cat-grid { grid-template-columns: 1fr; }
+  .cat-card { border-right: 0 !important; border-bottom: 1px solid var(--rule); }
+  .cat-card:last-child { border-bottom: 0; }
+  .filter-group { min-width: 100% !important; }
+  .filter-group input, .filter-group select { font-size: 16px; }
+  .review-toggle { flex-direction: column; }
+  .review-toggle button { border-right: 0; border-bottom: 1px solid var(--ink); flex: none; }
+  .review-toggle button:last-child { border-bottom: 0; }
+  .pagination { flex-wrap: wrap; gap: 12px; }
+  .pag-btn { flex: 1 1 40%; }
+  .mini-map { height: 180px; }
+  .slider-arrow { width: 36px; height: 36px; font-size: 18px; }
+  .slider-arrow.prev { left: 8px; }
+  .slider-arrow.next { right: 8px; }
+  .foot { flex-direction: column; gap: 8px; align-items: flex-start; }
+}
 </style>
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
