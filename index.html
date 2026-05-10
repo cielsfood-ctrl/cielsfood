@@ -1228,6 +1228,32 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .band-dark--hero { padding-top: 4px; }
 }
 
+
+/* Recent list rows */
+.recent-row { display: grid; grid-template-columns: 120px 1fr 1fr auto; gap: 32px; padding: 22px 0; cursor: pointer; align-items: baseline; }
+
+/* ---------- Tablet breakpoint (≤768px) ---------- */
+@media (max-width: 768px) {
+  .hero { padding: 32px 0 24px; }
+  .h-display { font-size: clamp(36px, 8vw, 64px); }
+  .lede { font-size: 18px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .feature-main { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+  .feature-side { padding-left: 0; }
+  .scores { grid-template-columns: 1fr 1fr; }
+  .score-cell { border-bottom: 1px solid var(--rule); }
+  .score-cell:nth-child(2n) { border-right: 0; }
+  .score-cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .cat-grid { grid-template-columns: 1fr 1fr; }
+  .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  .cat-row { grid-template-columns: 1fr; gap: 14px; }
+  .detail-grid { grid-template-columns: 1fr; gap: 32px; }
+  .reviews-head { grid-template-columns: 1fr; }
+  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); }
+  table.reviews-table { min-width: 720px; }
+  .map-wrap { height: clamp(420px, 60vh, 600px); }
+  .recent-row { grid-template-columns: 1fr auto; gap: 16px; }
+}
 /* ---------- Phone breakpoint (≤560px) ---------- */
 @media (max-width: 560px) {
   :root { --pad-x: clamp(14px, 4vw, 20px); }
@@ -1277,31 +1303,10 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 
   /* Tweaks panel: don't let it dwarf the screen */
 }
+  .recent-row { grid-template-columns: 1fr; gap: 8px; }
 
 /* Prevent horizontal page bleed from full-bleed bands when viewport is very narrow */
 html, body { overflow-x: hidden; }
-
-/* ---------- Tablet breakpoint (≤768px) ---------- */
-@media (max-width: 768px) {
-  .hero { padding: 32px 0 24px; }
-  .h-display { font-size: clamp(36px, 8vw, 64px); }
-  .lede { font-size: 18px; }
-  .feature-grid { grid-template-columns: 1fr; }
-  .feature-main { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
-  .feature-side { padding-left: 0; }
-  .scores { grid-template-columns: 1fr 1fr; }
-  .score-cell { border-bottom: 1px solid var(--rule); }
-  .score-cell:nth-child(2n) { border-right: 0; }
-  .score-cell:nth-last-child(-n+2) { border-bottom: 0; }
-  .cat-grid { grid-template-columns: 1fr 1fr; }
-  .about-grid { grid-template-columns: 1fr; gap: 32px; }
-  .cat-row { grid-template-columns: 1fr; gap: 14px; }
-  .detail-grid { grid-template-columns: 1fr; gap: 32px; }
-  .reviews-head { grid-template-columns: 1fr; }
-  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); }
-  table.reviews-table { min-width: 720px; }
-  .map-wrap { height: clamp(420px, 60vh, 600px); }
-}
 
 /* ---------- Phone breakpoint (≤480px) ---------- */
 @media (max-width: 480px) {

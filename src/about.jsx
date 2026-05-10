@@ -6,7 +6,7 @@ function AboutPage({ navigate }) {
       <section className="about-grid">
         <div>
           <div className="portrait">
-            <img src={window.photoPlaceholder("PORTRAIT", 22)} alt="Portrait" style={{ height: "560.094px" }} />
+            <img src={window.photoPlaceholder("PORTRAIT", 22)} alt="Portrait" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
           <div className="about-cap"></div>
         </div>
