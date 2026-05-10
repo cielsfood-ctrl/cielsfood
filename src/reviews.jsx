@@ -168,79 +168,26 @@ function ReviewsPage({ navigate }) {
 function MapView({ rows, navigate }) {
   const [active, setActive] = useState(rows[0]?.id || null);
   const sel = rows.find((r) => r.id === active);
-  const containerRef = useRef(null);
-  const mapRef = useRef(null);
-  const markersRef = useRef({});
-  const firstFitRef = useRef(true);
-  const setActiveRef = useRef(setActive);
-  setActiveRef.current = setActive;
-
-  // Init Leaflet map once
-  useEffect(() => {
-    if (!containerRef.current || !window.L) return;
-    const L = window.L;
-    const map = L.map(containerRef.current, {
-      zoomControl: true,
-      worldCopyJump: true,
-      attributionControl: true
-    }).setView([51.5135, -0.1], 12);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19,
-      subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-    }).addTo(map);
-    mapRef.current = map;
-    setTimeout(() => map.invalidateSize(), 60);
-    return () => { map.remove(); mapRef.current = null; };
-  }, []);
-
-  // Sync markers + fit bounds when filtered rows change
-  useEffect(() => {
-    const map = mapRef.current;
-    const L = window.L;
-    if (!map || !L) return;
-    Object.values(markersRef.current).forEach((m) => m.remove());
-    markersRef.current = {};
-
-    const valid = rows.filter((r) => r.lat != null && r.lng != null);
-    valid.forEach((r) => {
-      const icon = L.divIcon({
-        className: "cf-pin-icon",
-        html: `<div class="cf-pin"><div class="stick"></div><div class="label">${r.name.replace(/</g, "&lt;")}</div></div>`,
-        iconSize: [22, 28],
-        iconAnchor: [11, 28]
-      });
-      const marker = L.marker([r.lat, r.lng], { icon, riseOnHover: true, title: r.name }).addTo(map);
-      marker.on("click", () => setActiveRef.current(r.id));
-      markersRef.current[r.id] = marker;
-    });
-
-    if (valid.length === 1) {
-      map.flyTo([valid[0].lat, valid[0].lng], 14, { duration: 0.5 });
-    } else if (valid.length > 1) {
-      if (firstFitRef.current) {
-        firstFitRef.current = false;
-      } else {
-        const bounds = L.latLngBounds(valid.map((r) => [r.lat, r.lng]));
-        map.flyToBounds(bounds, { padding: [40, 40], maxZoom: 14, duration: 0.5 });
-      }
-    }
-  }, [rows]);
-
-  // Reflect active marker styling
-  useEffect(() => {
-    Object.entries(markersRef.current).forEach(([id, m]) => {
-      const el = m.getElement();
-      if (!el) return;
-      const inner = el.querySelector(".cf-pin");
-      if (!inner) return;
-      inner.classList.toggle("active", id === active);
-    });
-  }, [active, rows]);
 
   return (
     <div className="map-wrap">
-      <div className="map-base" ref={containerRef} />
+      <div className="map-canvas" />
+      <div className="map-rivers" />
+      <div className="map-key">CIELSFOOD · Atlas of restaurants</div>
+
+      {rows.map((r) =>
+      <button
+        key={r.id}
+        className={`map-pin ${active === r.id ? "active" : ""}`}
+        style={{ left: `${r.mapX * 100}%`, top: `${r.mapY * 100}%` }}
+        onClick={() => setActive(r.id)}
+        aria-label={r.name}>
+        
+          <div className="stick" />
+          <div className="label">{r.name}</div>
+        </button>
+      )}
+
       {sel &&
       <div className="map-card">
           <span className="eyebrow">{sel.location} · {sel.michelin}</span>
@@ -259,7 +206,6 @@ function MapView({ rows, navigate }) {
 }
 
 Object.assign(window, { ReviewsPage });
-
 
 function Pagination({ page, totalPages, onChange }) {
   if (totalPages <= 1) return null;

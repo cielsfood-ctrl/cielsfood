@@ -89,15 +89,10 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           </div>
 
           <div className="eyebrow" style={{ marginTop: 36, marginBottom: 8, fontSize: "14px" }}>Location</div>
-          <div className="mini-map" style={{ padding: 0, background: "var(--paper-2)" }}>
-            <iframe
-              title={`Map of ${rest.name}`}
-              src={`https://www.google.com/maps?q=${encodeURIComponent(rest.address || rest.location)}&output=embed`}
-              style={{ width: "100%", height: "100%", border: 0, display: "block" }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen />
-            <div className="addr" style={{ pointerEvents: "none" }}>
+          <div className="mini-map">
+            <div className="river" />
+            <div className="pin"><div className="stick" /></div>
+            <div className="addr">
               <div className="city">{rest.location}</div>
               {rest.address}
             </div>
