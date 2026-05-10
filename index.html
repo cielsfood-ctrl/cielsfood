@@ -787,7 +787,7 @@ img { height: auto; display: block; }
 @media (max-width: 880px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
 
 /* ---------- Categories ---------- */
-.cat-page-head { padding: 56px 0 32px; max-width: 64ch; }
+.cat-page-head { padding: 56px 0 32px; }
 .cat-list { padding-bottom: 64px; }
 .cat-row {
   display: grid; grid-template-columns: 80px 1fr 1.4fr;
@@ -992,7 +992,7 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   border-top: 1px solid var(--ink); margin-top: 24px;
 }
 .detail-side .info-table .row {
-  display: grid; grid-template-columns: 130px 1fr; gap: 16px;
+  display: grid; grid-template-columns: minmax(auto, 110px) 1fr; gap: 16px;
   padding: 14px 0; border-bottom: 1px solid var(--rule);
 }
 .detail-side .info-table .row .k {
@@ -1211,7 +1211,7 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .detail-head { padding: 32px 0 18px; }
   .detail-meta { gap: 14px; font-size: 10px; }
   .detail-grid { padding: 28px 0 56px; gap: 28px; }
-  .detail-side .info-table .row { grid-template-columns: 110px 1fr; gap: 12px; padding: 12px 0; }
+  .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 110px) 1fr; gap: 12px; padding: 12px 0; }
   .detail-side .info-table .row .v { font-size: 16px; }
   .score-line { grid-template-columns: 110px 1fr 50px; gap: 12px; }
 
@@ -1285,7 +1285,7 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .feature-grid > * { padding: 28px 0; }
 
   /* Review detail */
-  .detail-side .info-table .row { grid-template-columns: 96px 1fr; gap: 10px; }
+  .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 96px) 1fr; gap: 10px; }
   .detail-side .info-table .row .k { font-size: 9px; letter-spacing: 0.2em; }
   .score-line { grid-template-columns: 96px 1fr 44px; gap: 10px; }
   .score-line .k { font-size: 9px; }
@@ -1320,6 +1320,7 @@ html, body { overflow-x: hidden; }
   .h-card { font-size: 22px; }
   .lede { font-size: 17px; line-height: 1.45; }
   .cat-grid { grid-template-columns: 1fr; }
+  .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 90px) 1fr; gap: 8px; }
   .cat-card { border-right: 0 !important; border-bottom: 1px solid var(--rule); }
   .cat-card:last-child { border-bottom: 0; }
   .filter-group { min-width: 100% !important; }
