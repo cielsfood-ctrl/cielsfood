@@ -886,6 +886,17 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   inset: 0;
   z-index: 0;
 }
+.map-card {
+  position: absolute; right: 20px; bottom: 20px;
+  width: min(360px, 90%); padding: 22px;
+  background: var(--paper); border: 1px solid var(--ink);
+  box-shadow: 0 12px 30px rgba(31,27,22,0.18);
+  z-index: 1000;
+}
+.map-card h4 { margin: 0 0 4px; font-size: 24px; font-weight: 500; }
+.map-card .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.map-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--rule); font-size: 15px; }
+.map-card .row:first-of-type { border-top: 0; }
 
 /* Leaflet integration */
 .leaflet-container {
@@ -945,6 +956,22 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 }
 .cf-pin:hover .label, .cf-pin.active .label { opacity: 1; }
 .cf-pin.active .stick { background: var(--ink); border-color: var(--ink); }
+
+.detail-head {
+  padding: 48px 0 24px;
+  border-bottom: 1px solid var(--ink);
+}
+.detail-meta {
+  display: flex; gap: 24px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 18px;
+}
+.detail-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px;
+  padding: 40px 0 80px;
+}
+@media (max-width: 880px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
 
 .slider { position: relative; background: var(--paper-2); border: 1px solid var(--rule); width: 100%; max-width: 626px; aspect-ratio: 626 / 469; overflow: hidden; }
 .slider-track {
