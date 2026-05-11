@@ -5,7 +5,7 @@ function AboutPage({ navigate }) {
     <main className="shell">
       <section className="about-grid">
         <div className="about-body body">
-          <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>About</h1>
+          <h1 className="h-display" style={{ margin: "10px 0 20px", fontSize: "70px" }}>About</h1>
           <hr className="rule" style={{ margin: "0 0 28px", maxWidth: "100%" }} />
           <p className="first-letter">I decided to create my own restaurant guide after struggling to find honest restaurant reviews, combining this with my passion for journaling. My food journey is captured by my phone or my Sony ZV-1 II camera.</p>
           <p>
