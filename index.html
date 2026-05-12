@@ -1254,11 +1254,12 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 /* ---------- Tablet breakpoint (≤768px) ---------- */
 @media (max-width: 768px) {
   .hero { padding: 32px 0 24px; }
-  .h-display { font-size: clamp(36px, 8vw, 64px); }
+  .h-display { font-size: clamp(36px, 8vw, 64px) !important; }
   .lede { font-size: 18px; }
   .feature-grid { grid-template-columns: 1fr; }
   .feature-main { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
   .feature-side { padding-left: 0; }
+  .feature-grid > * { padding: 28px 0; }
   .scores { grid-template-columns: 1fr 1fr; }
   .score-cell { border-bottom: 1px solid var(--rule); }
   .score-cell:nth-child(2n) { border-right: 0; }
@@ -1270,17 +1271,19 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); }
   table.reviews-table { min-width: 720px; }
   .map-wrap { height: clamp(420px, 60vh, 600px); }
-  .recent-row { grid-template-columns: 1fr auto; gap: 16px; }
+  /* Recent list: collapse to single column at tablet */
+  .recent-row { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
 }
 /* ---------- Phone breakpoint (≤560px) ---------- */
 @media (max-width: 560px) {
   :root { --pad-x: clamp(14px, 4vw, 20px); }
 
   /* Hero display gets a touch smaller */
-  .h-display { font-size: clamp(36px, 11vw, 56px); }
+  .h-display { font-size: clamp(32px, 11vw, 52px) !important; }
   .h-section { font-size: clamp(24px, 6vw, 32px); }
-  .h-card { font-size: 22px; }
+  .h-card { font-size: 20px; }
   .lede { font-size: 18px; line-height: 1.45; }
+  .recent-row { grid-template-columns: 1fr; gap: 6px; padding: 16px 0; }
 
   /* Categories grid: 2-up → 1-up */
   .cat-grid { grid-template-columns: 1fr; }
@@ -1321,7 +1324,6 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 
   /* Tweaks panel: don't let it dwarf the screen */
 }
-  .recent-row { grid-template-columns: 1fr; gap: 8px; }
 
 /* Prevent horizontal page bleed from full-bleed bands when viewport is very narrow */
 html, body { overflow-x: hidden; }
@@ -1330,9 +1332,11 @@ html, body { overflow-x: hidden; }
 @media (max-width: 480px) {
   :root { --pad-x: 16px; }
   body { font-size: 16px; }
-  .h-display { font-size: clamp(32px, 11vw, 48px); }
-  .h-section { font-size: clamp(24px, 7vw, 32px); }
-  .h-card { font-size: 22px; }
+  .h-display { font-size: clamp(28px, 10vw, 44px) !important; }
+  .h-section { font-size: clamp(22px, 7vw, 30px); }
+  .h-card { font-size: 19px; }
+  .recent-row { gap: 4px; padding: 14px 0; }
+  .band-dark { margin-top: 24px; }
   .lede { font-size: 17px; line-height: 1.45; }
   .cat-grid { grid-template-columns: 1fr; }
   .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 90px) 1fr; gap: 8px; }
