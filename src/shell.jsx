@@ -97,7 +97,6 @@ function Footer() {
     <footer className="foot-wrap">
       <div className="foot shell">
         <span>© CIELSFOOD</span>
-        <span>Hong Kong · London · Everywhere</span>
         <span>instagram.com/cielsfood</span>
       </div>
     </footer>);
