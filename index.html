@@ -699,6 +699,7 @@ img { height: auto; display: block; }
   border: 1px solid var(--rule);
   background: #ECE4D2;
   margin-bottom: 22px;
+  overflow: hidden;
 }
 .feature-photo img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -1273,6 +1274,18 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .map-wrap { height: clamp(420px, 60vh, 600px); }
   /* Recent list: collapse to single column at tablet */
   .recent-row { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
+
+  /* Override inline width styles on feature card paragraphs so they don't
+     stretch the grid item wider than the viewport, which would inflate the photo */
+  .feature-main p, .feature-side p { width: auto !important; max-width: 100% !important; }
+  .feature-photo { max-height: 300px; }
+
+  /* Scores: ensure 2×2 and compact */
+  .scores { grid-template-columns: 1fr 1fr; }
+  .score-num { font-size: 26px; }
+
+  /* Section-head on mobile: tighten top padding */
+  .section-head { padding: 36px 0 14px; }
 }
 /* ---------- Phone breakpoint (≤560px) ---------- */
 @media (max-width: 560px) {
@@ -1299,7 +1312,7 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   .filter-group input, .filter-group select { font-size: 16px; }
 
   /* Feature card photo aspect on phone */
-  .feature-photo { aspect-ratio: 4 / 3; margin-bottom: 18px; }
+  .feature-photo { aspect-ratio: 4 / 3; max-height: 260px; margin-bottom: 16px; }
   .feature-grid > * { padding: 28px 0; }
 
   /* Review detail */
@@ -1337,6 +1350,8 @@ html, body { overflow-x: hidden; }
   .h-card { font-size: 19px; }
   .recent-row { gap: 4px; padding: 14px 0; }
   .band-dark { margin-top: 24px; }
+  .feature-photo { max-height: 230px; }
+  .feature-main p, .feature-side p { width: auto !important; max-width: 100% !important; }
   .lede { font-size: 17px; line-height: 1.45; }
   .cat-grid { grid-template-columns: 1fr; }
   .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 90px) 1fr; gap: 8px; }
