@@ -139,7 +139,7 @@ function ReviewsPage({ navigate }) {
           </thead>
           <tbody>
             {pageRows.map((r) =>
-          <tr key={r.id} className="row" onClick={() => navigate("review", { id: r.id })}>
+          <tr key={r.id} className="row" onClick={() => navigate("restaurant", { id: r.id })}>
                 <td className="name">{r.name}</td>
                 <td style={{ fontStyle: "italic" }}>{r.cuisine}</td>
                 <td>{r.location}</td>
@@ -250,7 +250,7 @@ function MapView({ rows, navigate }) {
           <div className="row"><span>Value</span><span><PoundMark value={sel.value} /></span></div>
           <div className="row"><span>Latest</span><span>{window.formatDate(sel.latestDate)}</span></div>
           <div style={{ marginTop: 16 }}>
-            <button className="btn" onClick={() => navigate("review", { id: sel.id })}>Open review →</button>
+            <button className="btn" onClick={() => navigate("restaurant", { id: sel.id })}>Open review →</button>
           </div>
         </div>
       }
