@@ -6,7 +6,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
     return (
       <main className="shell">
         <p style={{ padding: "80px 0" }}>Restaurant not found.{" "}
-          <button className="btn--ghost btn" onClick={() => navigate("reviews")}>Back to index →</button>
+          <button className="btn--ghost btn" onClick={() => navigate("restaurants")}>Back to index →</button>
         </p>
       </main>);
 
@@ -19,7 +19,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
     <main className="shell">
       <section className="detail-head">
         <div className="detail-meta">
-          <button className="link" onClick={() => navigate("reviews")} style={{ font: "inherit", letterSpacing: "0.22em" }}>← Back to Reviews</button>
+          <button className="link" onClick={() => navigate("restaurants")} style={{ font: "inherit", letterSpacing: "0.22em" }}>← Back to Reviews</button>
           <span>{"\n"}</span>
           <span>{"\n"}</span>
           <span>{"\n"}</span>

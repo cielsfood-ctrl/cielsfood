@@ -68,7 +68,7 @@ function HomePage({ navigate }) {
             <div className="score-cell"><div className="score-label">Value</div><div className="score-num"><PoundMark value={latest.value} /></div></div>
           </div>
           <div style={{ marginTop: 24 }}>
-            <button className="btn--ghost btn" onClick={() => navigate("review", { id: latestRest.id })}>
+            <button className="btn--ghost btn" onClick={() => navigate("restaurant", { id: latestRest.id })}>
               Read the full review →
             </button>
           </div>
@@ -91,7 +91,7 @@ function HomePage({ navigate }) {
             <div className="score-cell"><div className="score-label">Value</div><div className="score-num"><PoundMark value={favReview.value} /></div></div>
           </div>
           <div style={{ marginTop: 18 }}>
-            <button className="btn--ghost btn" onClick={() => navigate("review", { id: fav.id })}>WHY IT STAYS THE FAVOURITE →
+            <button className="btn--ghost btn" onClick={() => navigate("restaurant", { id: fav.id })}>WHY IT STAYS THE FAVOURITE →
 
             </button>
           </div>
@@ -127,7 +127,7 @@ function HomePage({ navigate }) {
           <span className="numeral"></span>
           <h2 className="h-section">Latest Reviews</h2>
         </div>
-        <button className="btn--ghost btn" onClick={() => navigate("reviews")}>
+        <button className="btn--ghost btn" onClick={() => navigate("restaurants")}>
           See all {window.RESTAURANTS.length} restaurants →
         </button>
       </div>
@@ -153,7 +153,7 @@ function RecentList({ navigate }) {
         return (
           <article key={rv.id}
           className="recent-row"
-          onClick={() => navigate("review", { id: rest.id })}
+          onClick={() => navigate("restaurant", { id: rest.id })}
           style={{ borderTop: i === 0 ? 0 : "1px solid var(--rule)" }}>
             <div className="eyebrow">{window.formatDate(rv.date)}</div>
             <div>

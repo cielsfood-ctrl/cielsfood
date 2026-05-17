@@ -3,7 +3,7 @@
 const { useState: useS, useEffect: useE } = React;
 
 function App() {
-  // hash-based router: #/home, #/about, #/categories, #/reviews, #/review/r02
+  // hash-based router: #/home, #/about, #/categories, #/restaurants, #/restaurant/r02
   const parseHash = () => {
     const h = (window.location.hash || "#/home").replace(/^#\/?/, "");
     const [page, ...rest] = h.split("/");
@@ -18,7 +18,7 @@ function App() {
   }, []);
 
   function navigate(page, params = {}) {
-    if (page === "review" && params.id) window.location.hash = `#/review/${params.id}`;
+    if (page === "restaurant" && params.id) window.location.hash = `#/restaurant/${params.id}`;
     else window.location.hash = `#/${page}`;
     window.scrollTo({ top: 0 });
   }
@@ -39,17 +39,17 @@ function App() {
 
   let pageId = route.page;
   // Normalize unknown routes
-  const known = ["home", "about", "categories", "reviews", "review"];
+  const known = ["home", "about", "categories", "restaurants", "restaurant"];
   if (!known.includes(pageId)) pageId = "home";
 
   let body;
   if (pageId === "home")       body = <HomePage navigate={navigate}/>;
   else if (pageId === "about") body = <AboutPage navigate={navigate}/>;
   else if (pageId === "categories") body = <CategoriesPage/>;
-  else if (pageId === "reviews")    body = <ReviewsPage navigate={navigate}/>;
-  else if (pageId === "review")     body = <ReviewDetailPage restaurantId={route.id} navigate={navigate}/>;
+  else if (pageId === "restaurants")    body = <ReviewsPage navigate={navigate}/>;
+  else if (pageId === "restaurant")     body = <ReviewDetailPage restaurantId={route.id} navigate={navigate}/>;
 
-  const navPage = pageId === "review" ? "reviews" : pageId;
+  const navPage = pageId === "restaurant" ? "restaurants" : pageId;
 
   return (
     <>
