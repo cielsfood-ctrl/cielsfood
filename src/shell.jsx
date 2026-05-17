@@ -15,7 +15,7 @@ function Nav({ page, navigate }) {
   const links = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
-    { id: "reviews", label: "Reviews" },
+    { id: "reviews", label: "Restaurants" },
     { id: "categories", label: "Categories" }];
 
   useEffect(() => {
