@@ -65,7 +65,7 @@ function ReviewsPage({ navigate }) {
       <section className="reviews-head">
         <div>
           <span className="eyebrow"></span>
-          <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>Reviews</h1>
+          <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>Restaurants</h1>
           <p className="kicker"></p>
         </div>
         <div className="view-switch" role="tablist">
