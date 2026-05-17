@@ -206,9 +206,9 @@ function MapView({ rows, navigate }) {
     valid.forEach((r) => {
       const icon = L.divIcon({
         className: "cf-pin-icon",
-        html: `<div class="cf-pin"><div class="stick"></div><div class="label">${r.name.replace(/</g, "&lt;")}</div></div>`,
-        iconSize: [22, 28],
-        iconAnchor: [11, 28]
+        html: `<div class="cf-pin"><svg class="cf-pin-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="32" viewBox="0 0 24 32"><path d="M12 0C5.373 0 0 5.373 0 12c0 8.5 12 20 12 20S24 20.5 24 12C24 5.373 18.627 0 12 0z"/><circle class="pin-ring" cx="12" cy="11" r="5"/><circle class="pin-dot" cx="12" cy="11" r="3"/></svg><div class="label">${r.name.replace(/</g, "&lt;")}</div></div>`,
+        iconSize: [24, 32],
+        iconAnchor: [12, 32]
       });
       const marker = L.marker([r.lat, r.lng], { icon, riseOnHover: true, title: r.name }).addTo(map);
       marker.on("click", () => setActiveRef.current(r.id));

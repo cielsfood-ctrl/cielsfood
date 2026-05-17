@@ -914,21 +914,11 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   flex-direction: column;
   align-items: center;
 }
-.cf-pin .stick {
-  width: 10px; height: 18px;
-  background: var(--ink-2);
-  border: 1.5px solid var(--ink);
-  border-radius: 2px 2px 0 0;
-  display: block;
-}
-.cf-pin .stick::after {
-  content: "";
-  display: block;
-  width: 4px; height: 4px;
-  background: var(--paper);
-  border-radius: 50%;
-  margin: 3px auto 0;
-}
+.cf-pin-svg path { fill: var(--ink); }
+.cf-pin-svg .pin-ring { fill: white; }
+.cf-pin-svg .pin-dot { fill: var(--ink); }
+.cf-pin.active .cf-pin-svg path { fill: var(--accent); }
+.cf-pin.active .cf-pin-svg .pin-dot { fill: var(--accent); }
 .cf-pin .label {
   font-family: var(--mono); font-size: 10px;
   letter-spacing: 0.02em;
@@ -938,14 +928,12 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.15s;
-  top: -30px;
+  top: -22px;
   position: absolute;
-  width: 100%;
   display: block;
   z-index: 1000;
 }
 .cf-pin:hover .label, .cf-pin.active .label { opacity: 1; }
-.cf-pin.active .stick { background: var(--ink); border-color: var(--ink); }
 
 .detail-head {
   padding: 48px 0 24px;
