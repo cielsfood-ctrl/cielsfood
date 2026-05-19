@@ -1,0 +1,341 @@
+#!/usr/bin/env bash
+# publish-reviews.sh — Notion → data.js automated publisher
+# Usage: ./publish-reviews.sh
+# Requires: $NOTION_KEY, curl, python3, git
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DATA_JS="$SCRIPT_DIR/src/data.js"
+TMP_REST="$SCRIPT_DIR/.tmp-notion-restaurants.json"
+TMP_REV="$SCRIPT_DIR/.tmp-notion-reviews.json"
+TMP_REST_IDS="$SCRIPT_DIR/.tmp-notion-rest-ids"
+TMP_REV_IDS="$SCRIPT_DIR/.tmp-notion-rev-ids"
+
+NOTION_REST_DB="298028b6e10280788b1ee47e7cacd57b"
+NOTION_REV_DB="298028b6e10280139d12d35f33c66e1f"
+
+# ── Cleanup ───────────────────────────────────────────────────────────────────
+cleanup() {
+  rm -f "$TMP_REST" "$TMP_REV" "$TMP_REST_IDS" "$TMP_REV_IDS"
+}
+trap cleanup EXIT
+
+# ── Prerequisites ─────────────────────────────────────────────────────────────
+if [ -z "${NOTION_KEY:-}" ]; then
+  echo "Error: NOTION_KEY is not set. Run: export NOTION_KEY=your_key" >&2
+  exit 1
+fi
+
+for cmd in curl python3 git; do
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "Error: '$cmd' is required but not found." >&2
+    exit 1
+  fi
+done
+
+# ── 1. Fetch from Notion ──────────────────────────────────────────────────────
+echo ""
+echo "── Fetching from Notion ──────────────────────────────────────────────"
+
+curl -sf -X POST "https://api.notion.com/v1/databases/${NOTION_REST_DB}/query" \
+  -H "Authorization: Bearer $NOTION_KEY" \
+  -H "Notion-Version: 2022-06-28" \
+  -H "Content-Type: application/json" \
+  -d '{"filter":{"property":"Status","status":{"equals":"Ready to Publish"}}}' \
+  -o "$TMP_REST"
+
+curl -sf -X POST "https://api.notion.com/v1/databases/${NOTION_REV_DB}/query" \
+  -H "Authorization: Bearer $NOTION_KEY" \
+  -H "Notion-Version: 2022-06-28" \
+  -H "Content-Type: application/json" \
+  -d '{"filter":{"property":"Status","status":{"equals":"Ready to Publish"}}}' \
+  -o "$TMP_REV"
+
+for f in "$TMP_REST" "$TMP_REV"; do
+  if ! python3 -c "import json,sys; d=json.load(open('$f')); sys.exit(0 if d.get('object')=='list' else 1)" 2>/dev/null; then
+    echo "Error: Unexpected Notion API response:" >&2
+    cat "$f" >&2
+    exit 1
+  fi
+done
+
+NREST=$(python3 -c "import json; print(len(json.load(open('$TMP_REST'))['results']))")
+NREV=$(python3 -c  "import json; print(len(json.load(open('$TMP_REV'))['results']))")
+echo "  Found $NREST restaurant(s) and $NREV review(s) ready to publish."
+
+if [ "$NREST" -eq 0 ] && [ "$NREV" -eq 0 ]; then
+  echo "  Nothing to publish."
+  exit 0
+fi
+
+# ── 2. Parse and update src/data.js ──────────────────────────────────────────
+echo ""
+echo "── Parsing and updating src/data.js ─────────────────────────────────"
+
+DATA_JS="$DATA_JS" \
+TMP_REST="$TMP_REST" \
+TMP_REV="$TMP_REV" \
+TMP_REST_IDS="$TMP_REST_IDS" \
+TMP_REV_IDS="$TMP_REV_IDS" \
+python3 << 'PYTHON'
+import json, re, sys, os
+
+DATA_JS_PATH = os.environ['DATA_JS']
+TMP_REST     = os.environ['TMP_REST']
+TMP_REV      = os.environ['TMP_REV']
+TMP_REST_IDS = os.environ['TMP_REST_IDS']
+TMP_REV_IDS  = os.environ['TMP_REV_IDS']
+
+with open(DATA_JS_PATH) as f:
+    data_js = f.read()
+with open(TMP_REST) as f:
+    restaurants_data = json.load(f)
+with open(TMP_REV) as f:
+    reviews_data = json.load(f)
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def get_text(arr):
+    return ''.join(t.get('plain_text', '') for t in (arr or []))
+
+def parse_urls(arr):
+    raw = get_text(arr)
+    return [p.strip() for p in re.split(r';\s*', raw) if p.strip().startswith('http')]
+
+def parse_captions(arr):
+    raw = get_text(arr)
+    return [p.strip() for p in raw.split(';') if p.strip()]
+
+def parse_value(select):
+    if not select:
+        return 4
+    count = (select.get('name') or '').count('£')
+    return count if 1 <= count <= 5 else 4
+
+def js_str(s):
+    return s.strip().replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
+
+def next_rev_id(rest_num, used):
+    base = f'rv{rest_num}'
+    for ch in 'abcdefghijklmnopqrstuvwxyz':
+        cid = f'{base}{ch}'
+        if cid not in used:
+            return cid
+    raise RuntimeError(f'Ran out of review ID letters for {base}')
+
+# ── Read existing state ───────────────────────────────────────────────────────
+
+# Restaurant IDs and names already in data.js
+rest_id_nums = [int(m) for m in re.findall(r'id:\s*"r(\d+)"', data_js)]
+max_rest_num = max(rest_id_nums) if rest_id_nums else 0
+
+existing_name_to_id = {}
+for m in re.finditer(r'\{\s*id:\s*"(r\d+)"[^}]*name:\s*"([^"]+)"', data_js):
+    existing_name_to_id[m.group(2).lower()] = m.group(1)
+
+used_rev_ids = set(re.findall(r'id:\s*"(rv\d+\w*)"', data_js))
+
+# ── Build Notion review map: restaurant page ID → [review pages] ──────────────
+
+notion_reviews = {}
+for page in reviews_data['results']:
+    for rel in (page['properties'].get('Restaurant', {}).get('relation') or []):
+        notion_reviews.setdefault(rel['id'], []).append(page)
+
+# ── Process each restaurant ───────────────────────────────────────────────────
+
+new_rest_entries = []
+new_rev_entries  = []
+notion_rest_ids  = []
+notion_rev_ids   = []
+summary          = []
+
+for page in restaurants_data['results']:
+    props      = page['properties']
+    notion_pid = page['id']
+    name       = get_text(props.get('Restaurant', {}).get('title') or [])
+    cuisine    = ((props.get('Cuisine', {}).get('select')) or {}).get('name', '')
+    location   = ((props.get('Location', {}).get('select')) or {}).get('name', '')
+    place      = (props.get('Address', {}) or {}).get('place') or {}
+    address    = place.get('address', '')
+    lat        = place.get('lat')
+    lng        = place.get('lon')
+    url        = (props.get('URL', {}) or {}).get('url') or ''
+    michelin   = ((props.get('Michelin', {}).get('select')) or {}).get('name', 'None')
+    is_new     = name.lower() not in existing_name_to_id
+
+    if is_new:
+        max_rest_num += 1
+        rest_id = f'r{max_rest_num}'
+        lat_s   = str(lat) if lat is not None else 'null'
+        lng_s   = str(lng) if lng is not None else 'null'
+        new_rest_entries.append(
+            f'  {{ id: "{rest_id}", name: "{js_str(name)}", cuisine: "{cuisine}", '
+            f'location: "{location}", address: "{js_str(address)}", '
+            f'website: "{url}", michelin: "{michelin}", '
+            f'value: 4, mapX: 0.50, mapY: 0.40, lat: {lat_s}, lng: {lng_s} }}'
+        )
+        existing_name_to_id[name.lower()] = rest_id
+        summary.append(f'\n  [NEW] {name} ({rest_id})')
+        summary.append(f'        {cuisine} · {location} · Michelin: {michelin}')
+        summary.append(f'        {address}')
+    else:
+        rest_id = existing_name_to_id[name.lower()]
+        summary.append(f'\n  [EXISTING] {name} ({rest_id}) — adding new review tab only')
+
+    notion_rest_ids.append(notion_pid)
+    rest_num = re.search(r'\d+', rest_id).group()
+
+    for rev_page in notion_reviews.get(notion_pid, []):
+        rp           = rev_page['properties']
+        notion_rev_pid = rev_page['id']
+        date         = ((rp.get('Review Date', {}) or {}).get('date') or {}).get('start', '')
+        tastiness    = (rp.get('Tastiness',   {}) or {}).get('number') or 0
+        specialness  = (rp.get('Specialness', {}) or {}).get('number') or 0
+        service      = (rp.get('Service',     {}) or {}).get('number') or 0
+        environment  = (rp.get('Environment', {}) or {}).get('number') or 0
+        value        = parse_value((rp.get('Value of Money', {}) or {}).get('select'))
+        body         = js_str(get_text((rp.get('Review Body', {}) or {}).get('rich_text') or []))
+        urls         = parse_urls((rp.get('Image URLs', {}) or {}).get('rich_text') or [])
+        captions     = parse_captions((rp.get('Image Captions', {}) or {}).get('rich_text') or [])
+
+        photos = []
+        for i, u in enumerate(urls):
+            cap = js_str(captions[i]) if i < len(captions) else ''
+            photos.append(f'      {{ src: "{u}", caption: "{cap}" }}')
+
+        rev_id = next_rev_id(rest_num, used_rev_ids)
+        used_rev_ids.add(rev_id)
+        notion_rev_ids.append(notion_rev_pid)
+
+        new_rev_entries.append(
+            f'  // {rest_id} {name}\n'
+            f'  {{ id: "{rev_id}", restaurantId: "{rest_id}", date: "{date}", '
+            f'tastiness: {tastiness}, specialness: {specialness}, service: {service}, '
+            f'environment: {environment}, value: {value},\n'
+            f'    body: "{body}",\n'
+            f'    photos: [\n'
+            + ',\n'.join(photos) +
+            f'\n    ]\n  }}'
+        )
+
+        summary.append(f'    Review {rev_id}: {date}')
+        summary.append(f'    T:{tastiness}  Sp:{specialness}  Sv:{service}  E:{environment}  V:{value}')
+        summary.append(f'    Photos: {len(photos)}' +
+                       (f'  ⚠ caption count mismatch ({len(urls)} URLs / {len(captions)} captions)'
+                        if len(urls) != len(captions) else ''))
+
+# ── Patch data.js ─────────────────────────────────────────────────────────────
+
+if not new_rest_entries and not new_rev_entries:
+    print('\n  No new content — all entries already exist in data.js.')
+    sys.exit(0)
+
+updated = data_js
+
+if new_rest_entries:
+    insert = ',\n' + ',\n'.join(new_rest_entries)
+    if '\n];\n\n// Photo placeholder' not in updated:
+        print('Error: could not find RESTAURANTS insertion point in data.js.', file=sys.stderr)
+        sys.exit(1)
+    updated = updated.replace('\n];\n\n// Photo placeholder',
+                               insert + '\n];\n\n// Photo placeholder', 1)
+
+if new_rev_entries:
+    insert = ',\n\n' + ',\n\n'.join(new_rev_entries)
+    if '\n];\n\n// Personal favourite' not in updated:
+        print('Error: could not find REVIEWS insertion point in data.js.', file=sys.stderr)
+        sys.exit(1)
+    updated = updated.replace('\n];\n\n// Personal favourite',
+                               insert + '\n];\n\n// Personal favourite', 1)
+
+with open(DATA_JS_PATH, 'w') as f:
+    f.write(updated)
+
+# ── Write Notion IDs for shell PATCH step ─────────────────────────────────────
+
+with open(TMP_REST_IDS, 'w') as f:
+    f.write('\n'.join(notion_rest_ids))
+with open(TMP_REV_IDS, 'w') as f:
+    f.write('\n'.join(notion_rev_ids))
+
+# ── Print summary ─────────────────────────────────────────────────────────────
+
+print('')
+print('─' * 62)
+print('  CHANGES SUMMARY')
+print('─' * 62)
+for line in summary:
+    print(line)
+print('─' * 62)
+print(f'  {len(new_rest_entries)} new restaurant(s), {len(new_rev_entries)} new review(s)')
+print('─' * 62)
+
+PYTHON
+
+# ── 3. Show diff and prompt for approval ─────────────────────────────────────
+echo ""
+echo "── Git diff ──────────────────────────────────────────────────────────"
+git diff src/data.js
+
+echo ""
+echo "Type 'approve' to commit, push, and mark Published in Notion."
+echo "Type anything else to abort (changes to src/data.js will be reverted)."
+printf "> "
+read -r RESPONSE
+
+if [ "$RESPONSE" != "approve" ]; then
+  echo "Aborted — reverting src/data.js."
+  git checkout -- src/data.js
+  exit 0
+fi
+
+# ── 4. Commit and push ────────────────────────────────────────────────────────
+echo ""
+echo "── Committing and pushing ────────────────────────────────────────────"
+
+NREST_NEW=$(python3 -c "print(sum(1 for l in open('$TMP_REST_IDS') if l.strip()))")
+NREV_NEW=$(python3  -c "print(sum(1 for l in open('$TMP_REV_IDS')  if l.strip()))")
+
+git add src/data.js
+git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion
+
+https://claude.ai/code/session_01D1PpSRHqqgdMgjUL7wXL7V"
+
+git push origin main
+echo "  Pushed to main."
+
+# ── 5. Mark Published in Notion ───────────────────────────────────────────────
+echo ""
+echo "── Marking as Published in Notion ───────────────────────────────────"
+
+PATCH_BODY='{"properties":{"Status":{"status":{"name":"Published"}}}}'
+
+while IFS= read -r page_id; do
+  [ -z "$page_id" ] && continue
+  RESULT=$(curl -s -X PATCH "https://api.notion.com/v1/pages/${page_id}" \
+    -H "Authorization: Bearer $NOTION_KEY" \
+    -H "Notion-Version: 2022-06-28" \
+    -H "Content-Type: application/json" \
+    -d "$PATCH_BODY")
+  STATUS=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" 2>/dev/null || echo "error")
+  echo "  Restaurant ${page_id} → ${STATUS}"
+done < "$TMP_REST_IDS"
+
+while IFS= read -r page_id; do
+  [ -z "$page_id" ] && continue
+  RESULT=$(curl -s -X PATCH "https://api.notion.com/v1/pages/${page_id}" \
+    -H "Authorization: Bearer $NOTION_KEY" \
+    -H "Notion-Version: 2022-06-28" \
+    -H "Content-Type: application/json" \
+    -d "$PATCH_BODY")
+  STATUS=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" 2>/dev/null || echo "error")
+  echo "  Review     ${page_id} → ${STATUS}"
+done < "$TMP_REV_IDS"
+
+# ── Done ──────────────────────────────────────────────────────────────────────
+echo ""
+echo "── Done ──────────────────────────────────────────────────────────────"
+echo "  Site updated and Notion statuses set to Published."
+echo ""
