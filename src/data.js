@@ -17,8 +17,7 @@ const MICHELIN = ["None", "Guide", "Bib Gourmand", "1★", "2★", "3★"];
 // mapX/mapY are normalized 0–1 for the static placeholder map; lat/lng are real coordinates for Leaflet.
 const RESTAURANTS = [
   { id: "r12", name: "BELLY",   cuisine: "Modern Filipino", location: "London",  address: "157 Kentish Town Road, London, NW1 8PD, United Kingdom", website: "https://bellylondon.com",         michelin: "Guide", value: 4, mapX: 0.18, mapY: 0.36, lat: 51.547,  lng: -0.1428 },
-  { id: "r16", name: "St. JOHN", cuisine: "British",        location: "London",  address: "26 St John St, EC1M 4AY",                                website: "https://stjohnrestaurant.com",   michelin: "1★",   value: 4, mapX: 0.30, mapY: 0.32, lat: 51.523,  lng: -0.1031 },
-  { id: "r17", name: "Tutto",    cuisine: "Italian",         location: "Brighton", address: "20 Marlborough Place, Brighton, BN11UB, United Kingdom", website: "https://tutto-restaurant.co.uk/", michelin: "Guide", value: 4, mapX: 0.81, mapY: 0.43, lat: 50.826, lng: -0.1383 },
+{ id: "r17", name: "Tutto",    cuisine: "Italian",         location: "Brighton", address: "20 Marlborough Place, Brighton, BN11UB, United Kingdom", website: "https://tutto-restaurant.co.uk/", michelin: "Guide", value: 4, mapX: 0.81, mapY: 0.43, lat: 50.826, lng: -0.1383 },
   { id: "r18", name: "Bridge Arms", cuisine: "Modern British", location: "Canterbury", address: "53 High Street, Canterbury, CT4 5LA, United Kingdom", website: "https://www.bridgearms.co.uk/", michelin: "1★", value: 4, mapX: 0.34, mapY: 0.34, lat: 51.24617, lng: 1.12558 },
   { id: "r19", name: "Bratislavský Meštiansky Pivovar", cuisine: "Slovak", location: "Bratislava", address: "Dunajská 2294/21, 811 08 Bratislava, Slovakia", website: "https://mestianskypivovar.sk/", michelin: "None", value: 4, mapX: 0.60, mapY: 0.38, lat: 48.14587, lng: 17.11792 }
 ];
@@ -57,14 +56,6 @@ const REVIEWS = [
     ]
   },
 
-  // r16 St. JOHN
-  { id: "rv16a", restaurantId: "r16", date: "2026-04-18", tastiness: 9, specialness: 9, service: 9, environment: 9, value: 4,
-    body: "Bone marrow and parsley salad is a benchmark dish, and the white room is one of London's great spaces. Still essential.",
-    photos: [
-      { src: photoPlaceholder("BONE MARROW · PARSLEY", 28), caption: "Bone marrow with parsley salad." },
-      { src: photoPlaceholder("WHITE ROOM", 12), caption: "The dining room — pure white." }
-    ]
-  },
 
   // r17 Tutto
   { id: "rv17b", restaurantId: "r17", date: "2026-04-05", tastiness: 6, specialness: 6, service: 8, environment: 7, value: 4,
@@ -114,7 +105,7 @@ const REVIEWS = [
 ];
 
 // Personal favourite — featured on the home page.
-const FAVORITE_ID = "r16"; // St. JOHN
+const FAVORITE_ID = "r12"; // BELLY
 
 // Helpers
 function reviewsFor(restaurantId) {
