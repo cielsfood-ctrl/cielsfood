@@ -60,7 +60,7 @@ function HomePage({ navigate }) {
             <span>·</span>
             <span>{latestRest.michelin}</span>
           </div>
-          <p className="body" style={{ maxWidth: "100%", width: "640.328px" }}>{latest.body}</p>
+          <p className="body" style={{ maxWidth: "100%", width: "640.328px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{latest.body}</p>
           <div className="scores" style={{ marginTop: 24 }}>
             <div className="score-cell"><div className="score-label">Tastiness</div><div className="score-num">{latest.tastiness}<em>/10</em></div></div>
             <div className="score-cell"><div className="score-label">Specialness</div><div className="score-num">{latest.specialness}<em>/10</em></div></div>
