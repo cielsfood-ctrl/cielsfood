@@ -53,9 +53,9 @@ function ReviewDetailPage({ restaurantId, navigate }) {
         <div>
           <ImageSlider photos={review.photos} />
 
-          <div className="body" style={{ marginTop: 32, maxWidth: "60ch" }}>
+          <div className="body" style={{ marginTop: 32 }}>
             {review.body.split(/\n\n+/).map((para, i) =>
-            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", maxWidth: "626.516px", fontSize: "14px", marginTop: i === 0 ? 0 : "1em" }}>
+            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", fontSize: "14px", marginTop: i === 0 ? 0 : "1em" }}>
                 {para}
               </p>
             )}
