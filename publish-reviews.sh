@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
 # publish-reviews.sh — Notion → data.js automated publisher
-# Usage: ./publish-reviews.sh
+# Usage: ./publish-reviews.sh [--dry-run]
+#   --dry-run  Fetch, parse, show diff, test Notion PATCH calls,
+#              but do NOT write src/data.js or commit/push.
 # Requires: $NOTION_KEY, curl, python3, git
 
 set -euo pipefail
+
+DRY_RUN=0
+if [ "${1:-}" = "--dry-run" ]; then
+  DRY_RUN=1
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATA_JS="$SCRIPT_DIR/src/data.js"
@@ -11,13 +18,14 @@ TMP_REST="$SCRIPT_DIR/.tmp-notion-restaurants.json"
 TMP_REV="$SCRIPT_DIR/.tmp-notion-reviews.json"
 TMP_REST_IDS="$SCRIPT_DIR/.tmp-notion-rest-ids"
 TMP_REV_IDS="$SCRIPT_DIR/.tmp-notion-rev-ids"
+TMP_CURL="$SCRIPT_DIR/.tmp-notion-curl-response"
 
 NOTION_REST_DB="298028b6e10280788b1ee47e7cacd57b"
 NOTION_REV_DB="298028b6e10280139d12d35f33c66e1f"
 
 # ── Cleanup ───────────────────────────────────────────────────────────────────
 cleanup() {
-  rm -f "$TMP_REST" "$TMP_REV" "$TMP_REST_IDS" "$TMP_REV_IDS"
+  rm -f "$TMP_REST" "$TMP_REV" "$TMP_REST_IDS" "$TMP_REV_IDS" "$TMP_CURL"
 }
 trap cleanup EXIT
 
@@ -33,6 +41,13 @@ for cmd in curl python3 git; do
     exit 1
   fi
 done
+
+if [ "$DRY_RUN" = "1" ]; then
+  echo ""
+  echo "── DRY RUN ───────────────────────────────────────────────────────────"
+  echo "  src/data.js will NOT be modified. Git commit/push skipped."
+  echo "  Notion PATCH calls will run to test connectivity."
+fi
 
 # ── 1. Fetch from Notion ──────────────────────────────────────────────────────
 echo ""
@@ -280,81 +295,132 @@ echo ""
 echo "── Git diff ──────────────────────────────────────────────────────────"
 git diff src/data.js
 
-echo ""
-echo "Type 'approve' to commit, push, and mark Published in Notion."
-echo "Type anything else to abort (changes to src/data.js will be reverted)."
-printf "> "
-read -r RESPONSE
-
-if [ "$RESPONSE" != "approve" ]; then
-  echo "Aborted — reverting src/data.js."
+if [ "$DRY_RUN" = "1" ]; then
+  echo ""
+  echo "── [DRY RUN] Reverting src/data.js ──────────────────────────────────"
   git checkout -- src/data.js
-  exit 0
-fi
+  echo "  src/data.js reverted — no changes written."
+else
+  echo ""
+  echo "Type 'approve' to commit, push, and mark Published in Notion."
+  echo "Type anything else to abort (changes to src/data.js will be reverted)."
+  printf "> "
+  read -r RESPONSE
 
-# ── 4. Commit and push ────────────────────────────────────────────────────────
-echo ""
-echo "── Committing and pushing ────────────────────────────────────────────"
+  if [ "$RESPONSE" != "approve" ]; then
+    echo "Aborted — reverting src/data.js."
+    git checkout -- src/data.js
+    exit 0
+  fi
 
-NREST_NEW=$(python3 -c "print(sum(1 for l in open('$TMP_REST_IDS') if l.strip()))")
-NREV_NEW=$(python3  -c "print(sum(1 for l in open('$TMP_REV_IDS')  if l.strip()))")
+  # ── 4. Commit and push ──────────────────────────────────────────────────────
+  echo ""
+  echo "── Committing and pushing ────────────────────────────────────────────"
 
-git add src/data.js
-git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion
+  NREST_NEW=$(python3 -c "print(sum(1 for l in open('$TMP_REST_IDS') if l.strip()))")
+  NREV_NEW=$(python3  -c "print(sum(1 for l in open('$TMP_REV_IDS')  if l.strip()))")
+
+  git add src/data.js
+  git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion
 
 https://claude.ai/code/session_01D1PpSRHqqgdMgjUL7wXL7V"
 
-git push origin main
-echo "  Pushed to main."
+  git push origin main
+  echo "  Pushed to main."
+fi
 
 # ── 5. Mark Published in Notion ───────────────────────────────────────────────
 echo ""
-echo "── Marking as Published in Notion ───────────────────────────────────"
+if [ "$DRY_RUN" = "1" ]; then
+  echo "── [DRY RUN] Testing Notion PATCH calls ──────────────────────────────"
+else
+  echo "── Marking as Published in Notion ───────────────────────────────────"
+fi
 
 PATCH_BODY='{"properties":{"Status":{"status":{"name":"Published"}}}}'
 PATCH_FAILED=0
 
+# ── PATCH helper: one call with one retry, full output on failure ─────────────
+notion_patch() {
+  local kind="$1"
+  local page_id="$2"
+  local attempt http_code result status
+
+  for attempt in 1 2; do
+    http_code=$(curl -s \
+      -o "$TMP_CURL" \
+      -w "%{http_code}" \
+      -X PATCH "https://api.notion.com/v1/pages/${page_id}" \
+      -H "Authorization: Bearer $NOTION_KEY" \
+      -H "Notion-Version: 2022-06-28" \
+      -H "Content-Type: application/json" \
+      -d "$PATCH_BODY")
+    result=$(cat "$TMP_CURL" 2>/dev/null || echo "")
+
+    status=$(echo "$result" | python3 -c \
+      "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" \
+      2>/dev/null || echo "parse-error")
+
+    if [ "$status" = "Published" ]; then
+      if [ "$attempt" -eq 1 ]; then
+        echo "  OK  ${kind} ${page_id} → Published"
+      else
+        echo "  OK  ${kind} ${page_id} → Published (succeeded on retry)"
+      fi
+      return 0
+    fi
+
+    echo "  FAIL  ${kind} ${page_id}" >&2
+    echo "        Attempt ${attempt} — HTTP ${http_code} | parsed status: '${status}'" >&2
+    echo "        Response body:" >&2
+    echo "$result" | python3 -c \
+      "import json,sys
+try:
+    d=json.load(sys.stdin)
+    print('        ' + json.dumps(d, indent=2).replace('\n', '\n        '))
+except Exception:
+    import sys as _s; print('        (unparseable) ' + open('${TMP_CURL}').read())" >&2
+
+    if [ "$attempt" -eq 1 ]; then
+      echo "        Retrying in 3s..." >&2
+      sleep 3
+    fi
+  done
+
+  echo "" >&2
+  echo "  ERROR ${kind} ${page_id} — failed after retry." >&2
+  echo "        Mark it Published manually in Notion to prevent re-processing." >&2
+  PATCH_FAILED=1
+}
+
 while IFS= read -r page_id; do
   [ -z "$page_id" ] && continue
-  RESULT=$(curl -s -X PATCH "https://api.notion.com/v1/pages/${page_id}" \
-    -H "Authorization: Bearer $NOTION_KEY" \
-    -H "Notion-Version: 2022-06-28" \
-    -H "Content-Type: application/json" \
-    -d "$PATCH_BODY")
-  STATUS=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" 2>/dev/null || echo "error")
-  if [ "$STATUS" = "Published" ]; then
-    echo "  Restaurant ${page_id} → Published"
-  else
-    echo "  WARNING: Restaurant ${page_id} PATCH failed — got '${STATUS}'. Mark it Published manually in Notion to prevent re-processing." >&2
-    PATCH_FAILED=1
-  fi
+  notion_patch "Restaurant" "$page_id"
 done < "$TMP_REST_IDS"
 
 while IFS= read -r page_id; do
   [ -z "$page_id" ] && continue
-  RESULT=$(curl -s -X PATCH "https://api.notion.com/v1/pages/${page_id}" \
-    -H "Authorization: Bearer $NOTION_KEY" \
-    -H "Notion-Version: 2022-06-28" \
-    -H "Content-Type: application/json" \
-    -d "$PATCH_BODY")
-  STATUS=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" 2>/dev/null || echo "error")
-  if [ "$STATUS" = "Published" ]; then
-    echo "  Review     ${page_id} → Published"
-  else
-    echo "  WARNING: Review ${page_id} PATCH failed — got '${STATUS}'. Mark it Published manually in Notion to prevent re-processing." >&2
-    PATCH_FAILED=1
-  fi
+  notion_patch "Review    " "$page_id"
 done < "$TMP_REV_IDS"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo "── Done ──────────────────────────────────────────────────────────────"
 if [ "$PATCH_FAILED" -eq 1 ]; then
-  echo "  Site updated. WARNING: one or more Notion PATCH calls failed."
-  echo "  Pages still marked 'Ready to Publish' will be re-fetched on the next"
-  echo "  run but skipped (already in data.js). Mark them Published manually"
-  echo "  in Notion when convenient."
+  if [ "$DRY_RUN" = "1" ]; then
+    echo "  [DRY RUN] One or more PATCH calls failed — see errors above."
+  else
+    echo "  Site updated. WARNING: one or more Notion PATCH calls failed."
+    echo "  Pages still marked 'Ready to Publish' will be re-fetched on the next"
+    echo "  run but skipped (already in data.js). Mark them Published manually."
+  fi
+  echo ""
+  exit 1
 else
-  echo "  Site updated and Notion statuses set to Published."
+  if [ "$DRY_RUN" = "1" ]; then
+    echo "  [DRY RUN] All PATCH calls succeeded. Run without --dry-run to publish."
+  else
+    echo "  Site updated and Notion statuses set to Published."
+  fi
 fi
 echo ""
