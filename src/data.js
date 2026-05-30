@@ -17,6 +17,7 @@ const MICHELIN = ["None", "Guide", "Bib Gourmand", "1★", "2★", "3★"];
 // mapX/mapY are normalized 0–1 for the static placeholder map; lat/lng are real coordinates for Leaflet.
 const RESTAURANTS = [
   { id: "r12", name: "BELLY",   cuisine: "Modern Filipino", location: "London",  address: "157 Kentish Town Road, London, NW1 8PD, United Kingdom", website: "https://bellylondon.com",         michelin: "Guide", value: 4, mapX: 0.18, mapY: 0.36, lat: 51.547,  lng: -0.1428 },
+  { id: "r16", name: "St. JOHN", cuisine: "British",        location: "London",  address: "26 St John St, EC1M 4AY",                                website: "https://stjohnrestaurant.com",   michelin: "1★",   value: 4, mapX: 0.30, mapY: 0.32, lat: 51.523,  lng: -0.1031 },
   { id: "r17", name: "Tutto",    cuisine: "Italian",         location: "Brighton", address: "20 Marlborough Place, Brighton, BN11UB, United Kingdom", website: "https://tutto-restaurant.co.uk/", michelin: "Guide", value: 4, mapX: 0.81, mapY: 0.43, lat: 50.826, lng: -0.1383 },
   { id: "r18", name: "Bridge Arms", cuisine: "Modern British", location: "Canterbury", address: "53 High Street, Canterbury, CT4 5LA, United Kingdom", website: "https://www.bridgearms.co.uk/", michelin: "1★", value: 4, mapX: 0.34, mapY: 0.34, lat: 51.24617, lng: 1.12558 },
   { id: "r19", name: "Bratislavský Meštiansky Pivovar", cuisine: "Slovak", location: "Bratislava", address: "Dunajská 2294/21, 811 08 Bratislava, Slovakia", website: "https://mestianskypivovar.sk/", michelin: "None", value: 4, mapX: 0.60, mapY: 0.38, lat: 48.14587, lng: 17.11792 },
@@ -57,6 +58,16 @@ const REVIEWS = [
     ]
   },
 
+  // r16 St. JOHN
+  { id: "rv16a", restaurantId: "r16", date: "2025-09-15", tastiness: 5.5, specialness: 5, service: 3, environment: 5, value: 1,
+    body: "St. John is a short walk from Smithfield Market, famous for its rustic nose-to-tail cooking. The restaurant is set in a converted Victorian smokehouse with austere aesthetics. The menu changes daily, posted online only a few hours before service.\n\nThe meal began with the bone marrow and parsley salad (6/10), the entrée St. John is most associated with. The marrow was everything it should be - fatty, creamy, genuinely beefy, and spreadable onto toast with ease. The problem was the toast itself. Half of it had been grilled to the point of being extremely hard to bite into, which stopped the dish in its tracks. For a signature, it felt careless. The grilled lamb heart was the best thing we ate (6.5/10). Properly charred outside, tender through the middle, with a deep, clean meatiness that needed nothing else on the plate.\n\nThe brill with leek and tartare sauce (5/10) had the bones of a good dish. The fish itself was tender with a pleasant firmness, and the leek provided a quiet, gentle sweetness alongside it. But the tartare sauce was far too citrus-forward, and rather than lifting the fish it just drowned out whatever delicacy the brill had to offer. A lighter hand would have gone a long way. The duck (5/10) was the most forgettable plate of the night. Most of the meat came out touch, which takes some doing for a braised duck leg takes. The sauce compounded things by swinging too sweet, leaving the dish without any real anchor.\n\nService was a disappointment. The restaurant was predictably busy, but our waiter seemed genuinely disengaged and uncertain about the dishes, or simply unbothered about explaining them, and visibly more interested in the conversation at the neighbouring table than our own.\n\nSt. John carries enormous culinary credibility, and the ingredients on the night were clearly good. But good ingredients and a famous philosophy only go so far when the execution is patchy and the service is indifferent. For the price and the reputation, we left underwhelmed with their execution. The overall experience was mediocre and nothing memorable.",
+    photos: [
+      { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1779225781/EA8F6992-76E0-45B0-9523-87E798FE8AC1_1_105_c_eijeav.jpg", caption: "Roast Bone Marrow and Parsley Salad (£16.5) & Grilled Lamb Heart, Cucumber and Anchovy (£14.2)" },
+      { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1779225781/C0FC0DC9-4177-43DE-B5AC-D0D9C072ECCC_1_105_c_lpdtbq.jpg", caption: "Brill, Leek and Tartare Sauce (£32)" },
+      { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1779225780/7C684140-F47D-4DCE-A077-9F77C9391FB8_1_105_c_vimfrl.jpg", caption: "Braised Duck leg, Carrot and Green Sauce (£27)" },
+      { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1779225782/E9F0031A-E0A7-4208-B3C7-E90CAA4C47D0_1_102_a_mij2mn.jpg", caption: "Rice Pudding (£9.8)" }
+    ]
+  },
 
   // r17 Tutto
   { id: "rv17b", restaurantId: "r17", date: "2026-04-05", tastiness: 6, specialness: 6, service: 8, environment: 7, value: 4,

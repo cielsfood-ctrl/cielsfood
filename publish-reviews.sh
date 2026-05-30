@@ -182,7 +182,8 @@ for page in restaurants_data['results']:
         summary.append(f'        {address}')
     else:
         rest_id = existing_name_to_id[name.lower()]
-        summary.append(f'\n  [EXISTING] {name} ({rest_id}) — adding new review tab only')
+        summary.append(f'\n  [SKIP] {name} ({rest_id}) — already in data.js; skipping')
+        continue
 
     notion_rest_ids.append(notion_pid)
     rest_num = re.search(r'\d+', rest_id).group()
@@ -311,6 +312,7 @@ echo ""
 echo "── Marking as Published in Notion ───────────────────────────────────"
 
 PATCH_BODY='{"properties":{"Status":{"status":{"name":"Published"}}}}'
+PATCH_FAILED=0
 
 while IFS= read -r page_id; do
   [ -z "$page_id" ] && continue
@@ -320,7 +322,12 @@ while IFS= read -r page_id; do
     -H "Content-Type: application/json" \
     -d "$PATCH_BODY")
   STATUS=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" 2>/dev/null || echo "error")
-  echo "  Restaurant ${page_id} → ${STATUS}"
+  if [ "$STATUS" = "Published" ]; then
+    echo "  Restaurant ${page_id} → Published"
+  else
+    echo "  WARNING: Restaurant ${page_id} PATCH failed — got '${STATUS}'. Mark it Published manually in Notion to prevent re-processing." >&2
+    PATCH_FAILED=1
+  fi
 done < "$TMP_REST_IDS"
 
 while IFS= read -r page_id; do
@@ -331,11 +338,23 @@ while IFS= read -r page_id; do
     -H "Content-Type: application/json" \
     -d "$PATCH_BODY")
   STATUS=$(echo "$RESULT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('properties',{}).get('Status',{}).get('status',{}).get('name','?'))" 2>/dev/null || echo "error")
-  echo "  Review     ${page_id} → ${STATUS}"
+  if [ "$STATUS" = "Published" ]; then
+    echo "  Review     ${page_id} → Published"
+  else
+    echo "  WARNING: Review ${page_id} PATCH failed — got '${STATUS}'. Mark it Published manually in Notion to prevent re-processing." >&2
+    PATCH_FAILED=1
+  fi
 done < "$TMP_REV_IDS"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo "── Done ──────────────────────────────────────────────────────────────"
-echo "  Site updated and Notion statuses set to Published."
+if [ "$PATCH_FAILED" -eq 1 ]; then
+  echo "  Site updated. WARNING: one or more Notion PATCH calls failed."
+  echo "  Pages still marked 'Ready to Publish' will be re-fetched on the next"
+  echo "  run but skipped (already in data.js). Mark them Published manually"
+  echo "  in Notion when convenient."
+else
+  echo "  Site updated and Notion statuses set to Published."
+fi
 echo ""
