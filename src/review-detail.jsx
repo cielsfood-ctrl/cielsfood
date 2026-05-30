@@ -55,7 +55,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
 
           <div className="body" style={{ marginTop: 32 }}>
             {review.body.split(/\n\n+/).map((para, i) =>
-            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", fontSize: "14px", marginTop: i === 0 ? 0 : "1em" }}>
+            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", fontSize: "14px", marginTop: i === 0 ? 0 : "1.8em" }}>
                 {para}
               </p>
             )}
