@@ -72,10 +72,9 @@ function ReviewDetailPage({ restaurantId, navigate }) {
             <div className="row"><span className="k">Tastiness</span><span className="v"><Score value={review.tastiness} /></span></div>
           </div>
 
-          <div className="eyebrow" style={{ marginTop: 36, marginBottom: 8, fontSize: "14px" }}>Categories</div>
+          <div className="eyebrow" style={{ marginTop: 36, marginBottom: 8, fontSize: "14px" }}>Other Categories</div>
           <div className="score-stack">
             {[
-            ["Tastiness", review.tastiness],
             ["Specialness", review.specialness],
             ["Service", review.service],
             ["Environment", review.environment]].
