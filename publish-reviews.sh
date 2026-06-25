@@ -321,9 +321,10 @@ else
   NREV_NEW=$(python3  -c "print(sum(1 for l in open('$TMP_REV_IDS')  if l.strip()))")
 
   git add src/data.js
-  git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion
+  git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion"
 
-https://claude.ai/code/session_01D1PpSRHqqgdMgjUL7wXL7V"
+  echo "  Pulling latest remote changes before push..."
+  git pull --rebase origin main
 
   git push origin main
   echo "  Pushed to main."
