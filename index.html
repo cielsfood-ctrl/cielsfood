@@ -1441,10 +1441,8 @@ body { overflow-x: hidden; scrollbar-gutter: stable; }
         splash.parentNode.removeChild(splash);
       } else {
         sessionStorage.setItem('splashShown', '1');
-        document.body.style.overflow = 'hidden';
         setTimeout(function(){
           splash.style.opacity = '0';
-          document.body.style.overflow = '';
           setTimeout(function(){ splash.parentNode && splash.parentNode.removeChild(splash); }, 650);
         }, 2500);
       }
