@@ -128,7 +128,7 @@ function HomePage({ navigate }) {
           <h2 className="h-section">Latest Reviews</h2>
         </div>
         <button className="btn--ghost btn" onClick={() => navigate("restaurants")}>
-          See all {window.RESTAURANTS.length} restaurants →
+          SEE ALL RESTAURANTS →
         </button>
       </div>
       <RecentList navigate={navigate} />
@@ -165,6 +165,7 @@ function RecentList({ navigate }) {
               <Score value={rv.tastiness} />
               <PoundMark value={rv.value} />
             </div>
+            <div className="row-hover-cta">READ THIS REVIEW →</div>
           </article>);
 
       })}
