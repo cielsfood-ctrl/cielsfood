@@ -34,6 +34,9 @@ function HomePage({ navigate }) {
 
           </p>
         </div>
+        <div>
+          <button className="btn btn--ghost" onClick={() => navigate("restaurants")}>EXPLORE REVIEWS →</button>
+        </div>
       </section>
       </div>
 
