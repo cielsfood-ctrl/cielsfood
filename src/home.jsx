@@ -71,7 +71,7 @@ function HomePage({ navigate }) {
             <div className="score-cell"><div className="score-label">Value</div><div className="score-num"><PoundMark value={latest.value} /></div></div>
           </div>
           <div style={{ marginTop: 24 }}>
-            <button className="btn--ghost btn" onClick={() => navigate("restaurant", { id: latestRest.id })}>
+            <button className="btn btn--text" onClick={() => navigate("restaurant", { id: latestRest.id })}>
               Read the full review →
             </button>
           </div>
@@ -94,7 +94,7 @@ function HomePage({ navigate }) {
             <div className="score-cell"><div className="score-label">Value</div><div className="score-num"><PoundMark value={favReview.value} /></div></div>
           </div>
           <div style={{ marginTop: 18 }}>
-            <button className="btn--ghost btn" onClick={() => navigate("restaurant", { id: fav.id })}>WHY IT STAYS THE FAVOURITE →
+            <button className="btn btn--text" onClick={() => navigate("restaurant", { id: fav.id })}>WHY IT STAYS THE FAVOURITE →
 
             </button>
           </div>
@@ -108,7 +108,7 @@ function HomePage({ navigate }) {
           <span className="numeral"></span>
           <h2 className="h-section">Review Categories</h2>
         </div>
-        <button className="btn--ghost btn" onClick={() => navigate("categories")}>READ THE FULL SYSTEM →
+        <button className="btn btn--text" onClick={() => navigate("categories")}>READ THE FULL SYSTEM →
 
           </button>
       </div>
@@ -130,7 +130,7 @@ function HomePage({ navigate }) {
           <span className="numeral"></span>
           <h2 className="h-section">Latest Reviews</h2>
         </div>
-        <button className="btn--ghost btn" onClick={() => navigate("restaurants")}>
+        <button className="btn btn--text" onClick={() => navigate("restaurants")}>
           SEE ALL RESTAURANTS →
         </button>
       </div>
