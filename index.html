@@ -1255,7 +1255,8 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 
 
 /* Recent list rows */
-.recent-row { display: grid; grid-template-columns: 160px 1fr 1fr auto; gap: 32px; padding: 22px 0; cursor: pointer; align-items: baseline; position: relative; }
+.recent-row { display: grid; grid-template-columns: 160px 1fr 1fr auto; gap: 32px; padding: 22px 16px; cursor: pointer; align-items: baseline; position: relative; }
+.recent-row-preview { color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* ---------- Row hover CTA ---------- */
 .row-hover-cta {
@@ -1267,6 +1268,7 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
   background: rgba(0, 0, 0, 0.48);
   font-family: var(--serif);
   font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--paper);
@@ -1286,9 +1288,9 @@ table.reviews-table tr.row::after {
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.48);
-  font-family: var(--mono);
+  font-family: var(--serif);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--paper);
@@ -1330,7 +1332,7 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   /* Section-head: stack on mobile */
   .section-head { flex-direction: column; align-items: flex-start; gap: 14px; padding: 36px 0 14px; }
   /* Row hover CTA: always visible on mobile */
-  .row-hover-cta { position: static; display: inline-block; background: none; opacity: 1; pointer-events: auto; padding: 5px 10px; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); margin-top: 2px; border: 1px solid var(--ink); }
+  .row-hover-cta { position: static; display: inline-block; background: none; opacity: 1; pointer-events: auto; padding: 5px 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink); margin-top: 2px; border: 1px solid var(--ink); }
   table.reviews-table tr.row::after { display: none; }
 }
 /* ---------- Phone breakpoint (≤560px) ---------- */

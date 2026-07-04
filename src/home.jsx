@@ -160,7 +160,7 @@ function RecentList({ navigate }) {
               <div style={{ fontSize: 24, lineHeight: 1.1 }}>{rest.name}</div>
               <div style={{ color: "var(--muted)", fontStyle: "italic", marginTop: 2 }}>{rest.cuisine} · {rest.location}</div>
             </div>
-            <div style={{ color: "var(--ink-2)" }}>{rv.body.slice(0, 110)}…</div>
+            <div className="recent-row-preview">{rv.body.slice(0, 110)}…</div>
             <div style={{ display: "flex", gap: 18, alignItems: "baseline" }}>
               <Score value={rv.tastiness} />
               <PoundMark value={rv.value} />
