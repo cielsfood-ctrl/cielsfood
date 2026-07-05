@@ -489,7 +489,7 @@ img { height: auto; display: block; }
   cursor: pointer;
 }
 .brand-logo {
-  height: 56px; width: auto; display: block;
+  height: 84px; width: auto; display: block;
   filter: invert(1) brightness(1.1);
 }
 
@@ -1306,6 +1306,11 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
 
 /* ---------- Tablet breakpoint (≤768px) ---------- */
 @media (max-width: 768px) {
+  /* Nav: centre logo, keep hamburger right */
+  .nav-row { position: relative; justify-content: flex-end; }
+  .brand { position: absolute; left: 50%; transform: translateX(-50%); }
+  .brand-logo { height: 66px; }
+
   .hero { padding: 32px 0 24px; }
   .h-display { font-size: clamp(36px, 8vw, 64px) !important; }
   .lede { font-size: 18px; }
