@@ -1347,7 +1347,7 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   .view-controls { padding: 10px 0 16px; }
   .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); width: calc(100% + 2 * var(--pad-x)); box-sizing: border-box; }
   table.reviews-table { min-width: 540px; }
-  table.reviews-table td.eyebrow { font-size: 12px; }
+  table.reviews-table td.eyebrow { font-size: 12px; white-space: nowrap; }
   .map-wrap { height: clamp(420px, 60vh, 600px); }
   /* Recent list: collapse to single column at tablet */
   .recent-row { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
@@ -1424,7 +1424,7 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
     padding: 16px var(--pad-x) 40px;
     display: flex; flex-direction: column; gap: 20px;
   }
-  .filter-sheet-body .filter-group { min-width: unset !important; width: 100%; align-self: auto !important; }
+  .filter-sheet-body .filter-group { min-width: unset !important; max-width: none !important; width: 100%; align-self: auto !important; }
   .filter-sheet-body .filter-group select,
   .filter-sheet-body .filter-group input { width: 100%; box-sizing: border-box; }
   .filter-sheet-body .btn--ghost { width: 100%; text-align: center; }
