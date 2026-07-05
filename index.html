@@ -824,7 +824,8 @@ img { height: auto; display: block; }
 /* Match h1 bottom margin to About/Categories (inline style override) */
 .reviews-head h1.h-display { margin-bottom: 20px !important; }
 .filters {
-  display: flex; flex-wrap: nowrap; align-items: flex-end; gap: 18px 18px;
+  display: flex; flex-wrap: nowrap; align-items: flex-end; justify-content: center; gap: 18px 18px;
+  position: relative;
   padding: 16px var(--pad-x);
   margin: 0 calc(-1 * var(--pad-x));
   background: #F4F2EC;
@@ -855,11 +856,12 @@ input[type="range"] { accent-color: var(--ink); }
 .view-switch button:last-child { border-right: 0; }
 .view-switch button.active { background: var(--ink); color: var(--paper); }
 .filter-reset {
-  font-family: system-ui, sans-serif; font-size: 11px; letter-spacing: 0.22em;
+  font-family: var(--serif); font-size: 11px; letter-spacing: 0.22em;
   text-transform: uppercase; padding: 8px 16px;
   color: var(--ink); background: transparent;
   border: 1px solid var(--ink); cursor: pointer;
-  align-self: end; white-space: nowrap;
+  position: absolute; right: var(--pad-x); bottom: 16px;
+  white-space: nowrap;
 }
 .filter-reset:hover { color: var(--accent); border-color: var(--accent); }
 
@@ -1231,6 +1233,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   /* Reviews head */
   .reviews-head { padding: 36px 0 16px; }
   .filters { gap: 14px 22px; padding: 14px 0; }
+  .filter-reset { bottom: 14px; }
 
   /* Reviews table → make horizontally scrollable container */
   .reviews-table-wrap {
