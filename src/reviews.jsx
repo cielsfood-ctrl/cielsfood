@@ -69,16 +69,15 @@ function ReviewsPage({ navigate }) {
           <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>Restaurants</h1>
           <p className="kicker"></p>
         </div>
-        <div className="view-switch" role="tablist">
-          <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
-          <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+        <div className="view-controls">
+          <div className="view-switch" role="tablist">
+            <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
+            <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+          </div>
+          <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
         </div>
       </section>
-
-      {/* Mobile: sticky filter trigger */}
-      <div className="mob-filter-bar">
-        <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
-      </div>
+      <hr className="rule" style={{ margin: "0 0 16px", maxWidth: "100%" }} />
 
       {/* Mobile: filter bottom sheet */}
       {filtersOpen && (
@@ -223,7 +222,7 @@ function ReviewsPage({ navigate }) {
 }
 
 function MapView({ rows, navigate }) {
-  const [active, setActive] = useState(rows[0]?.id || null);
+  const [active, setActive] = useState("r21");
   const sel = rows.find((r) => r.id === active);
   const containerRef = useRef(null);
   const mapRef = useRef(null);

@@ -824,6 +824,8 @@ img { height: auto; display: block; }
   border-bottom: 1px solid var(--rule);
 }
 .mob-filter-bar { display: none; }
+.view-controls { display: flex; align-items: center; gap: 12px; }
+.mob-filter-btn { display: none; }
 .filter-group { display: flex; flex-direction: column; gap: 6px; min-width: 130px; }
 .filter-group label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
 .filter-group select, .filter-group input {
@@ -1211,7 +1213,7 @@ table.reviews-table tr.row:hover { background: var(--paper-2); }
 
   /* Reviews head */
   .reviews-head { grid-template-columns: 1fr; padding: 36px 0 20px; }
-  .reviews-head .view-switch { justify-self: start; }
+  .reviews-head .view-controls { justify-self: start; }
   .filters { gap: 14px 22px; padding: 14px 0; }
 
   /* Reviews table → make horizontally scrollable container */
@@ -1345,21 +1347,25 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   .row-hover-cta { position: static; display: inline-block; background: #1A1A1A; color: #F5F5F5; opacity: 1; pointer-events: auto; padding: 10px 20px; font-size: 10px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; margin-top: 2px; border: 0; border-radius: 4px; }
   table.reviews-table tr.row::after { display: none; }
 
-  /* Filters: hide desktop bar, show sticky trigger button */
+  /* Filters: hide desktop bar; show Filters button inline with view switch */
   .filters { display: none; }
-  .mob-filter-bar {
-    display: flex; align-items: center;
-    position: sticky; top: 115px; z-index: 40;
-    background: var(--paper);
-    padding: 10px 0;
-    border-bottom: 1px solid var(--rule);
-  }
+  .view-controls { justify-content: space-between; }
   .mob-filter-btn {
-    font-family: var(--serif); font-size: 13px;
-    letter-spacing: 0.12em; text-transform: uppercase;
+    display: block;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
     padding: 8px 16px; border: 1px solid var(--ink);
-    background: transparent; color: var(--ink); cursor: pointer;
+    background: transparent; color: var(--ink-2); cursor: pointer;
   }
+
+  /* Frozen first column in reviews table */
+  table.reviews-table th:first-child,
+  table.reviews-table td:first-child {
+    position: sticky; left: 0; z-index: 2;
+    background: var(--paper);
+    border-right: 1px solid var(--rule);
+  }
+  table.reviews-table tr.row:hover td:first-child { background: var(--paper-2); }
 
   /* Filter bottom sheet */
   .filter-sheet-overlay {
