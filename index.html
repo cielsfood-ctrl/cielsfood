@@ -877,6 +877,7 @@ table.reviews-table th {
 table.reviews-table th .arrow { display: inline-block; width: 12px; color: var(--accent); }
 table.reviews-table td { font-size: 18px; }
 table.reviews-table td.name { font-size: 22px; }
+table.reviews-table td.eyebrow { font-size: 13px; }
 table.reviews-table tr.row { cursor: pointer; transition: background 150ms ease; }
 table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 
@@ -1344,8 +1345,9 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   .reviews-head { display: block; }
   .reviews-hr { display: block; }
   .view-controls { padding: 10px 0 16px; }
-  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); }
-  table.reviews-table { min-width: 720px; }
+  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); width: calc(100% + 2 * var(--pad-x)); box-sizing: border-box; }
+  table.reviews-table { min-width: 540px; }
+  table.reviews-table td.eyebrow { font-size: 12px; }
   .map-wrap { height: clamp(420px, 60vh, 600px); }
   /* Recent list: collapse to single column at tablet */
   .recent-row { grid-template-columns: 1fr; gap: 6px; padding: 18px 0; }
