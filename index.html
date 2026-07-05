@@ -835,9 +835,7 @@ img { height: auto; display: block; }
   padding: 4px 0; color: var(--ink); appearance: none;
 }
 .filter-group select:focus, .filter-group input:focus { outline: none; border-bottom-color: var(--accent); }
-input[type="range"] { -webkit-appearance: none; appearance: none; height: 2px; background: var(--rule-strong); outline: none; cursor: pointer; border: 0; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); cursor: pointer; }
-input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--ink); cursor: pointer; border: none; }
+input[type="range"] { accent-color: var(--ink); }
 
 .view-switch {
   display: inline-flex; border: 1px solid var(--ink);
