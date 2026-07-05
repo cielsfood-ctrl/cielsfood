@@ -198,7 +198,7 @@ function ReviewsPage({ navigate }) {
                 <td style={{ fontStyle: "italic" }}>{r.cuisine}</td>
                 <td>{r.location}</td>
                 <td><Score value={r.tastiness} /></td>
-                <td className="eyebrow">{window.formatDate(r.latestDate)}</td>
+                <td>{window.formatDate(r.latestDate)}</td>
                 <td>{r.michelin}</td>
               </tr>
           )}
