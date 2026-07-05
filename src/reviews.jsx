@@ -69,15 +69,15 @@ function ReviewsPage({ navigate }) {
           <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>Restaurants</h1>
           <p className="kicker"></p>
         </div>
-        <div className="view-controls">
-          <div className="view-switch" role="tablist">
-            <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
-            <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
-          </div>
-          <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
-        </div>
       </section>
-      <hr className="rule" style={{ margin: "0 0 16px", maxWidth: "100%" }} />
+      <hr className="rule" style={{ margin: "0 0 0", maxWidth: "100%" }} />
+      <div className="view-controls">
+        <div className="view-switch" role="tablist">
+          <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
+          <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+        </div>
+        <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
+      </div>
 
       {/* Mobile: filter bottom sheet */}
       {filtersOpen && (
