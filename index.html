@@ -815,9 +815,14 @@ img { height: auto; display: block; }
 .reviews-head {
   display: grid; grid-template-columns: 1fr auto; gap: 24px;
   align-items: end;
-  padding: 56px 0 24px;
+  padding: 56px 0 0;
 }
 .reviews-hr { display: none; }
+/* Empty placeholder elements inflate the grid row — suppress them */
+.reviews-head span.eyebrow:empty,
+.reviews-head p.kicker:empty { display: none; }
+/* Match h1 bottom margin to About/Categories (inline style override) */
+.reviews-head h1.h-display { margin-bottom: 20px !important; }
 .filters {
   display: flex; flex-wrap: wrap; gap: 18px 28px;
   padding: 16px 0;
