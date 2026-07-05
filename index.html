@@ -835,6 +835,9 @@ img { height: auto; display: block; }
   padding: 4px 0; color: var(--ink); appearance: none;
 }
 .filter-group select:focus, .filter-group input:focus { outline: none; border-bottom-color: var(--accent); }
+input[type="range"] { -webkit-appearance: none; appearance: none; height: 2px; background: var(--rule-strong); outline: none; cursor: pointer; border: 0; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); cursor: pointer; }
+input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--ink); cursor: pointer; border: none; }
 
 .view-switch {
   display: inline-flex; border: 1px solid var(--ink);
@@ -1371,6 +1374,7 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   }
   table.reviews-table td:first-child {
     font-size: 0.85rem; line-height: 1.2;
+    width: 120px; max-width: 120px; white-space: normal; word-break: break-word;
   }
   table.reviews-table td:not(:first-child) { font-size: 12px; }
   table.reviews-table tr.row:hover td:first-child { background: var(--paper-2); }
@@ -1406,6 +1410,9 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
     display: flex; flex-direction: column; gap: 20px;
   }
   .filter-sheet-body .filter-group { min-width: unset !important; width: 100%; align-self: auto !important; }
+  .filter-sheet-body .filter-group select,
+  .filter-sheet-body .filter-group input { width: 100%; box-sizing: border-box; }
+  .filter-sheet-body .btn--ghost { width: 100%; text-align: center; }
 }
 /* ---------- Phone breakpoint (≤560px) ---------- */
 @media (max-width: 560px) {
