@@ -24,7 +24,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           <span>{"\n"}</span>
           <span>{"\n"}</span>
         </div>
-        <h1 className="h-display" style={{ maxWidth: "16ch" }}>{rest.name}</h1>
+        <h1 className="h-display">{rest.name}</h1>
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 24, alignItems: "end", marginTop: 18 }}>
           <p className="kicker" style={{ margin: 0 }}>{rest.address}</p>
           {rest.website && rest.website !== "#" &&
