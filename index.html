@@ -1367,16 +1367,17 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
     position: sticky; left: 0; z-index: 2;
     background: var(--paper);
     border-right: 1px solid var(--rule);
-    box-shadow: 4px 0 6px rgba(0,0,0,0.04);
+    box-shadow: 4px 0 8px rgba(0,0,0,0.06);
   }
   table.reviews-table td:first-child {
     font-size: 0.85rem; line-height: 1.2;
   }
+  table.reviews-table td:not(:first-child) { font-size: 12px; }
   table.reviews-table tr.row:hover td:first-child { background: var(--paper-2); }
 
   /* Filter bottom sheet */
   .filter-sheet-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.42); z-index: 200;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.42); z-index: 9999;
     touch-action: none;
   }
   .filter-sheet {
