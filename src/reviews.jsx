@@ -69,15 +69,15 @@ function ReviewsPage({ navigate }) {
           <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>Restaurants</h1>
           <p className="kicker"></p>
         </div>
-      </section>
-      <hr className="rule" style={{ margin: "0 0 0", maxWidth: "100%" }} />
-      <div className="view-controls">
-        <div className="view-switch" role="tablist">
-          <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
-          <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+        <hr className="reviews-hr rule" />
+        <div className="view-controls">
+          <div className="view-switch" role="tablist">
+            <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
+            <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+          </div>
+          <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
         </div>
-        <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
-      </div>
+      </section>
 
       {/* Mobile: filter bottom sheet */}
       {filtersOpen && (
@@ -131,7 +131,7 @@ function ReviewsPage({ navigate }) {
       )}
 
       <section className="filters">
-        <div className="filter-group" style={{ minWidth: 200 }}>
+        <div className="filter-group">
           <label>Search</label>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, city…" />
         </div>
@@ -157,17 +157,15 @@ function ReviewsPage({ navigate }) {
           <label>Min. Tastiness · {minTasti}</label>
           <input type="range" min="0" max="10" step="1" value={minTasti} onChange={(e) => setMinTasti(+e.target.value)} />
         </div>
-        <div className="filter-group" style={{ minWidth: 220 }}>
+        <div className="filter-group">
           <label>Sort by</label>
           <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
             {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
-        <div className="filter-group" style={{ minWidth: 140, alignSelf: "end" }}>
-          <button className="btn--ghost btn" onClick={() => {
-            setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
-          }}>Reset filters</button>
-        </div>
+        <button className="btn btn--text" style={{ alignSelf: "end", paddingBottom: "6px", fontSize: "13px" }} onClick={() => {
+          setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+        }}>Reset filters</button>
       </section>
 
       <div style={{ padding: "14px 0", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
