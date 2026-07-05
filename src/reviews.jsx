@@ -9,6 +9,7 @@ function ReviewsPage({ navigate }) {
   const [search, setSearch] = useState("");
   const [sortMode, setSortMode] = useState("date-desc");
   const [page, setPage] = useState(1);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const PER_PAGE = 10;
 
   const SORT_OPTIONS = [
@@ -73,6 +74,62 @@ function ReviewsPage({ navigate }) {
           <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
         </div>
       </section>
+
+      {/* Mobile: sticky filter trigger */}
+      <div className="mob-filter-bar">
+        <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
+      </div>
+
+      {/* Mobile: filter bottom sheet */}
+      {filtersOpen && (
+        <div className="filter-sheet-overlay" onClick={() => setFiltersOpen(false)}>
+          <div className="filter-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="filter-sheet-head">
+              <span>Filters</span>
+              <button className="filter-sheet-close" onClick={() => setFiltersOpen(false)}>✕</button>
+            </div>
+            <div className="filter-sheet-body">
+              <div className="filter-group">
+                <label>Search</label>
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, city…" />
+              </div>
+              <div className="filter-group">
+                <label>Cuisine</label>
+                <select value={cuisine} onChange={(e) => setCuisine(e.target.value)}>
+                  {cuisineOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>Location</label>
+                <select value={city} onChange={(e) => setCity(e.target.value)}>
+                  {cityOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>Michelin</label>
+                <select value={michelin} onChange={(e) => setMichelin(e.target.value)}>
+                  {michOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>Min. Tastiness · {minTasti}</label>
+                <input type="range" min="0" max="10" step="1" value={minTasti} onChange={(e) => setMinTasti(+e.target.value)} />
+              </div>
+              <div className="filter-group">
+                <label>Sort by</label>
+                <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
+                  {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <button className="btn--ghost btn" onClick={() => {
+                  setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+                }}>Reset filters</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="filters">
         <div className="filter-group" style={{ minWidth: 200 }}>
