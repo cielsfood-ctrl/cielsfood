@@ -863,7 +863,7 @@ input[type="range"] { accent-color: var(--ink); }
 }
 .filter-reset:hover { color: var(--accent); border-color: var(--accent); }
 
-table.reviews-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+table.reviews-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 4px; }
 .reviews-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 table.reviews-table th, table.reviews-table td {
   text-align: left; padding: 18px 14px; border-bottom: 1px solid var(--rule);
@@ -875,7 +875,7 @@ table.reviews-table th {
   user-select: none;
 }
 table.reviews-table th .arrow { display: inline-block; width: 12px; color: var(--accent); }
-table.reviews-table td { font-size: 18px; }
+table.reviews-table td { font-family: var(--serif); font-size: 18px; }
 table.reviews-table td.name { font-size: 22px; }
 table.reviews-table tr.row { cursor: pointer; transition: background 150ms ease; }
 table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
@@ -1344,7 +1344,7 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   .reviews-head { display: block; }
   .reviews-hr { display: block; }
   .view-controls { padding: 10px 0 16px; }
-  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 calc(-1 * var(--pad-x)); padding: 0 var(--pad-x); width: calc(100% + 2 * var(--pad-x)); box-sizing: border-box; }
+  .reviews-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-left: calc(-1 * var(--pad-x)); margin-right: calc(-1 * var(--pad-x)); padding-left: 0; padding-right: var(--pad-x); width: calc(100% + 2 * var(--pad-x)); box-sizing: border-box; }
   table.reviews-table { min-width: 540px; }
   .map-wrap { height: clamp(420px, 60vh, 600px); }
   /* Recent list: collapse to single column at tablet */
