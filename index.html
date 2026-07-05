@@ -825,12 +825,14 @@ img { height: auto; display: block; }
 .reviews-head h1.h-display { margin-bottom: 20px !important; }
 .filters {
   display: flex; flex-wrap: wrap; gap: 18px 28px;
-  padding: 16px 0;
+  padding: 16px var(--pad-x);
+  margin: 0 calc(-1 * var(--pad-x));
+  background: #F4F2EC;
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--rule);
 }
 .mob-filter-bar { display: none; }
-.view-controls { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
+.view-controls { display: flex; align-items: center; gap: 12px; justify-content: flex-end; padding-bottom: 16px; }
 .mob-filter-btn { display: none; }
 .filter-group { display: flex; flex-direction: column; gap: 6px; min-width: 130px; max-width: 180px; }
 .filter-group label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
