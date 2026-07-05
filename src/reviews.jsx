@@ -163,7 +163,7 @@ function ReviewsPage({ navigate }) {
             {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
-        <button className="btn--text" style={{ alignSelf: "end", paddingBottom: "6px", fontSize: "13px" }} onClick={() => {
+        <button className="filter-reset" onClick={() => {
           setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
         }}>Reset filters</button>
       </section>

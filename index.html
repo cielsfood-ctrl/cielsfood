@@ -854,6 +854,14 @@ input[type="range"] { accent-color: var(--ink); }
 }
 .view-switch button:last-child { border-right: 0; }
 .view-switch button.active { background: var(--ink); color: var(--paper); }
+.filter-reset {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; padding: 8px 16px;
+  color: var(--ink); background: transparent;
+  border: 1px solid var(--ink); cursor: pointer;
+  align-self: end; white-space: nowrap;
+}
+.filter-reset:hover { color: var(--accent); border-color: var(--accent); }
 
 table.reviews-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
 .reviews-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
