@@ -177,24 +177,28 @@ for page in restaurants_data['results']:
     lat        = place.get('lat')
     lng        = place.get('lon')
     url        = (props.get('URL', {}) or {}).get('url') or ''
+    phone      = (props.get('Phone', {}) or {}).get('phone_number') or ''
     michelin   = ((props.get('Michelin', {}).get('select')) or {}).get('name', 'None')
     is_new     = name.lower() not in existing_name_to_id
 
     if is_new:
         max_rest_num += 1
         rest_id = f'r{max_rest_num}'
-        lat_s   = str(lat) if lat is not None else 'null'
-        lng_s   = str(lng) if lng is not None else 'null'
+        lat_s       = str(lat) if lat is not None else 'null'
+        lng_s       = str(lng) if lng is not None else 'null'
+        phone_field = f', phone: "{js_str(phone)}"' if phone else ''
         new_rest_entries.append(
             f'  {{ id: "{rest_id}", name: "{js_str(name)}", cuisine: "{cuisine}", '
             f'location: "{location}", address: "{js_str(address)}", '
-            f'website: "{url}", michelin: "{michelin}", '
+            f'website: "{url}"{phone_field}, michelin: "{michelin}", '
             f'value: 4, mapX: 0.50, mapY: 0.40, lat: {lat_s}, lng: {lng_s} }}'
         )
         existing_name_to_id[name.lower()] = rest_id
         summary.append(f'\n  [NEW] {name} ({rest_id})')
         summary.append(f'        {cuisine} · {location} · Michelin: {michelin}')
         summary.append(f'        {address}')
+        if phone:
+            summary.append(f'        Phone: {phone}')
     else:
         rest_id = existing_name_to_id[name.lower()]
         summary.append(f'\n  [SKIP] {name} ({rest_id}) — already in data.js; skipping')
