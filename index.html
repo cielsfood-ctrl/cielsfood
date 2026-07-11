@@ -983,6 +983,10 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   text-transform: uppercase; color: var(--muted);
   margin-bottom: 18px;
 }
+.detail-action-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; margin-top: 18px;
+}
+.detail-action-btns { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
 .detail-grid {
   display: grid; grid-template-columns: 2fr 1fr; gap: 56px;
   padding: 40px 0 80px;
@@ -1251,6 +1255,9 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .detail-head { padding: 32px 0 18px; }
   .detail-meta { gap: 14px; font-size: 10px; }
   .detail-grid { padding: 28px 0 56px; gap: 28px; }
+  .detail-action-row { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .detail-action-btns { gap: 10px; }
+  .detail-action-btns .btn { padding: 8px 14px; font-size: 12px; }
   .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 110px) 1fr; gap: 12px; padding: 12px 0; }
   .detail-side .info-table .row .v { font-size: 16px; }
   .score-line { grid-template-columns: 110px 1fr 50px; gap: 12px; }

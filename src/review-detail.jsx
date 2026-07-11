@@ -25,14 +25,14 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           <span>{"\n"}</span>
         </div>
         <h1 className="h-display">{rest.name}</h1>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 24, alignItems: "end", marginTop: 18 }}>
+        <div className="detail-action-row">
           <a className="kicker"
              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(rest.address || rest.location)}`}
              target="_blank" rel="noreferrer"
              style={{ margin: 0, color: "inherit", textDecoration: "none" }}>
             {rest.address}
           </a>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
+          <div className="detail-action-btns">
             {rest.phone &&
               <a className="btn btn--accent" href={`tel:${rest.phone}`} style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.59a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
