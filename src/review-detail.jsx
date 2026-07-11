@@ -27,9 +27,9 @@ function ReviewDetailPage({ restaurantId, navigate }) {
         <h1 className="h-display">{rest.name}</h1>
         <div className="detail-action-row">
           <a className="kicker"
-             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(rest.address || rest.location)}`}
+             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${rest.name} ${rest.address || rest.location}`)}`}
              target="_blank" rel="noreferrer"
-             style={{ margin: 0, color: "inherit", textDecoration: "none" }}>
+             style={{ margin: 0, color: "inherit" }}>
             {rest.address}
           </a>
           <div className="detail-action-btns">
