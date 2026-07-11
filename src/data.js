@@ -23,7 +23,7 @@ const RESTAURANTS = [
   { id: "r19", name: "Bratislavský Meštiansky Pivovar", cuisine: "Slovak", location: "Bratislava", address: "Dunajská 2294/21, 811 08 Bratislava, Slovakia", website: "https://mestianskypivovar.sk/", michelin: "None", value: 4, mapX: 0.60, mapY: 0.38, lat: 48.14587, lng: 17.11792 },
   { id: "r20", name: "East West Shoreditch", cuisine: "European", location: "London", address: "42-44 Kingsland Road, London, E2 8DA, United Kingdom", website: "https://www.eastwestlondon.com/", michelin: "None", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.52824, lng: -0.07793 },
   { id: "r21", name: "Dim Sum Duck", cuisine: "Cantonese", location: "London", address: "124 King's Cross Road, London, WC1X 9DS, United Kingdom", website: "https://dim-sum-duck.menueat.net/", michelin: "Guide", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.53022, lng: -0.11645 },
-  { id: "r22", name: "Ye Ye Noodle & Dumpling (Liverpool St.)", cuisine: "Chinese", location: "London", address: "14 Artillery Passage, London, E1 7LJ, United Kingdom", website: "https://www.yeyelondon.co.uk/", michelin: "None", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.5182, lng: -0.0776 }
+  { id: "r22", name: "Ye Ye Noodle & Dumpling (Liverpool St.)", cuisine: "Chinese", location: "London", address: "14 Artillery Passage, London, E1 7LJ, United Kingdom", website: "https://www.yeyelondon.co.uk/", phone: "+44 020 7247 9747", michelin: "None", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.5182, lng: -0.0776 }
 ];
 
 // Photo placeholder helper — striped SVG with caption.
