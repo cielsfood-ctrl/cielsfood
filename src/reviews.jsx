@@ -90,7 +90,7 @@ function ReviewsPage({ navigate }) {
             <div className="filter-sheet-body">
               <div className="filter-group">
                 <label>Search</label>
-                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, city…" />
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, location…" />
               </div>
               <div className="filter-group">
                 <label>Cuisine</label>
@@ -133,7 +133,7 @@ function ReviewsPage({ navigate }) {
       <section className="filters">
         <div className="filter-group">
           <label>Search</label>
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, city…" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, location…" />
         </div>
         <div className="filter-group">
           <label>Cuisine</label>
