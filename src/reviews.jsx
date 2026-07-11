@@ -153,7 +153,7 @@ function ReviewsPage({ navigate }) {
             {michOpts.map((o) => <option key={o}>{o}</option>)}
           </select>
         </div>
-        <div className="filter-group">
+        <div className="filter-group filter-group--tastiness">
           <label>Min. Tastiness · {minTasti}</label>
           <input type="range" min="0" max="10" step="1" value={minTasti} onChange={(e) => setMinTasti(+e.target.value)} />
         </div>
