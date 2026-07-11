@@ -96,7 +96,7 @@ function Footer() {
   return (
     <footer className="foot-wrap">
       <div className="foot shell">
-        <span>© CIELSFOOD</span>
+        <span>© 2026 CieL's Food Guide. Words & Photography by Cherrie Leung.</span>
         <span>instagram.com/cielsfood</span>
       </div>
     </footer>);

@@ -9,6 +9,7 @@ function ReviewsPage({ navigate }) {
   const [search, setSearch] = useState("");
   const [sortMode, setSortMode] = useState("date-desc");
   const [page, setPage] = useState(1);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const PER_PAGE = 10;
 
   const SORT_OPTIONS = [
@@ -68,16 +69,71 @@ function ReviewsPage({ navigate }) {
           <h1 className="h-display" style={{ margin: "10px 0 8px", fontSize: "70px" }}>Restaurants</h1>
           <p className="kicker"></p>
         </div>
-        <div className="view-switch" role="tablist">
-          <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
-          <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+        <hr className="reviews-hr rule" />
+        <div className="view-controls">
+          <div className="view-switch" role="tablist">
+            <button className={view === "list" ? "active" : ""} onClick={() => setView("list")}>List</button>
+            <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}>Map</button>
+          </div>
+          <button className="mob-filter-btn" onClick={() => setFiltersOpen(true)}>Filters</button>
         </div>
       </section>
 
+      {/* Mobile: filter bottom sheet */}
+      {filtersOpen && (
+        <div className="filter-sheet-overlay" onClick={() => setFiltersOpen(false)}>
+          <div className="filter-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="filter-sheet-head">
+              <span>Filters</span>
+              <button className="filter-sheet-close" onClick={() => setFiltersOpen(false)}>✕</button>
+            </div>
+            <div className="filter-sheet-body">
+              <div className="filter-group">
+                <label>Search</label>
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, location…" />
+              </div>
+              <div className="filter-group">
+                <label>Cuisine</label>
+                <select value={cuisine} onChange={(e) => setCuisine(e.target.value)}>
+                  {cuisineOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>Location</label>
+                <select value={city} onChange={(e) => setCity(e.target.value)}>
+                  {cityOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>Michelin</label>
+                <select value={michelin} onChange={(e) => setMichelin(e.target.value)}>
+                  {michOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <label>Min. Tastiness · {minTasti}</label>
+                <input type="range" min="0" max="10" step="1" value={minTasti} onChange={(e) => setMinTasti(+e.target.value)} />
+              </div>
+              <div className="filter-group">
+                <label>Sort by</label>
+                <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
+                  {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
+                <button className="btn--ghost btn" onClick={() => {
+                  setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+                }}>Reset filters</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <section className="filters">
-        <div className="filter-group" style={{ minWidth: 200 }}>
+        <div className="filter-group">
           <label>Search</label>
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, city…" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Restaurant, cuisine, location…" />
         </div>
         <div className="filter-group">
           <label>Cuisine</label>
@@ -97,21 +153,19 @@ function ReviewsPage({ navigate }) {
             {michOpts.map((o) => <option key={o}>{o}</option>)}
           </select>
         </div>
-        <div className="filter-group">
+        <div className="filter-group filter-group--tastiness">
           <label>Min. Tastiness · {minTasti}</label>
           <input type="range" min="0" max="10" step="1" value={minTasti} onChange={(e) => setMinTasti(+e.target.value)} />
         </div>
-        <div className="filter-group" style={{ minWidth: 220 }}>
+        <div className="filter-group">
           <label>Sort by</label>
           <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
             {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
-        <div className="filter-group" style={{ minWidth: 140, alignSelf: "end" }}>
-          <button className="btn--ghost btn" onClick={() => {
-            setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
-          }}>Reset filters</button>
-        </div>
+        <button className="filter-reset" onClick={() => {
+          setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+        }}>Reset filters</button>
       </section>
 
       <div style={{ padding: "14px 0", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
@@ -144,7 +198,7 @@ function ReviewsPage({ navigate }) {
                 <td style={{ fontStyle: "italic" }}>{r.cuisine}</td>
                 <td>{r.location}</td>
                 <td><Score value={r.tastiness} /></td>
-                <td className="eyebrow" style={{ fontSize: 13 }}>{window.formatDate(r.latestDate)}</td>
+                <td>{window.formatDate(r.latestDate)}</td>
                 <td>{r.michelin}</td>
               </tr>
           )}
@@ -160,13 +214,12 @@ function ReviewsPage({ navigate }) {
       <MapView rows={rows} navigate={navigate} />
       }
 
-      <Footer />
     </main>);
 
 }
 
 function MapView({ rows, navigate }) {
-  const [active, setActive] = useState(rows[0]?.id || null);
+  const [active, setActive] = useState("r21");
   const sel = rows.find((r) => r.id === active);
   const containerRef = useRef(null);
   const mapRef = useRef(null);

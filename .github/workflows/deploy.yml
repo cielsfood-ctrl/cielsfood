@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel any in-progress deployment when a new push arrives.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      # Remove any leftover cielsfood-pages artifacts from prior runs or
+      # re-run attempts. Without this, a re-run produces two identically-
+      # named artifacts for the same run ID and deploy-pages refuses to pick.
+      - name: Delete stale pages artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100,
+            });
+            for (const artifact of data.artifacts) {
+              if (artifact.name.startsWith('cielsfood-pages')) {
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id,
+                });
+              }
+            }
+
+      # run_id + run_attempt ensures every attempt (including re-runs) gets
+      # a unique artifact name, preventing the "Artifact count is 2" error.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+          name: cielsfood-pages-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        with:
+          artifact_name: cielsfood-pages-${{ github.run_id }}-${{ github.run_attempt }}

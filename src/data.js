@@ -156,7 +156,7 @@ const REVIEWS = [
 ];
 
 // Personal favourite — featured on the home page.
-const FAVORITE_ID = "r12"; // BELLY
+const FAVORITE_ID = "r21"; // Dim Sum Duck
 
 // Helpers
 function reviewsFor(restaurantId) {

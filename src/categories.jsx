@@ -31,7 +31,6 @@ function CategoriesPage() {
   return (
     <main className="shell">
       <section className="cat-page-head">
-        <span className="eyebrow"></span>
         <h1 className="h-display" style={{ margin: "10px 0 20px", fontSize: "70px" }}>Categories</h1>
         <hr className="rule" style={{ margin: "0 0 22px", border: 0, borderTop: "1px solid var(--ink)", maxWidth: "100%" }} />
         <p className="lede" style={{ fontStyle: "normal", color: "var(--ink-2)", maxWidth: "100%", fontSize: "18px", lineHeight: 1.65 }}>
@@ -86,7 +85,6 @@ function CategoriesPage() {
         </article>
       </section>
 
-      <Footer />
     </main>);
 
 }

@@ -19,11 +19,10 @@ function AboutPage({ navigate }) {
             Join me on{" "}
             <a className="link" href="https://www.instagram.com/cielsfood/" target="_blank" rel="noreferrer">
               @cielsfood
-            </a>{" "}for more concise and frequent reviews. If you have any recommendations or thoughts about this guide, I'd love to hear from you directly through email.
+            </a>{" "}for more concise and frequent reviews. If you have any recommendations or thoughts about this guide, I'd love to hear from you directly through <a className="link" href="mailto:cielsfood@gmail.com">email</a>.
           </p>
         </div>
       </section>
-      <Footer />
     </main>);
 
 }
