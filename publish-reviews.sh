@@ -324,11 +324,13 @@ else
   NREST_NEW=$(python3 -c "print(sum(1 for l in open('$TMP_REST_IDS') if l.strip()))")
   NREV_NEW=$(python3  -c "print(sum(1 for l in open('$TMP_REV_IDS')  if l.strip()))")
 
+  echo "  Pulling latest remote changes before commit..."
+  git stash
+  git pull --rebase origin main
+  git stash pop
+
   git add src/data.js
   git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion"
-
-  echo "  Pulling latest remote changes before push..."
-  git pull --rebase origin main
 
   git push origin main
   echo "  Pushed to main."
