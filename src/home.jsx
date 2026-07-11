@@ -41,7 +41,7 @@ function HomePage({ navigate }) {
       </div>
 
       {/* Latest + Favourite */}
-      <div className="section-head">
+      <div className="section-head section-head--after-hero">
         <div className="title">
           <span className="numeral"></span>
           <h2 className="h-section"></h2>
