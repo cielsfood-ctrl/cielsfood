@@ -104,7 +104,6 @@ function ReviewDetailPage({ restaurantId, navigate }) {
         </aside>
       </section>
 
-      <Footer />
     </main>);
 
 }

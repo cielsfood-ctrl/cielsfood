@@ -214,7 +214,6 @@ function ReviewsPage({ navigate }) {
       <MapView rows={rows} navigate={navigate} />
       }
 
-      <Footer />
     </main>);
 
 }

@@ -85,7 +85,6 @@ function CategoriesPage() {
         </article>
       </section>
 
-      <Footer />
     </main>);
 
 }

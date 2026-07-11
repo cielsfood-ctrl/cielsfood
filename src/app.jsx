@@ -55,6 +55,7 @@ function App() {
     <>
       <Nav page={navPage} navigate={navigate}/>
       {body}
+      <Footer />
 
       <TweaksPanel>
         <TweakSection label="Accent colour"/>

@@ -135,8 +135,6 @@ function HomePage({ navigate }) {
         </button>
       </div>
       <RecentList navigate={navigate} />
-
-      <Footer />
     </main>);
 
 }

@@ -23,7 +23,6 @@ function AboutPage({ navigate }) {
           </p>
         </div>
       </section>
-      <Footer />
     </main>);
 
 }
