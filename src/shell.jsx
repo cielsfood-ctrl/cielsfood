@@ -97,7 +97,23 @@ function Footer() {
     <footer className="foot-wrap">
       <div className="foot shell">
         <span>© cielsfood.com | Words, Photography and Website Development by Cherrie Leung</span>
-        <span>instagram.com/cielsfood</span>
+        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <a href="mailto:cielsfood@gmail.com" aria-label="Email" style={{ color: "inherit", display: "flex" }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512" fill="none" stroke="currentColor" strokeWidth="28">
+              <circle cx="256" cy="256" r="236" />
+              <rect x="112" y="160" width="288" height="196" rx="8" />
+              <polyline points="112,160 256,284 400,160" />
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/cielsfood" target="_blank" rel="noreferrer" aria-label="Instagram" style={{ color: "inherit", display: "flex" }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512" fill="none" stroke="currentColor" strokeWidth="28">
+              <circle cx="256" cy="256" r="236" />
+              <rect x="148" y="148" width="216" height="216" rx="54" />
+              <circle cx="256" cy="256" r="62" />
+              <circle cx="340" cy="172" r="14" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </div>
       </div>
     </footer>);
 }
