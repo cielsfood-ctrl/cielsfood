@@ -22,7 +22,8 @@ const RESTAURANTS = [
   { id: "r18", name: "Bridge Arms", cuisine: "Modern British", location: "Canterbury", address: "53 High Street, Canterbury, CT4 5LA, United Kingdom", website: "https://www.bridgearms.co.uk/", michelin: "1★", value: 4, mapX: 0.34, mapY: 0.34, lat: 51.24617, lng: 1.12558 },
   { id: "r19", name: "Bratislavský Meštiansky Pivovar", cuisine: "Slovak", location: "Bratislava", address: "Dunajská 2294/21, 811 08 Bratislava, Slovakia", website: "https://mestianskypivovar.sk/", michelin: "None", value: 4, mapX: 0.60, mapY: 0.38, lat: 48.14587, lng: 17.11792 },
   { id: "r20", name: "East West Shoreditch", cuisine: "European", location: "London", address: "42-44 Kingsland Road, London, E2 8DA, United Kingdom", website: "https://www.eastwestlondon.com/", michelin: "None", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.52824, lng: -0.07793 },
-  { id: "r21", name: "Dim Sum Duck", cuisine: "Cantonese", location: "London", address: "124 King's Cross Road, London, WC1X 9DS, United Kingdom", website: "https://dim-sum-duck.menueat.net/", michelin: "Guide", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.53022, lng: -0.11645 }
+  { id: "r21", name: "Dim Sum Duck", cuisine: "Cantonese", location: "London", address: "124 King's Cross Road, London, WC1X 9DS, United Kingdom", website: "https://dim-sum-duck.menueat.net/", michelin: "Guide", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.53022, lng: -0.11645 },
+  { id: "r22", name: "Ye Ye Noodle & Dumpling (Liverpool St.)", cuisine: "Chinese", location: "London", address: "14 Artillery Passage, London, E1 7LJ, United Kingdom", website: "https://www.yeyelondon.co.uk/", michelin: "None", value: 4, mapX: 0.50, mapY: 0.40, lat: 51.5182, lng: -0.0776 }
 ];
 
 // Photo placeholder helper — striped SVG with caption.
@@ -141,6 +142,15 @@ const REVIEWS = [
       { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1782076439/49D1CB4A-A054-49F1-BA65-2554A443DF08_1_105_c_hsr08k.jpg", caption: "Half BBQ Roast Duck (£19.8)" },
       { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1782318446/C3BCE270-68ED-4CAB-A3B3-E156EF1BE5AD_1_105_c_yqhbr1.jpg", caption: "Stir Fried Beef Ho Fun (£12.8)" },
       { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1782318574/1674F03D-5DB0-4D8C-A0FD-8E6155CE6ABA_1_201_a_u6wnkt.jpg", caption: "Steamed Razor Clams with Garlic and Vermicelli (£14.8)" }
+    ]
+  },
+
+  // r22 Ye Ye Noodle & Dumpling (Liverpool St.)
+  { id: "rv22a", restaurantId: "r22", date: "2026-07-10", tastiness: 6.5, specialness: 5, service: 5, environment: 5, value: 3,
+    body: "Ye Ye Noodle & Dumpling is a noodle bar located near Liverpool Street, in the very popular Artillery Passage. The restaurant is famous for its Grilled Pork Dumplings (Shaang Zin baau/ Sheng Jian Bao/ 生煎包) that are only available in-house, and there will always be a queue. The restaurant has an open kitchen setting and is a two-storey building with approximately 20-30 seats. The menu covers a focused selection of noodles, dumplings, and small bites.\n\nWe ordered the Grilled Juicy Pork Dumplings (6.5/10) and the Spicy Beef Soup Noodles (6/10). Both dishes came within minutes. The dumplings arrived lukewarm rather than blisteringly hot, unlike previous visits. The fundamentals were excellent. The dough had the perfect thickness, the pork filling was tender, and the savoury broth was rich. But the bottom crust was soft rather than crispy, having clearly sat a little too long on the pass. The flavour is no doubt still top tier in London; it's a shame the temperature let it down.\n\nThe Spicy Beef Soup Noodles were a mixed bag. The portion had reduced compared to previous visits, and the broth lacked depth - the spiciness was more prominent than anything else, without much to back it up. The lettuce was fresh and the beef was flavourful, though inconsistent in texture, ranging from tender to tough within the same bowl. The noodles were overcooked and lacked chew.\n\nService was quick and staff were polite. Water and chilli oil were both self-served. Ye Ye is still worth visiting when you're craving Chinese noodles and dumplings, but there seemed to be a noticeable decline in quality compared to past visits. For a restaurant where the queue is part of the experience, consistency matters.",
+    photos: [
+      { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1783770282/F9F83E69-C61A-49B6-AFFF-AFDAFF66D20F_1_105_c_bnsw2d.jpg", caption: "Grilled Juicy Pork Dumplings - 8pcs (£14.8)" },
+      { src: "https://res.cloudinary.com/ddpzamkoa/image/upload/v1783770292/9AB4F115-C832-44F9-AAEF-E8755670AF5B_1_102_a_vrvbu2.jpg", caption: "Spicy Beef Soup Noodles (£14.8)" }
     ]
   }
 ];
