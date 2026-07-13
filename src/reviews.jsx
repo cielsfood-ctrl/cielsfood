@@ -300,7 +300,7 @@ function MapView({ rows, navigate }) {
           <h4>{sel.name}</h4>
           <div className="meta">{sel.cuisine}</div>
           <div className="row"><span>Tastiness</span><span><Score value={sel.tastiness} /></span></div>
-          <div className="row"><span>Value</span><span><PoundMark value={sel.value} /></span></div>
+          <div className="row"><span>Value for Money</span><span><PoundMark value={sel.value} /></span></div>
           <div className="row"><span>Latest</span><span>{window.formatDate(sel.latestDate)}</span></div>
           <div style={{ marginTop: 16 }}>
             <button className="btn" onClick={() => navigate("restaurant", { id: sel.id })}>Open review →</button>

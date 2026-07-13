@@ -13,7 +13,7 @@ function HomePage({ navigate }) {
   { id: "II", name: "Specialness", sub: "Other category", blurb: "Distinctiveness, creativity, memory." },
   { id: "III", name: "Service", sub: "Other category", blurb: "Hospitality, attentiveness, warmth." },
   { id: "IV", name: "Environment", sub: "Other category", blurb: "Ambience, comfort, atmosphere." },
-  { id: "V", name: "Value of Money", sub: "Other category", blurb: "Out of five £'s — does each penny feel well spent?" }];
+  { id: "V", name: "Value for Money", sub: "Other category", blurb: "Out of five £'s — does each penny feel well spent?" }];
 
 
   return (
@@ -68,7 +68,7 @@ function HomePage({ navigate }) {
             <div className="score-cell"><div className="score-label">Tastiness</div><div className="score-num">{latest.tastiness}<em>/10</em></div></div>
             <div className="score-cell"><div className="score-label">Specialness</div><div className="score-num">{latest.specialness}<em>/10</em></div></div>
             <div className="score-cell"><div className="score-label">Service</div><div className="score-num">{latest.service}<em>/10</em></div></div>
-            <div className="score-cell"><div className="score-label">Value</div><div className="score-num"><PoundMark value={latest.value} /></div></div>
+            <div className="score-cell"><div className="score-label">Value for Money</div><div className="score-num"><PoundMark value={latest.value} /></div></div>
           </div>
           <div style={{ marginTop: 24 }}>
             <button className="btn btn--text" onClick={() => navigate("restaurant", { id: latestRest.id })}>
@@ -91,7 +91,7 @@ function HomePage({ navigate }) {
           </p>
           <div className="scores" style={{ marginTop: 18, gridTemplateColumns: "repeat(2, 1fr)" }}>
             <div className="score-cell"><div className="score-label">Tastiness</div><div className="score-num">{favReview.tastiness}<em>/10</em></div></div>
-            <div className="score-cell"><div className="score-label">Value</div><div className="score-num"><PoundMark value={favReview.value} /></div></div>
+            <div className="score-cell"><div className="score-label">Value for Money</div><div className="score-num"><PoundMark value={favReview.value} /></div></div>
           </div>
           <div style={{ marginTop: 18 }}>
             <button className="btn btn--text" onClick={() => navigate("restaurant", { id: fav.id })}>WHY IT STAYS THE FAVOURITE →
