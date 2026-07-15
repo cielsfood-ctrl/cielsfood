@@ -471,6 +471,7 @@ img { height: auto; display: block; }
   margin: 0 auto;
   padding: 0 var(--pad-x);
 }
+main.shell { padding-top: 48px; }
 
 /* ---------- Nav (dark) ---------- */
 .nav {
@@ -1149,9 +1150,9 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   border-bottom: 1px solid var(--paper);
 }
 .band-dark--hero {
-  margin-top: 0;
+  margin-top: -48px;
   border-top: 0;
-  padding-top: 8px;
+  padding-top: 56px;
 }
 .band-dark .eyebrow,
 .band-dark .kicker,
@@ -1245,6 +1246,8 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .nav-burger { display: block; }
   .brand-logo { height: 44px; }
   .nav-top-bar { padding: 12px 0 10px; gap: 12px; }
+  main.shell { padding-top: 0; }
+  .band-dark--hero { margin-top: 0; padding-top: 8px; }
 }
 
 /* ---------- Tablet breakpoint (≤880px) ---------- */
