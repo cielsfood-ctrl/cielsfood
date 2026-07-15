@@ -505,15 +505,13 @@ img { height: auto; display: block; }
   position: relative;
 }
 .nav-link[aria-current="page"] { color: var(--paper); }
-.nav-link[aria-current="page"]::after {
-  content: ""; position: absolute; left: 18px; right: 18px; bottom: 2px; height: 1px; background: var(--paper);
-}
 .nav-link:hover { color: var(--paper); }
 
 .nav-bottom-bar {
   border-top: 1px solid rgba(250, 247, 240, 0.22);
   border-bottom: 1px solid rgba(250, 247, 240, 0.22);
   display: flex; align-items: center; justify-content: center;
+  padding: 4px 0;
 }
 
 /* Desktop nav search */
