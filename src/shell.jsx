@@ -10,8 +10,16 @@ function Brand({ onClick }) {
     </div>);
 }
 
-function Nav({ page, navigate }) {
+const SearchIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+);
+
+function Nav({ page, navigate, onNavSearch }) {
   const [open, setOpen] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
   const links = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
@@ -35,22 +43,29 @@ function Nav({ page, navigate }) {
 
   function go(id) { setOpen(false); navigate(id); }
 
+  function handleSearch() {
+    if (onNavSearch) onNavSearch(searchVal.trim());
+  }
+
   return (
     <React.Fragment>
       <nav className="nav">
         <div className="shell">
-          <div className="nav-row">
+          {/* Top bar: Brand + search (desktop) | Brand + burger (mobile) */}
+          <div className="nav-top-bar">
             <Brand onClick={() => go("home")} />
-            <div className="nav-links">
-              {links.map((l) =>
-                <button
-                  key={l.id}
-                  className="nav-link"
-                  aria-current={page === l.id ? "page" : undefined}
-                  onClick={() => go(l.id)}>
-                  {l.label}
-                </button>
-              )}
+            <div className="nav-search-wrap">
+              <input
+                type="text"
+                className="nav-search-input"
+                placeholder="Search"
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
+              />
+              <button className="nav-search-btn" onClick={handleSearch} aria-label="Search">
+                <SearchIcon />
+              </button>
             </div>
             <button
               className={"nav-burger" + (open ? " is-open" : "")}
@@ -62,9 +77,35 @@ function Nav({ page, navigate }) {
               <span></span>
             </button>
           </div>
-          <div className="nav-thin">
-            <span></span>
-            <span></span>
+
+          {/* Bottom bar: nav links with borders (desktop only) */}
+          <div className="nav-bottom-bar">
+            <div className="nav-links">
+              {links.map((l) =>
+                <button
+                  key={l.id}
+                  className="nav-link"
+                  aria-current={page === l.id ? "page" : undefined}
+                  onClick={() => go(l.id)}>
+                  {l.label}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile search bar */}
+          <div className="nav-search-mobile-bar">
+            <input
+              type="text"
+              className="nav-search-mobile-input"
+              placeholder="Search restaurants, cuisine, location…"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
+            />
+            <button className="nav-search-mobile-btn" onClick={handleSearch} aria-label="Search">
+              <SearchIcon />
+            </button>
           </div>
         </div>
       </nav>

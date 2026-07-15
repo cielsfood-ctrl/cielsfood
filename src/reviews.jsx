@@ -1,6 +1,6 @@
 // CIELSFOOD — Reviews page (List + Map view)
 
-function ReviewsPage({ navigate }) {
+function ReviewsPage({ navigate, navSearch, clearNavSearch }) {
   const [view, setView] = useState("list");
   const [cuisine, setCuisine] = useState("All");
   const [city, setCity] = useState("All");
@@ -30,14 +30,15 @@ function ReviewsPage({ navigate }) {
         tastiness: latest.tastiness,
         value: latest.value,
         latestDate: latest.date,
-        latestId: latest.id
+        latestId: latest.id,
+        latestBody: latest.body
       };
     }).
     filter((r) => cuisine === "All" || r.cuisine === cuisine).
     filter((r) => city === "All" || r.location === city).
     filter((r) => michelin === "All" || r.michelin === michelin).
     filter((r) => r.tastiness >= minTasti).
-    filter((r) => !search.trim() || (r.name + r.cuisine + r.location).toLowerCase().includes(search.toLowerCase())).
+    filter((r) => !search.trim() || (r.name + r.cuisine + r.location + (r.latestBody || "")).toLowerCase().includes(search.toLowerCase())).
     sort((a, b) => {
       const [key, dirRaw] = sortMode.split("-");
       const dir = dirRaw === "asc" ? 1 : -1;
@@ -48,6 +49,14 @@ function ReviewsPage({ navigate }) {
       return ((a[key] || "").toString().toLowerCase() < (b[key] || "").toString().toLowerCase() ? -1 : 1) * dir;
     });
   }, [cuisine, city, michelin, minTasti, search, sortMode]);
+
+  // Sync nav search into local state (one-shot)
+  useEffect(() => {
+    if (navSearch) {
+      setSearch(navSearch);
+      if (clearNavSearch) clearNavSearch();
+    }
+  }, [navSearch]);
 
   // Reset to page 1 whenever filters/sort change
   useEffect(() => { setPage(1); }, [cuisine, city, michelin, minTasti, search, sortMode, view]);

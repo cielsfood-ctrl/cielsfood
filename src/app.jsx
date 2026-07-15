@@ -23,6 +23,13 @@ function App() {
     window.scrollTo({ top: 0 });
   }
 
+  const [navSearch, setNavSearch] = useS("");
+
+  function handleNavSearch(term) {
+    setNavSearch(term);
+    navigate("restaurants");
+  }
+
   // ---------- Tweaks ----------
   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
     "accent": "ink",
@@ -46,14 +53,14 @@ function App() {
   if (pageId === "home")       body = <HomePage navigate={navigate}/>;
   else if (pageId === "about") body = <AboutPage navigate={navigate}/>;
   else if (pageId === "categories") body = <CategoriesPage/>;
-  else if (pageId === "restaurants")    body = <ReviewsPage navigate={navigate}/>;
+  else if (pageId === "restaurants")    body = <ReviewsPage navigate={navigate} navSearch={navSearch} clearNavSearch={() => setNavSearch("")}/>;
   else if (pageId === "restaurant")     body = <ReviewDetailPage restaurantId={route.id} navigate={navigate}/>;
 
   const navPage = pageId === "restaurant" ? "restaurants" : pageId;
 
   return (
     <>
-      <Nav page={navPage} navigate={navigate}/>
+      <Nav page={navPage} navigate={navigate} onNavSearch={handleNavSearch}/>
       {body}
       <Footer />
 
