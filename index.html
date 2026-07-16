@@ -471,13 +471,13 @@ img { height: auto; display: block; }
   margin: 0 auto;
   padding: 0 var(--pad-x);
 }
-main.shell { padding-top: 48px; }
 
 /* ---------- Nav (dark) ---------- */
 .nav {
   background: var(--ink);
   color: var(--paper);
   position: sticky; top: 0; z-index: 50;
+  padding-bottom: 20px;
 }
 .nav-top-bar {
   display: flex; align-items: center; justify-content: space-between;
@@ -1150,9 +1150,9 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   border-bottom: 1px solid var(--paper);
 }
 .band-dark--hero {
-  margin-top: -48px;
+  margin-top: 0;
   border-top: 0;
-  padding-top: 56px;
+  padding-top: 8px;
 }
 .band-dark .eyebrow,
 .band-dark .kicker,
@@ -1246,8 +1246,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .nav-burger { display: block; }
   .brand-logo { height: 44px; }
   .nav-top-bar { padding: 12px 0 10px; gap: 12px; }
-  main.shell { padding-top: 0; }
-  .band-dark--hero { margin-top: 0; padding-top: 8px; }
+  .nav { padding-bottom: 0; }
 }
 
 /* ---------- Tablet breakpoint (≤880px) ---------- */
