@@ -695,6 +695,22 @@ a.kicker:hover { text-decoration: underline; }
 .body p { font-size: 18px; line-height: 1.65; }
 .body p + p { margin-top: 0.9em; }
 
+/* Lightweight anti-copy deterrent: block selection of review body copy
+   (nav, buttons and other UI keep normal selection) and stop image drag-save */
+.body, .slider-cap {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
 .numeral {
   font-family: var(--serif);
   font-style: italic;
@@ -1610,5 +1626,18 @@ body { overflow-x: hidden; overflow-y: scroll; }
   <script type="text/babel" src="src/review-detail.jsx"></script>
   <script type="text/babel" src="src/app.jsx"></script>
 
+  <script>
+    /* Basic anti-copy deterrent (not DRM). Block right-click on images and
+       review body text, and prevent image drag-to-save. Links, buttons and
+       scrolling/tapping stay fully functional. */
+    (function () {
+      document.addEventListener("contextmenu", function (e) {
+        if (e.target.closest("img, .body, .slider-cap")) e.preventDefault();
+      });
+      document.addEventListener("dragstart", function (e) {
+        if (e.target.tagName === "IMG") e.preventDefault();
+      });
+    })();
+  </script>
 
 </body></html>
