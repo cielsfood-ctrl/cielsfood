@@ -51,9 +51,20 @@ function Nav({ page, navigate, onNavSearch }) {
     <React.Fragment>
       <nav className="nav">
         <div className="shell">
-          {/* Top bar: Brand + search (desktop) | Brand + burger (mobile) */}
+          {/* Single row: Brand (left) + nav links (centre) + search (right) */}
           <div className="nav-top-bar">
             <Brand onClick={() => go("home")} />
+            <div className="nav-links">
+              {links.map((l) =>
+                <button
+                  key={l.id}
+                  className="nav-link"
+                  aria-current={page === l.id ? "page" : undefined}
+                  onClick={() => go(l.id)}>
+                  {l.label}
+                </button>
+              )}
+            </div>
             <div className="nav-search-wrap">
               <input
                 type="text"
@@ -76,21 +87,6 @@ function Nav({ page, navigate, onNavSearch }) {
               <span></span>
               <span></span>
             </button>
-          </div>
-
-          {/* Bottom bar: nav links with borders (desktop only) */}
-          <div className="nav-bottom-bar">
-            <div className="nav-links">
-              {links.map((l) =>
-                <button
-                  key={l.id}
-                  className="nav-link"
-                  aria-current={page === l.id ? "page" : undefined}
-                  onClick={() => go(l.id)}>
-                  {l.label}
-                </button>
-              )}
-            </div>
           </div>
 
           {/* Mobile search bar */}
