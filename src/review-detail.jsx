@@ -79,7 +79,6 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           <div className="eyebrow" style={{ fontSize: "14px" }}>At a glance</div>
           <div className="info-table">
             <div className="row"><span className="k">Cuisine</span><span className="v">{rest.cuisine}</span></div>
-            <div className="row"><span className="k">Location</span><span className="v">{rest.location}</span></div>
             <div className="row"><span className="k">Michelin</span><span className="v">{rest.michelin}</span></div>
             <div className="row"><span className="k">Value for Money</span><span className="v"><PoundMark value={review.value} /></span></div>
             <div className="row"><span className="k">Tastiness</span><span className="v"><Score value={review.tastiness} /></span></div>
