@@ -77,9 +77,7 @@ function SearchResultsPage({ query, navigate }) {
         {total === 0 && (
           <p style={{ paddingTop: 32, color: "var(--muted)", fontStyle: "italic" }}>
             Try a different search term, or{" "}
-            <button className="link" style={{ font: "inherit", fontStyle: "italic" }} onClick={() => navigate("restaurants")}>
-              browse all restaurants
-            </button>.
+            <button className="text-link" style={{ fontStyle: "italic" }} onClick={() => navigate("restaurants")}>browse all restaurants</button>.
           </p>
         )}
       </section>
