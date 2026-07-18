@@ -48,7 +48,7 @@ function CategoriesPage() {
             <div>
               <h3>{c.name}</h3>
               <div className="meta">{c.kind}</div>
-              <p style={{ marginTop: 14, color: "var(--ink-2)", maxWidth: "40ch" }}>{c.desc}</p>
+              <p style={{ marginTop: 14, color: "var(--ink-2)", maxWidth: "100%" }}>{c.desc}</p>
             </div>
             <div className="scale">
               <div className="scale-row">
@@ -66,9 +66,9 @@ function CategoriesPage() {
         <article className="cat-row" style={{ borderTop: "1px solid var(--rule)" }}>
           <div className="numeral">V.</div>
           <div>
-            <h3>Value of Money</h3>
+            <h3>Value for Money</h3>
             <div className="meta">Out of five £'s</div>
-            <p style={{ marginTop: 14, color: "var(--ink-2)", maxWidth: "40ch" }}>
+            <p style={{ marginTop: 14, color: "var(--ink-2)", maxWidth: "100%" }}>
               How well the overall experience justifies the price, rated from one to five £'s.
             </p>
           </div>

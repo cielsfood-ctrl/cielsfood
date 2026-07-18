@@ -15,6 +15,47 @@ function ReviewDetailPage({ restaurantId, navigate }) {
   const [selectedId, setSelectedId] = useState(reviews[0].id);
   const review = reviews.find((r) => r.id === selectedId) || reviews[0];
 
+  // SEO: inject Restaurant / Review / AggregateRating JSON-LD for this page
+  useEffect(() => {
+    const avg = reviews.reduce((s, r) => s + r.tastiness, 0) / reviews.length;
+    const data = {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": rest.name,
+      "servesCuisine": rest.cuisine,
+      "address": rest.address,
+      "telephone": rest.phone || undefined,
+      "url": rest.website && rest.website !== "#" ? rest.website : undefined,
+      "image": reviews[0].photos && reviews[0].photos[0] ? reviews[0].photos[0].src : undefined,
+      "geo": (rest.lat != null && rest.lng != null) ? {
+        "@type": "GeoCoordinates", "latitude": rest.lat, "longitude": rest.lng
+      } : undefined,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": Math.round(avg * 10) / 10,
+        "bestRating": 10,
+        "worstRating": 1,
+        "reviewCount": reviews.length
+      },
+      "review": reviews.map((rv) => ({
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Cherrie Leung" },
+        "publisher": { "@type": "Organization", "name": "CieL's Food Guide", "url": "https://www.cielsfood.com" },
+        "datePublished": rv.date,
+        "reviewBody": rv.body,
+        "reviewRating": {
+          "@type": "Rating", "ratingValue": rv.tastiness, "bestRating": 10, "worstRating": 1
+        }
+      }))
+    };
+    const el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.id = "restaurant-jsonld";
+    el.textContent = JSON.stringify(data);
+    document.head.appendChild(el);
+    return () => { el.remove(); };
+  }, [rest.id]);
+
   return (
     <main className="shell">
       <section className="detail-head">
@@ -79,9 +120,8 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           <div className="eyebrow" style={{ fontSize: "14px" }}>At a glance</div>
           <div className="info-table">
             <div className="row"><span className="k">Cuisine</span><span className="v">{rest.cuisine}</span></div>
-            <div className="row"><span className="k">Location</span><span className="v">{rest.location}</span></div>
             <div className="row"><span className="k">Michelin</span><span className="v">{rest.michelin}</span></div>
-            <div className="row"><span className="k">Value</span><span className="v"><PoundMark value={review.value} /></span></div>
+            <div className="row"><span className="k">Value for Money</span><span className="v"><PoundMark value={review.value} /></span></div>
             <div className="row"><span className="k">Tastiness</span><span className="v"><Score value={review.tastiness} /></span></div>
           </div>
 

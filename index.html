@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-  <script>window.__resources = {"logo":"assets/logo.png","belly-photo-0":"assets/belly-photo-0.jpg","belly-photo-1":"assets/belly-photo-1.jpg","belly-photo-2":"assets/belly-photo-2.jpg","belly-photo-3":"assets/belly-photo-3.jpg","belly-photo-4":"assets/belly-photo-4.jpg","belly-photo-5":"assets/belly-photo-5.jpg","belly-photo-6":"assets/belly-photo-6.jpg","tutto-apr-0":"assets/tutto-apr-0.jpg","tutto-apr-1":"assets/tutto-apr-1.jpg","tutto-apr-2":"assets/tutto-apr-2.jpg","tutto-apr-3":"assets/tutto-apr-3.jpg","tutto-sep-0":"assets/tutto-sep-0.jpg","tutto-sep-1":"assets/tutto-sep-1.jpg","tutto-sep-2":"assets/tutto-sep-2.jpg","tutto-sep-3":"assets/tutto-sep-3.jpg","tutto-sep-4":"assets/tutto-sep-4.jpg","tutto-sep-5":"assets/tutto-sep-5.jpg"};</script>
+  <script>window.__resources = {"logo":"assets/logo-horizontal.png","belly-photo-0":"assets/belly-photo-0.jpg","belly-photo-1":"assets/belly-photo-1.jpg","belly-photo-2":"assets/belly-photo-2.jpg","belly-photo-3":"assets/belly-photo-3.jpg","belly-photo-4":"assets/belly-photo-4.jpg","belly-photo-5":"assets/belly-photo-5.jpg","belly-photo-6":"assets/belly-photo-6.jpg","tutto-apr-0":"assets/tutto-apr-0.jpg","tutto-apr-1":"assets/tutto-apr-1.jpg","tutto-apr-2":"assets/tutto-apr-2.jpg","tutto-apr-3":"assets/tutto-apr-3.jpg","tutto-sep-0":"assets/tutto-sep-0.jpg","tutto-sep-1":"assets/tutto-sep-1.jpg","tutto-sep-2":"assets/tutto-sep-2.jpg","tutto-sep-3":"assets/tutto-sep-3.jpg","tutto-sep-4":"assets/tutto-sep-4.jpg","tutto-sep-5":"assets/tutto-sep-5.jpg"};</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CieL's Food Guide - Honest Restaurant Reviews | cielsfood</title>
-  <meta name="description" content="CieL's Food Guide (also known as Ciels Food or Ciel's Food) — honest, personal restaurant reviews across London and beyond, scored on tastiness, specialness, service, and environment.">
-  <meta name="keywords" content="cielsfood, ciels food, ciel's food, restaurant reviews">
+  <meta name="description" content="CieL's Food Guide — honest, personal restaurant reviews across London and beyond, scored on tastiness, specialness, service, and environment.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.cielsfood.com">
   <!-- Open Graph -->
@@ -13,12 +12,14 @@
   <meta property="og:url" content="https://www.cielsfood.com">
   <meta property="og:title" content="CieL's Food Guide - Honest Restaurant Reviews | cielsfood">
   <meta property="og:description" content="CieL's Food Guide (also known as Ciels Food or Ciel's Food) — honest, personal restaurant reviews across London and beyond, scored on tastiness, specialness, service, and environment.">
-  <meta property="og:image" content="https://www.cielsfood.com/assets/logo.png">
+  <meta property="og:image" content="https://www.cielsfood.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="CieL's Food Guide - Honest Restaurant Reviews | cielsfood">
   <meta name="twitter:description" content="CieL's Food Guide (also known as Ciels Food or Ciel's Food) — honest, personal restaurant reviews across London and beyond, scored on tastiness, specialness, service, and environment.">
-  <meta name="twitter:image" content="https://www.cielsfood.com/assets/logo.png">
+  <meta name="twitter:image" content="https://www.cielsfood.com/assets/og-image.png">
   <!-- Structured Data -->
   <script type="application/ld+json">
   {
@@ -459,6 +460,20 @@ a { color: inherit; text-decoration: none; }
 a.link { border-bottom: 1px solid var(--rule-strong); padding-bottom: 1px; }
 a.link:hover { color: var(--accent); border-color: var(--accent); }
 
+/* Inline text link (button styled as text) with animated underline on hover */
+.text-link {
+  display: inline; padding: 0; margin: 0; border: 0;
+  background: none; color: inherit; font: inherit; cursor: pointer;
+  position: relative;
+}
+.text-link::after {
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  width: 100%; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 240ms ease;
+}
+.text-link:hover::after { transform: scaleX(1); }
+
 button { font-family: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 img, iframe { max-width: 100%; }
@@ -474,22 +489,31 @@ img { height: auto; display: block; }
 
 /* ---------- Nav (dark) ---------- */
 .nav {
-  border-bottom: 1px solid var(--ink);
   background: var(--ink);
   color: var(--paper);
   position: sticky; top: 0; z-index: 50;
+  /* Promote to its own compositing layer so it repaints cleanly over
+     scrolling content (fixes intermittent sticky-header smearing) */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-.nav-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 0 16px;
+.nav-top-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 22px 0 18px;
   gap: 24px;
 }
+.nav-top-bar .nav-links { justify-self: center; }
+.nav-top-bar .nav-search-wrap { justify-self: end; }
 .brand {
   display: flex; align-items: center; gap: 14px;
   cursor: pointer;
 }
 .brand-logo {
-  height: 84px; width: auto; display: block;
+  height: 52px; width: auto; display: block;
   filter: invert(1) brightness(1.1);
 }
 
@@ -506,19 +530,65 @@ img { height: auto; display: block; }
   position: relative;
 }
 .nav-link[aria-current="page"] { color: var(--paper); }
-.nav-link[aria-current="page"]::after {
-  content: ""; position: absolute; left: 18px; right: 18px; bottom: 2px; height: 1px; background: var(--paper);
-}
 .nav-link:hover { color: var(--paper); }
 
-.nav-thin {
-  border-top: 1px solid rgba(250, 247, 240, 0.18);
-  padding: 8px 0;
-  color: rgba(250, 247, 240, 0.55);
-  display: flex; justify-content: space-between;
-  font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
-  text-transform: uppercase;
+/* Desktop nav search */
+.nav-search-wrap {
+  display: flex; align-items: center; gap: 2px;
+  border-bottom: 1px solid rgba(250, 247, 240, 0.38);
+  padding-bottom: 2px;
 }
+.nav-search-input {
+  background: transparent;
+  border: none; outline: none;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  padding: 2px 0;
+  width: 200px;
+}
+.nav-search-input::placeholder { color: rgba(250, 247, 240, 0.4); }
+.nav-search-btn {
+  background: transparent; border: none;
+  color: rgba(250, 247, 240, 0.65);
+  padding: 2px 6px; cursor: pointer;
+  display: flex; align-items: center;
+}
+.nav-search-btn:hover { color: var(--paper); }
+
+/* Mobile nav search bar */
+.nav-search-mobile-bar {
+  display: none;
+  width: 100%;
+  padding: 8px 0 10px;
+  gap: 8px; align-items: center;
+  border-top: 1px solid rgba(250, 247, 240, 0.18);
+  border-bottom: 1px solid rgba(250, 247, 240, 0.22);
+}
+.nav-search-mobile-input {
+  flex: 1;
+  background: rgba(250, 247, 240, 0.09);
+  border: 1px solid rgba(250, 247, 240, 0.22);
+  border-radius: 2px;
+  outline: none;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 16px;
+  padding: 8px 12px;
+  letter-spacing: 0.01em;
+}
+.nav-search-mobile-input::placeholder { color: rgba(250, 247, 240, 0.45); }
+.nav-search-mobile-btn {
+  background: rgba(250, 247, 240, 0.09);
+  border: 1px solid rgba(250, 247, 240, 0.22);
+  border-radius: 2px;
+  color: rgba(250, 247, 240, 0.8);
+  padding: 8px 10px; cursor: pointer;
+  display: flex; align-items: center;
+  flex-shrink: 0;
+}
+.nav-search-mobile-btn:hover { background: rgba(250, 247, 240, 0.15); color: var(--paper); }
 
 /* ---------- Burger + fullscreen overlay ---------- */
 .nav-burger {
@@ -556,10 +626,18 @@ img { height: auto; display: block; }
 .nav-overlay.is-open { opacity: 1; pointer-events: auto; }
 .nav-overlay-inner {
   min-height: 100%;
-  padding: 90px var(--pad-x) 32px;
+  padding: 0 var(--pad-x) 32px;
   display: flex; flex-direction: column; justify-content: space-between;
   gap: 48px;
 }
+/* Brand row mirrors the header top bar (same min-height/padding) so the logo
+   and the divider above the first link sit exactly where the header logo and
+   the search bar's top border sit on non-menu pages */
+.nav-overlay-brand {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 64px; padding: 12px 0 10px;
+}
+.nav-overlay-brand .brand { position: static; left: auto; top: auto; transform: none; }
 .nav-overlay-links { list-style: none; margin: 0; padding: 0; }
 .nav-overlay-links li {
   border-top: 1px solid rgba(250, 247, 240, 0.16);
@@ -644,6 +722,22 @@ a.kicker:hover { text-decoration: underline; }
 .body p { font-size: 18px; line-height: 1.65; }
 .body p + p { margin-top: 0.9em; }
 
+/* Lightweight anti-copy deterrent: block selection of review body copy
+   (nav, buttons and other UI keep normal selection) and stop image drag-save */
+.body, .slider-cap {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+}
+
 .numeral {
   font-family: var(--serif);
   font-style: italic;
@@ -682,7 +776,7 @@ a.kicker:hover { text-decoration: underline; }
 /* ---------- Home ---------- */
 .hero {
   display: grid; grid-template-columns: 1fr; gap: 28px;
-  padding: 56px 0 40px;
+  padding: 0;
 }
 .hero-meta {
   display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
@@ -767,13 +861,17 @@ a.kicker:hover { text-decoration: underline; }
   .cat-grid { grid-template-columns: 1fr 1fr; }
   .cat-card { padding: 24px 16px; }
   .cat-card:nth-child(2n) { border-right: 0; }
-  .cat-card:not(:nth-last-child(-n+2)) { border-bottom: 1px solid var(--rule); }
+  .cat-card:not(:last-child) { border-bottom: 1px solid var(--rule); }
+  /* Odd final card spans the full row so it stays centred instead of sitting
+     alone in the left column with an empty cell beside it */
+  .cat-card:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: 0; }
 }
 
 .section-head {
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 56px 0 22px; gap: 24px;
 }
+.section-head--after-hero { padding: 36px 0 0; }
 .section-head .title { display: flex; gap: 18px; align-items: baseline; }
 .section-head .numeral:empty { display: none; }
 
@@ -926,6 +1024,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 .map-card .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 .map-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--rule); font-size: 15px; }
 .map-card .row:first-of-type { border-top: 0; }
+.map-card-compact { display: none; }
 
 /* Leaflet integration */
 .leaflet-container {
@@ -1040,12 +1139,13 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   border-top: 1px solid var(--ink); margin-top: 24px;
 }
 .detail-side .info-table .row {
-  display: grid; grid-template-columns: minmax(auto, 110px) 1fr; gap: 16px;
+  display: grid; grid-template-columns: auto 1fr; gap: 16px;
   padding: 14px 0; border-bottom: 1px solid var(--rule); align-items: center;
 }
 .detail-side .info-table .row .k {
   font-family: var(--mono); font-size: 10px; letter-spacing: 0.24em;
-  text-transform: uppercase; color: var(--muted);
+  text-transform: uppercase; color: var(--muted); white-space: nowrap;
+  width: 140px;
 }
 .detail-side .info-table .row .v { font-size: 18px; }
 
@@ -1068,7 +1168,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   color: rgba(250, 247, 240, 0.7);
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em;
   text-transform: uppercase;
-  display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
 }
 
 /* ---------- Density tweak ---------- */
@@ -1099,7 +1199,8 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 .band-dark--hero {
   margin-top: 0;
   border-top: 0;
-  padding-top: 8px;
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 .band-dark .eyebrow,
 .band-dark .kicker,
@@ -1185,13 +1286,15 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
    RESPONSIVE — mobile + tablet
    ============================================================ */
 
-/* Hide desktop nav links / show burger on tablet & below */
+/* Hide desktop nav bars / show burger + mobile search on tablet & below */
 @media (max-width: 880px) {
-  .nav-links { display: none !important; }
+  .nav-links { display: none; }
+  .nav-search-wrap { display: none; }
+  .nav-search-mobile-bar { display: flex; }
   .nav-burger { display: block; }
   .brand-logo { height: 44px; }
-  .nav-row { padding: 12px 0 10px; gap: 12px; }
-  .nav-thin { font-size: 10px; padding: 6px 0; }
+  .nav-top-bar { display: flex; justify-content: space-between; padding: 12px 0 10px; gap: 12px; }
+  .nav { padding-bottom: 0; }
 }
 
 /* ---------- Tablet breakpoint (≤880px) ---------- */
@@ -1200,13 +1303,14 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   body { font-size: 17px; }
 
   /* Hero */
-  .hero { padding: 36px 0 28px; gap: 20px; }
+  .hero { padding: 36px 0 12px; gap: 20px; }
   .hero-meta { flex-wrap: wrap; gap: 8px 18px; font-size: 10px; letter-spacing: 0.22em; }
   .hero-sub { grid-template-columns: 1fr; gap: 18px; }
   .lede { font-size: 19px; }
 
   /* Section heads stack */
   .section-head { padding: 40px 0 14px; }
+  .section-head--after-hero { padding: 0; }
 
   /* Scores: 4-up → 2x2 */
   .scores { grid-template-columns: 1fr 1fr; }
@@ -1245,8 +1349,23 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 
   /* Map view */
   .map-wrap { height: clamp(420px, 60vh, 600px); }
-  .map-card { right: 12px; left: 12px; bottom: 12px; width: auto; padding: 16px; }
+  .map-card { right: 12px; left: 12px; bottom: 12px; width: auto; padding: 12px 14px; }
   .map-key { left: 12px; top: 12px; padding: 8px 10px; font-size: 9px; }
+
+  /* Compact map card (mobile): show condensed layout, hide the full one */
+  .map-card-full { display: none; }
+  .map-card-compact { display: block; }
+  .map-card-compact h4 { margin: 0; font-size: 18px; line-height: 1.15; font-weight: 500; }
+  .map-card-compact .mcc-sub {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin-top: 4px;
+  }
+  .map-card-compact .mcc-stats {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+    font-size: 13px; margin-top: 8px;
+  }
+  .map-card-compact .mcc-sep { color: var(--rule-strong); }
+  .map-card-compact .btn { margin-top: 10px; padding: 7px 14px; font-size: 11px; }
 
   /* Pagination */
   .pagination { padding: 18px 0 40px; }
@@ -1259,7 +1378,8 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .detail-action-row { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
   .detail-action-btns { gap: 10px; }
   .detail-action-btns .btn { padding: 8px 14px; font-size: 12px; }
-  .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 110px) 1fr; gap: 12px; padding: 12px 0; }
+  .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 0; }
+  .detail-side .info-table .row .k { width: 140px; }
   .detail-side .info-table .row .v { font-size: 16px; }
   .score-line { grid-template-columns: 110px 1fr 50px; gap: 12px; }
 
@@ -1276,7 +1396,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 
   /* Bands: tighten padding */
   .band-dark { padding: 36px calc(50vw - 50%) 44px; margin-top: 36px; }
-  .band-dark--hero { padding-top: 4px; margin-top: 0; }
+  .band-dark--hero { padding-top: 4px; padding-bottom: 20px; margin-top: 0; }
 }
 
 
@@ -1329,9 +1449,9 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
 /* ---------- Tablet breakpoint (≤768px) ---------- */
 @media (max-width: 768px) {
   /* Nav: centre logo, keep hamburger right */
-  .nav-row { position: relative; justify-content: flex-end; min-height: 89px; }
+  .nav-top-bar { position: relative; justify-content: flex-end; min-height: 64px; }
   .brand { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-  .brand-logo { height: 89px; }
+  .brand-logo { height: 40px; max-width: none; }
 
   .hero { padding: 32px 0 24px; }
   .h-display { font-size: clamp(36px, 8vw, 64px) !important; }
@@ -1364,6 +1484,8 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
 
   /* Section-head: stack on mobile */
   .section-head { flex-direction: column; align-items: flex-start; gap: 14px; padding: 36px 0 14px; }
+  .section-head--after-hero { padding: 0; }
+  .feature-grid > * { padding: 16px 0; }
   /* Row hover CTA: always visible on mobile */
   .row-hover-cta { position: static; display: inline-block; justify-self: start; background: #1A1A1A; color: #F5F5F5; opacity: 1; pointer-events: auto; padding: 12px 20px; font-size: 10px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; border: 0; border-radius: 4px; }
   table.reviews-table tr.row::after { display: none; }
@@ -1460,8 +1582,8 @@ table.reviews-table tr.row:hover::after { opacity: 1; }
   .feature-grid > * { padding: 28px 0; }
 
   /* Review detail */
-  .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 96px) 1fr; gap: 10px; }
-  .detail-side .info-table .row .k { font-size: 9px; letter-spacing: 0.2em; }
+  .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 10px; }
+  .detail-side .info-table .row .k { font-size: 9px; letter-spacing: 0.2em; width: 118px; }
   .score-line { grid-template-columns: 96px 1fr 44px; gap: 10px; }
   .score-line .k { font-size: 9px; }
   .score-line .v { font-size: 18px; }
@@ -1499,7 +1621,7 @@ body { overflow-x: hidden; overflow-y: scroll; }
   .feature-main p, .feature-side p { width: auto !important; max-width: 100% !important; }
   .lede { font-size: 17px; line-height: 1.45; }
   .cat-grid { grid-template-columns: 1fr; }
-  .detail-side .info-table .row { display: grid; grid-template-columns: minmax(auto, 90px) 1fr; gap: 8px; }
+  .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
   .cat-card { border-right: 0 !important; border-bottom: 1px solid var(--rule); }
   .cat-card:last-child { border-bottom: 0; }
   .filter-group { min-width: 100% !important; }
@@ -1550,8 +1672,22 @@ body { overflow-x: hidden; overflow-y: scroll; }
   <script type="text/babel" src="src/about.jsx"></script>
   <script type="text/babel" src="src/categories.jsx"></script>
   <script type="text/babel" src="src/reviews.jsx"></script>
+  <script type="text/babel" src="src/search.jsx"></script>
   <script type="text/babel" src="src/review-detail.jsx"></script>
   <script type="text/babel" src="src/app.jsx"></script>
 
+  <script>
+    /* Basic anti-copy deterrent (not DRM). Block right-click on images and
+       review body text, and prevent image drag-to-save. Links, buttons and
+       scrolling/tapping stay fully functional. */
+    (function () {
+      document.addEventListener("contextmenu", function (e) {
+        if (e.target.closest("img, .body, .slider-cap")) e.preventDefault();
+      });
+      document.addEventListener("dragstart", function (e) {
+        if (e.target.tagName === "IMG") e.preventDefault();
+      });
+    })();
+  </script>
 
 </body></html>

@@ -14,11 +14,15 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DATA_JS="$SCRIPT_DIR/src/data.js"
-TMP_REST="$SCRIPT_DIR/.tmp-notion-restaurants.json"
-TMP_REV="$SCRIPT_DIR/.tmp-notion-reviews.json"
-TMP_REST_IDS="$SCRIPT_DIR/.tmp-notion-rest-ids"
-TMP_REV_IDS="$SCRIPT_DIR/.tmp-notion-rev-ids"
-TMP_CURL="$SCRIPT_DIR/.tmp-notion-curl-response"
+
+# All temp files live in the repo directory (resolved from the script's own
+# location — ~/cielsfood in the normal setup — never a hardcoded path).
+TMP_DIR="$SCRIPT_DIR"
+TMP_REST="$TMP_DIR/.tmp-notion-restaurants.json"
+TMP_REV="$TMP_DIR/.tmp-notion-reviews.json"
+TMP_REST_IDS="$TMP_DIR/.tmp-notion-rest-ids"
+TMP_REV_IDS="$TMP_DIR/.tmp-notion-rev-ids"
+TMP_CURL="$TMP_DIR/.tmp-notion-curl-response"
 
 NOTION_REST_DB="298028b6e10280788b1ee47e7cacd57b"
 NOTION_REV_DB="298028b6e10280139d12d35f33c66e1f"
@@ -294,6 +298,11 @@ print('─' * 62)
 
 PYTHON
 
+# The Python step exits early (without writing the ID files) when there is no
+# new content — make sure they exist before anything below reads them.
+[ -f "$TMP_REST_IDS" ] || : > "$TMP_REST_IDS"
+[ -f "$TMP_REV_IDS" ]  || : > "$TMP_REV_IDS"
+
 # ── 3. Show diff and prompt for approval ─────────────────────────────────────
 echo ""
 echo "── Git diff ──────────────────────────────────────────────────────────"
@@ -324,17 +333,24 @@ else
   NREST_NEW=$(python3 -c "print(sum(1 for l in open('$TMP_REST_IDS') if l.strip()))")
   NREV_NEW=$(python3  -c "print(sum(1 for l in open('$TMP_REV_IDS')  if l.strip()))")
 
+  echo "  Pulling latest remote changes before commit..."
+  git stash
+  git pull --rebase origin main
+  git stash pop
+
   git add src/data.js
   git commit -m "Publish ${NREST_NEW} restaurant(s) and ${NREV_NEW} review(s) from Notion"
-
-  echo "  Pulling latest remote changes before push..."
-  git pull --rebase origin main
 
   git push origin main
   echo "  Pushed to main."
 fi
 
 # ── 5. Mark Published in Notion ───────────────────────────────────────────────
+# Guard: create the ID files if they don't exist so the read loops below can't
+# crash with a missing-file error.
+[ -f "$TMP_REST_IDS" ] || : > "$TMP_REST_IDS"
+[ -f "$TMP_REV_IDS" ]  || : > "$TMP_REV_IDS"
+
 echo ""
 if [ "$DRY_RUN" = "1" ]; then
   echo "── [DRY RUN] Testing Notion PATCH calls ──────────────────────────────"

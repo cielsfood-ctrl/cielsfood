@@ -19,8 +19,13 @@ function App() {
 
   function navigate(page, params = {}) {
     if (page === "restaurant" && params.id) window.location.hash = `#/restaurant/${params.id}`;
+    else if (page === "search" && params.term) window.location.hash = `#/search/${encodeURIComponent(params.term)}`;
     else window.location.hash = `#/${page}`;
     window.scrollTo({ top: 0 });
+  }
+
+  function handleNavSearch(term) {
+    if (term) navigate("search", { term });
   }
 
   // ---------- Tweaks ----------
@@ -39,21 +44,22 @@ function App() {
 
   let pageId = route.page;
   // Normalize unknown routes
-  const known = ["home", "about", "categories", "restaurants", "restaurant"];
+  const known = ["home", "about", "categories", "restaurants", "restaurant", "search"];
   if (!known.includes(pageId)) pageId = "home";
 
   let body;
-  if (pageId === "home")       body = <HomePage navigate={navigate}/>;
-  else if (pageId === "about") body = <AboutPage navigate={navigate}/>;
+  if (pageId === "home")            body = <HomePage navigate={navigate}/>;
+  else if (pageId === "about")      body = <AboutPage navigate={navigate}/>;
   else if (pageId === "categories") body = <CategoriesPage/>;
-  else if (pageId === "restaurants")    body = <ReviewsPage navigate={navigate}/>;
-  else if (pageId === "restaurant")     body = <ReviewDetailPage restaurantId={route.id} navigate={navigate}/>;
+  else if (pageId === "restaurants") body = <ReviewsPage navigate={navigate}/>;
+  else if (pageId === "restaurant") body = <ReviewDetailPage restaurantId={route.id} navigate={navigate}/>;
+  else if (pageId === "search")     body = <SearchResultsPage query={decodeURIComponent(route.id || "")} navigate={navigate}/>;
 
-  const navPage = pageId === "restaurant" ? "restaurants" : pageId;
+  const navPage = (pageId === "restaurant" || pageId === "search") ? "restaurants" : pageId;
 
   return (
     <>
-      <Nav page={navPage} navigate={navigate}/>
+      <Nav page={navPage} navigate={navigate} onNavSearch={handleNavSearch}/>
       {body}
       <Footer />
 

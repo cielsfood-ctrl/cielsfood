@@ -10,8 +10,16 @@ function Brand({ onClick }) {
     </div>);
 }
 
-function Nav({ page, navigate }) {
+const SearchIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
+);
+
+function Nav({ page, navigate, onNavSearch }) {
   const [open, setOpen] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
   const links = [
     { id: "home", label: "Home" },
     { id: "about", label: "About" },
@@ -35,11 +43,16 @@ function Nav({ page, navigate }) {
 
   function go(id) { setOpen(false); navigate(id); }
 
+  function handleSearch() {
+    if (onNavSearch) onNavSearch(searchVal.trim());
+  }
+
   return (
     <React.Fragment>
       <nav className="nav">
         <div className="shell">
-          <div className="nav-row">
+          {/* Single row: Brand (left) + nav links (centre) + search (right) */}
+          <div className="nav-top-bar">
             <Brand onClick={() => go("home")} />
             <div className="nav-links">
               {links.map((l) =>
@@ -52,6 +65,19 @@ function Nav({ page, navigate }) {
                 </button>
               )}
             </div>
+            <div className="nav-search-wrap">
+              <input
+                type="text"
+                className="nav-search-input"
+                placeholder="Search CieL's Guide"
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
+              />
+              <button className="nav-search-btn" onClick={handleSearch} aria-label="Search">
+                <SearchIcon />
+              </button>
+            </div>
             <button
               className={"nav-burger" + (open ? " is-open" : "")}
               aria-label={open ? "Close menu" : "Open menu"}
@@ -62,27 +88,43 @@ function Nav({ page, navigate }) {
               <span></span>
             </button>
           </div>
-          <div className="nav-thin">
-            <span></span>
-            <span></span>
+
+          {/* Mobile search bar */}
+          <div className="nav-search-mobile-bar">
+            <input
+              type="text"
+              className="nav-search-mobile-input"
+              placeholder="Search CieL's Guide"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
+            />
+            <button className="nav-search-mobile-btn" onClick={handleSearch} aria-label="Search">
+              <SearchIcon />
+            </button>
           </div>
         </div>
       </nav>
 
       <div className={"nav-overlay" + (open ? " is-open" : "")} aria-hidden={!open}>
         <div className="nav-overlay-inner">
-          <ul className="nav-overlay-links">
-            {links.map((l, i) =>
-              <li key={l.id} style={{ transitionDelay: open ? (60 + i * 60) + "ms" : "0ms" }}>
-                <button
-                  className={"nav-overlay-link" + (page === l.id ? " is-active" : "")}
-                  onClick={() => go(l.id)}>
-                  <span className="nav-overlay-num">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="nav-overlay-label">{l.label}</span>
-                </button>
-              </li>
-            )}
-          </ul>
+          <div className="nav-overlay-top">
+            <div className="nav-overlay-brand">
+              <Brand onClick={() => go("home")} />
+            </div>
+            <ul className="nav-overlay-links">
+              {links.map((l, i) =>
+                <li key={l.id} style={{ transitionDelay: open ? (60 + i * 60) + "ms" : "0ms" }}>
+                  <button
+                    className={"nav-overlay-link" + (page === l.id ? " is-active" : "")}
+                    onClick={() => go(l.id)}>
+                    <span className="nav-overlay-num">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="nav-overlay-label">{l.label}</span>
+                  </button>
+                </li>
+              )}
+            </ul>
+          </div>
           <div className="nav-overlay-foot">
             <span>© CIELSFOOD</span>
             <span>instagram.com/cielsfood</span>
@@ -96,8 +138,24 @@ function Footer() {
   return (
     <footer className="foot-wrap">
       <div className="foot shell">
-        <span>© 2026 CieL's Food Guide. Words & Photography by Cherrie Leung.</span>
-        <span>instagram.com/cielsfood</span>
+        <span>© cielsfood.com | Words, Photography and Website Development by Cherrie Leung</span>
+        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <a href="mailto:cielsfood@gmail.com" aria-label="Email" style={{ color: "inherit", display: "flex" }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512" fill="none" stroke="currentColor" strokeWidth="28">
+              <circle cx="256" cy="256" r="236" />
+              <rect x="112" y="160" width="288" height="196" rx="8" />
+              <polyline points="112,160 256,284 400,160" />
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/cielsfood" target="_blank" rel="noreferrer" aria-label="Instagram" style={{ color: "inherit", display: "flex" }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512" fill="none" stroke="currentColor" strokeWidth="28">
+              <circle cx="256" cy="256" r="236" />
+              <rect x="148" y="148" width="216" height="216" rx="54" />
+              <circle cx="256" cy="256" r="62" />
+              <circle cx="340" cy="172" r="14" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </div>
       </div>
     </footer>);
 }
