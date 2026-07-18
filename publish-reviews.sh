@@ -208,7 +208,7 @@ for page in restaurants_data['results']:
         summary.append(f'\n  [SKIP] {name} ({rest_id}) — already in data.js; skipping')
         continue
 
-    notion_rest_ids.append(notion_pid)
+    notion_rest_ids.append(f'{notion_pid}\t{name}')
     rest_num = re.search(r'\d+', rest_id).group()
 
     for rev_page in notion_reviews.get(notion_pid, []):
@@ -231,7 +231,7 @@ for page in restaurants_data['results']:
 
         rev_id = next_rev_id(rest_num, used_rev_ids)
         used_rev_ids.add(rev_id)
-        notion_rev_ids.append(notion_rev_pid)
+        notion_rev_ids.append(f'{notion_rev_pid}\t{name} — {date}')
 
         new_rev_entries.append(
             f'  // {rest_id} {name}\n'
@@ -278,11 +278,16 @@ with open(DATA_JS_PATH, 'w') as f:
     f.write(updated)
 
 # ── Write Notion IDs for shell PATCH step ─────────────────────────────────────
+# One "page_id<TAB>label" per line, each line newline-terminated. The trailing
+# newline matters: `while read` skips a final unterminated line, which silently
+# dropped the last entry from the PATCH loop.
 
 with open(TMP_REST_IDS, 'w') as f:
-    f.write('\n'.join(notion_rest_ids))
+    for line in notion_rest_ids:
+        f.write(line + '\n')
 with open(TMP_REV_IDS, 'w') as f:
-    f.write('\n'.join(notion_rev_ids))
+    for line in notion_rev_ids:
+        f.write(line + '\n')
 
 # ── Print summary ─────────────────────────────────────────────────────────────
 
@@ -362,9 +367,12 @@ PATCH_BODY='{"properties":{"Status":{"status":{"name":"Published"}}}}'
 PATCH_FAILED=0
 
 # ── PATCH helper: one call with one retry, full output on failure ─────────────
+# Always returns 0 so a failed PATCH never aborts the loop under `set -e` —
+# failures are recorded in PATCH_FAILED and the loop continues to the next entry.
 notion_patch() {
   local kind="$1"
   local page_id="$2"
+  local label="${3:-$page_id}"
   local attempt http_code result status
 
   for attempt in 1 2; do
@@ -384,14 +392,14 @@ notion_patch() {
 
     if [ "$status" = "Published" ]; then
       if [ "$attempt" -eq 1 ]; then
-        echo "  OK  ${kind} ${page_id} → Published"
+        echo "  OK  ${kind} '${label}' (${page_id}) → Published"
       else
-        echo "  OK  ${kind} ${page_id} → Published (succeeded on retry)"
+        echo "  OK  ${kind} '${label}' (${page_id}) → Published (succeeded on retry)"
       fi
       return 0
     fi
 
-    echo "  FAIL  ${kind} ${page_id}" >&2
+    echo "  FAIL  ${kind} '${label}' (${page_id})" >&2
     echo "        Attempt ${attempt} — HTTP ${http_code} | parsed status: '${status}'" >&2
     echo "        Response body:" >&2
     echo "$result" | python3 -c \
@@ -409,19 +417,24 @@ except Exception:
   done
 
   echo "" >&2
-  echo "  ERROR ${kind} ${page_id} — failed after retry." >&2
+  echo "  ERROR ${kind} '${label}' (${page_id}) — failed after retry, continuing with next entry." >&2
   echo "        Mark it Published manually in Notion to prevent re-processing." >&2
   PATCH_FAILED=1
+  return 0
 }
 
-while IFS= read -r page_id; do
+# Lines are "page_id<TAB>label". The `|| [ -n "$page_id" ]` guard processes a
+# final line even if it lacks a trailing newline — previously the last entry
+# of each file was silently skipped, so only the first restaurant/review of a
+# multi-entry publish was marked Published.
+while IFS=$'\t' read -r page_id label || [ -n "$page_id" ]; do
   [ -z "$page_id" ] && continue
-  notion_patch "Restaurant" "$page_id"
+  notion_patch "Restaurant" "$page_id" "$label"
 done < "$TMP_REST_IDS"
 
-while IFS= read -r page_id; do
+while IFS=$'\t' read -r page_id label || [ -n "$page_id" ]; do
   [ -z "$page_id" ] && continue
-  notion_patch "Review    " "$page_id"
+  notion_patch "Review    " "$page_id" "$label"
 done < "$TMP_REV_IDS"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
