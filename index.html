@@ -491,6 +491,12 @@ img { height: auto; display: block; }
   background: var(--ink);
   color: var(--paper);
   position: sticky; top: 0; z-index: 50;
+  /* Promote to its own compositing layer so it repaints cleanly over
+     scrolling content (fixes intermittent sticky-header smearing) */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 .nav-top-bar {
   display: grid;
