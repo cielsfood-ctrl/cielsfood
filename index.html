@@ -761,7 +761,7 @@ img {
 /* ---------- Home ---------- */
 .hero {
   display: grid; grid-template-columns: 1fr; gap: 28px;
-  padding: 32px 0 40px;
+  padding: 0;
 }
 .hero-meta {
   display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
@@ -853,6 +853,7 @@ img {
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 56px 0 22px; gap: 24px;
 }
+.section-head--after-hero { padding: 36px 0 0; }
 .section-head .title { display: flex; gap: 18px; align-items: baseline; }
 .section-head .numeral:empty { display: none; }
 
@@ -1178,7 +1179,8 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 .band-dark--hero {
   margin-top: 0;
   border-top: 0;
-  padding-top: 8px;
+  padding-top: 48px;
+  padding-bottom: 48px;
 }
 .band-dark .eyebrow,
 .band-dark .kicker,

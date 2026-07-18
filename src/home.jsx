@@ -20,11 +20,6 @@ function HomePage({ navigate }) {
     <main className="shell">
       <div className="band-dark band-dark--hero">
       <section className="hero">
-        <div className="hero-meta">
-          <span></span>
-          <span></span>
-          <span>{"\n"}</span>
-        </div>
         <h1 className="h-display" style={{ fontSize: "70px" }}>
           Welcome to CIEL'S FOOD GUIDE
         </h1>
