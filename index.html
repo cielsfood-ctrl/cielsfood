@@ -1085,16 +1085,14 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 }
 .detail-action-row {
   display: flex; flex-wrap: wrap; align-items: center;
-  gap: 14px 36px; margin-top: 18px;
+  gap: 14px 36px; margin-top: 32px;
 }
 /* Inline text links (phone / visit website) with animated hover underline */
 .detail-link {
   display: inline-flex; align-items: center; gap: 10px;
   color: var(--ink); text-decoration: none;
 }
-.detail-link--phone .detail-link-label {
-  font-family: var(--mono); font-size: 14px; letter-spacing: 0.18em;
-}
+.detail-link--phone .detail-link-label,
 .detail-link--site .detail-link-label {
   font-family: var(--serif); font-size: 16px; letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1396,7 +1394,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .detail-meta { gap: 14px; font-size: 10px; }
   .detail-grid { padding: 28px 0 56px; gap: 28px; }
   .detail-action-row { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .detail-link--phone .detail-link-label { font-size: 13px; }
+  .detail-link--phone .detail-link-label,
   .detail-link--site .detail-link-label { font-size: 15px; }
   .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 0; }
   .detail-side .info-table .row .k { width: 140px; }
