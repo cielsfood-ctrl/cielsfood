@@ -619,10 +619,13 @@ img { height: auto; display: block; }
 .nav-overlay.is-open { opacity: 1; pointer-events: auto; }
 .nav-overlay-inner {
   min-height: 100%;
-  padding: 90px var(--pad-x) 32px;
+  padding: 14px var(--pad-x) 32px;
   display: flex; flex-direction: column; justify-content: space-between;
   gap: 48px;
 }
+/* Horizontal logo kept at the top of the open nav overlay (same size as header) */
+.nav-overlay-brand { display: flex; justify-content: center; padding: 6px 0 34px; }
+.nav-overlay-brand .brand { position: static; left: auto; top: auto; transform: none; }
 .nav-overlay-links { list-style: none; margin: 0; padding: 0; }
 .nav-overlay-links li {
   border-top: 1px solid rgba(250, 247, 240, 0.16);

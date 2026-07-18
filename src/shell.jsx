@@ -108,18 +108,23 @@ function Nav({ page, navigate, onNavSearch }) {
 
       <div className={"nav-overlay" + (open ? " is-open" : "")} aria-hidden={!open}>
         <div className="nav-overlay-inner">
-          <ul className="nav-overlay-links">
-            {links.map((l, i) =>
-              <li key={l.id} style={{ transitionDelay: open ? (60 + i * 60) + "ms" : "0ms" }}>
-                <button
-                  className={"nav-overlay-link" + (page === l.id ? " is-active" : "")}
-                  onClick={() => go(l.id)}>
-                  <span className="nav-overlay-num">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="nav-overlay-label">{l.label}</span>
-                </button>
-              </li>
-            )}
-          </ul>
+          <div className="nav-overlay-top">
+            <div className="nav-overlay-brand">
+              <Brand onClick={() => go("home")} />
+            </div>
+            <ul className="nav-overlay-links">
+              {links.map((l, i) =>
+                <li key={l.id} style={{ transitionDelay: open ? (60 + i * 60) + "ms" : "0ms" }}>
+                  <button
+                    className={"nav-overlay-link" + (page === l.id ? " is-active" : "")}
+                    onClick={() => go(l.id)}>
+                    <span className="nav-overlay-num">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="nav-overlay-label">{l.label}</span>
+                  </button>
+                </li>
+              )}
+            </ul>
+          </div>
           <div className="nav-overlay-foot">
             <span>© CIELSFOOD</span>
             <span>instagram.com/cielsfood</span>
