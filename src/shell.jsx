@@ -69,7 +69,7 @@ function Nav({ page, navigate, onNavSearch }) {
               <input
                 type="text"
                 className="nav-search-input"
-                placeholder="Search"
+                placeholder="Search CieL's Guide"
                 value={searchVal}
                 onChange={(e) => setSearchVal(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
@@ -94,7 +94,7 @@ function Nav({ page, navigate, onNavSearch }) {
             <input
               type="text"
               className="nav-search-mobile-input"
-              placeholder="Search restaurants, cuisine, location…"
+              placeholder="Search CieL's Guide"
               value={searchVal}
               onChange={(e) => setSearchVal(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}

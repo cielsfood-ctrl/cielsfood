@@ -1006,6 +1006,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 .map-card .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 .map-card .row { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--rule); font-size: 15px; }
 .map-card .row:first-of-type { border-top: 0; }
+.map-card-compact { display: none; }
 
 /* Leaflet integration */
 .leaflet-container {
@@ -1329,8 +1330,23 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 
   /* Map view */
   .map-wrap { height: clamp(420px, 60vh, 600px); }
-  .map-card { right: 12px; left: 12px; bottom: 12px; width: auto; padding: 16px; }
+  .map-card { right: 12px; left: 12px; bottom: 12px; width: auto; padding: 12px 14px; }
   .map-key { left: 12px; top: 12px; padding: 8px 10px; font-size: 9px; }
+
+  /* Compact map card (mobile): show condensed layout, hide the full one */
+  .map-card-full { display: none; }
+  .map-card-compact { display: block; }
+  .map-card-compact h4 { margin: 0; font-size: 18px; line-height: 1.15; font-weight: 500; }
+  .map-card-compact .mcc-sub {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--muted); margin-top: 4px;
+  }
+  .map-card-compact .mcc-stats {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+    font-size: 13px; margin-top: 8px;
+  }
+  .map-card-compact .mcc-sep { color: var(--rule-strong); }
+  .map-card-compact .btn { margin-top: 10px; padding: 7px 14px; font-size: 11px; }
 
   /* Pagination */
   .pagination { padding: 18px 0 40px; }

@@ -219,7 +219,10 @@ function ReviewsPage({ navigate }) {
 }
 
 function MapView({ rows, navigate }) {
-  const [active, setActive] = useState("r21");
+  // Mobile: no restaurant card shown until a pin is tapped. Desktop: default selection.
+  const [active, setActive] = useState(() =>
+    (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(max-width: 880px)").matches) ? null : "r21"
+  );
   const sel = rows.find((r) => r.id === active);
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -296,13 +299,29 @@ function MapView({ rows, navigate }) {
       <div className="map-base" ref={containerRef} />
       {sel &&
       <div className="map-card">
-          <span className="eyebrow">{sel.location} · {sel.michelin}</span>
-          <h4>{sel.name}</h4>
-          <div className="meta">{sel.cuisine}</div>
-          <div className="row"><span>Tastiness</span><span><Score value={sel.tastiness} /></span></div>
-          <div className="row"><span>Value for Money</span><span><PoundMark value={sel.value} /></span></div>
-          <div className="row"><span>Latest</span><span>{window.formatDate(sel.latestDate)}</span></div>
-          <div style={{ marginTop: 16 }}>
+          {/* Desktop layout */}
+          <div className="map-card-full">
+            <span className="eyebrow">{sel.location} · {sel.michelin}</span>
+            <h4>{sel.name}</h4>
+            <div className="meta">{sel.cuisine}</div>
+            <div className="row"><span>Tastiness</span><span><Score value={sel.tastiness} /></span></div>
+            <div className="row"><span>Value for Money</span><span><PoundMark value={sel.value} /></span></div>
+            <div className="row"><span>Latest</span><span>{window.formatDate(sel.latestDate)}</span></div>
+            <div style={{ marginTop: 16 }}>
+              <button className="btn" onClick={() => navigate("restaurant", { id: sel.id })}>Open review →</button>
+            </div>
+          </div>
+          {/* Mobile compact layout */}
+          <div className="map-card-compact">
+            <h4>{sel.name}</h4>
+            <div className="mcc-sub">{sel.cuisine} · {sel.michelin}</div>
+            <div className="mcc-stats">
+              <span>Tastiness {sel.tastiness}/10</span>
+              <span className="mcc-sep">|</span>
+              <span>Value <PoundMark value={sel.value} /></span>
+              <span className="mcc-sep">|</span>
+              <span>{window.formatDate(sel.latestDate)}</span>
+            </div>
             <button className="btn" onClick={() => navigate("restaurant", { id: sel.id })}>Open review →</button>
           </div>
         </div>
