@@ -860,7 +860,10 @@ img {
   .cat-grid { grid-template-columns: 1fr 1fr; }
   .cat-card { padding: 24px 16px; }
   .cat-card:nth-child(2n) { border-right: 0; }
-  .cat-card:not(:nth-last-child(-n+2)) { border-bottom: 1px solid var(--rule); }
+  .cat-card:not(:last-child) { border-bottom: 1px solid var(--rule); }
+  /* Odd final card spans the full row so it stays centred instead of sitting
+     alone in the left column with an empty cell beside it */
+  .cat-card:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: 0; }
 }
 
 .section-head {
