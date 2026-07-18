@@ -1084,9 +1084,29 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   margin-bottom: 18px;
 }
 .detail-action-row {
-  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; margin-top: 18px;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 14px 36px; margin-top: 18px;
 }
-.detail-action-btns { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+/* Inline text links (phone / visit website) with animated hover underline */
+.detail-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--ink); text-decoration: none;
+}
+.detail-link--phone .detail-link-label {
+  font-family: var(--mono); font-size: 14px; letter-spacing: 0.18em;
+}
+.detail-link--site .detail-link-label {
+  font-family: var(--serif); font-size: 16px; letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.detail-link .detail-link-label { position: relative; }
+.detail-link .detail-link-label::after {
+  content: ""; position: absolute; left: 0; bottom: -2px;
+  width: 100%; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 240ms ease;
+}
+.detail-link:hover .detail-link-label::after { transform: scaleX(1); }
 .detail-grid {
   display: grid; grid-template-columns: 2fr 1fr; gap: 56px;
   padding: 40px 0 80px;
@@ -1375,9 +1395,9 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .detail-head { padding: 32px 0 18px; }
   .detail-meta { gap: 14px; font-size: 10px; }
   .detail-grid { padding: 28px 0 56px; gap: 28px; }
-  .detail-action-row { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-  .detail-action-btns { gap: 10px; }
-  .detail-action-btns .btn { padding: 8px 14px; font-size: 12px; }
+  .detail-action-row { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .detail-link--phone .detail-link-label { font-size: 13px; }
+  .detail-link--site .detail-link-label { font-size: 15px; }
   .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 0; }
   .detail-side .info-table .row .k { width: 140px; }
   .detail-side .info-table .row .v { font-size: 16px; }
