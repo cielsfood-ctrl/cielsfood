@@ -1393,9 +1393,12 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   .detail-head { padding: 32px 0 18px; }
   .detail-meta { gap: 14px; font-size: 10px; }
   .detail-grid { padding: 28px 0 56px; gap: 28px; }
-  .detail-action-row { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .detail-link--phone .detail-link-label,
-  .detail-link--site .detail-link-label { font-size: 15px; }
+  /* Address on its own row; phone + website as icon-only links on the next
+     row (labels hidden, tel:/website behaviour unchanged) */
+  .detail-action-row { flex-wrap: wrap; align-items: center; gap: 14px 28px; }
+  .detail-action-row .kicker { width: 100%; }
+  .detail-link .detail-link-label { display: none; }
+  .detail-link svg { width: 20px; height: 20px; }
   .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 0; }
   .detail-side .info-table .row .k { width: 140px; }
   .detail-side .info-table .row .v { font-size: 16px; }
