@@ -518,9 +518,9 @@ img { height: auto; display: block; }
   filter: invert(1) brightness(1.1);
 }
 
-/* Narrow desktop (above the burger breakpoint): shrink logo/search/links
-   proportionally instead of letting the logo compress */
-@media (max-width: 1120px) and (min-width: 881px) {
+/* Narrow desktop (just above the burger breakpoint): shrink logo/search/links
+   proportionally so the full bar always fits before we ever switch to mobile */
+@media (max-width: 1200px) and (min-width: 1081px) {
   .brand-logo { height: 42px; }
   .nav-search-input { width: 130px; }
   .nav-link { padding: 10px 12px; letter-spacing: 0.2em; }
@@ -1322,14 +1322,16 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
    RESPONSIVE — mobile + tablet
    ============================================================ */
 
-/* Hide desktop nav bars / show burger + mobile search on tablet & below */
-@media (max-width: 880px) {
+/* Below 1080px the full desktop bar cannot fit — switch cleanly to the mobile
+   header (centred logo + burger + full-width search) with no half-fit state */
+@media (max-width: 1080px) {
   .nav-links { display: none; }
   .nav-search-wrap { display: none; }
   .nav-search-mobile-bar { display: flex; }
   .nav-burger { display: block; }
   .brand-logo { height: 44px; }
-  .nav-top-bar { display: flex; justify-content: space-between; padding: 12px 0 10px; gap: 12px; }
+  .nav-top-bar { display: flex; position: relative; justify-content: flex-end; min-height: 64px; padding: 12px 0 10px; gap: 12px; }
+  .brand { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
   .nav { padding-bottom: 0; }
 }
 
