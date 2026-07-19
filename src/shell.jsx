@@ -111,6 +111,9 @@ function Nav({ page, navigate, onNavSearch }) {
           <div className="nav-overlay-top">
             <div className="nav-overlay-brand">
               <Brand onClick={() => go("home")} />
+              <button className="nav-overlay-close" aria-label="Close menu" onClick={() => setOpen(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+              </button>
             </div>
             <ul className="nav-overlay-links">
               {links.map((l, i) =>

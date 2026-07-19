@@ -644,10 +644,17 @@ img { height: auto; display: block; }
    and the divider above the first link sit exactly where the header logo and
    the search bar's top border sit on non-menu pages */
 .nav-overlay-brand {
+  position: relative;
   display: flex; align-items: center; justify-content: center;
   min-height: 64px; padding: 12px 0 10px;
 }
 .nav-overlay-brand .brand { position: static; left: auto; top: auto; transform: none; }
+.nav-overlay-close {
+  position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  color: var(--paper); background: none; border: 0; cursor: pointer; padding: 0;
+}
 .nav-overlay-links { list-style: none; margin: 0; padding: 0; }
 .nav-overlay-links li {
   border-top: 1px solid rgba(250, 247, 240, 0.16);
