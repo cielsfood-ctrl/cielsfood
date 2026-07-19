@@ -196,8 +196,12 @@ function ImageSlider({ photos }) {
         </div>
         {photos.length > 1 &&
         <>
-            <button className="slider-arrow prev" onClick={() => go(-1)} aria-label="Previous">←</button>
-            <button className="slider-arrow next" onClick={() => go(1)} aria-label="Next">→</button>
+            <button className="slider-arrow prev" onClick={() => go(-1)} aria-label="Previous">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 4 7 12 15 20"/></svg>
+            </button>
+            <button className="slider-arrow next" onClick={() => go(1)} aria-label="Next">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 4 17 12 9 20"/></svg>
+            </button>
           </>
         }
       </div>
