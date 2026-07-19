@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 # publish-reviews.sh — Notion → data.js automated publisher
-# Usage: ./publish-reviews.sh [--dry-run]
-#   --dry-run  Fetch, parse, show diff, test Notion PATCH calls,
-#              but do NOT write src/data.js or commit/push.
+# Usage: ./publish-reviews.sh [--dry-run | --sync-dishes]
+#   --dry-run      Fetch, parse, show diff, test Notion PATCH calls,
+#                  but do NOT write src/data.js or commit/push.
+#   --sync-dishes  Read the Dish multi-select for ALL restaurants in the
+#                  Notion DB and refresh the dish arrays of matching
+#                  entries in src/data.js (shows diff, asks approval).
 # Requires: $NOTION_KEY, curl, python3, git
 
 set -euo pipefail
 
 DRY_RUN=0
+SYNC_DISHES=0
 if [ "${1:-}" = "--dry-run" ]; then
   DRY_RUN=1
+elif [ "${1:-}" = "--sync-dishes" ]; then
+  SYNC_DISHES=1
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -51,6 +57,124 @@ if [ "$DRY_RUN" = "1" ]; then
   echo "── DRY RUN ───────────────────────────────────────────────────────────"
   echo "  src/data.js will NOT be modified. Git commit/push skipped."
   echo "  Notion PATCH calls will run to test connectivity."
+fi
+
+# ── Sync-dishes mode: refresh dish arrays in data.js from Notion ──────────────
+if [ "$SYNC_DISHES" = "1" ]; then
+  echo ""
+  echo "── Syncing Dish values from Notion ───────────────────────────────────"
+
+  # No status filter: match every Notion restaurant against data.js by name;
+  # pages not yet in data.js are reported and skipped.
+  curl -sf -X POST "https://api.notion.com/v1/databases/${NOTION_REST_DB}/query" \
+    -H "Authorization: Bearer $NOTION_KEY" \
+    -H "Notion-Version: 2022-06-28" \
+    -H "Content-Type: application/json" \
+    -d '{"page_size":100}' \
+    -o "$TMP_REST"
+
+  DATA_JS="$DATA_JS" TMP_REST="$TMP_REST" python3 << 'PYSYNC'
+import json, re, os, sys
+
+data_path = os.environ['DATA_JS']
+with open(data_path) as f:
+    data_js = f.read()
+with open(os.environ['TMP_REST']) as f:
+    resp = json.load(f)
+
+if resp.get('object') != 'list':
+    print('Error: unexpected Notion API response.', file=sys.stderr)
+    sys.exit(1)
+
+def get_text(arr):
+    return ''.join(t.get('plain_text', '') for t in (arr or []))
+
+def js_str(s):
+    return s.strip().replace('\\', '\\\\').replace('"', '\\"')
+
+lines = data_js.split('\n')
+changed, unchanged, unmatched = [], [], []
+
+for page in resp['results']:
+    props = page.get('properties', {})
+    name = get_text((props.get('Restaurant', {}) or {}).get('title') or [])
+    if not name:
+        continue
+    tags = [d.get('name', '') for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
+    arr = ', '.join(f'"{js_str(t)}"' for t in tags)
+
+    found = False
+    for i, line in enumerate(lines):
+        m = re.search(r'id: "r\d+", name: "([^"]+)"', line)
+        if not m or m.group(1).lower() != js_str(name).lower():
+            continue
+        found = True
+        old_m = re.search(r'dish: \[([^\]]*)\]', line)
+        if old_m:
+            old = old_m.group(1)
+            new_line = line[:old_m.start()] + f'dish: [{arr}]' + line[old_m.end():]
+        else:
+            old = '(missing)'
+            new_line = re.sub(r'(michelin: "[^"]*")',
+                              lambda mm: mm.group(1) + f', dish: [{arr}]', line, count=1)
+        if new_line != line:
+            lines[i] = new_line
+            changed.append((name, old, arr))
+        else:
+            unchanged.append(name)
+        break
+    if not found:
+        unmatched.append(name)
+
+print('')
+print('─' * 62)
+print('  DISH SYNC SUMMARY')
+print('─' * 62)
+for name, old, new in changed:
+    print(f'  [UPDATE] {name}')
+    print(f'           dish: [{old}] → [{new}]')
+for name in unchanged:
+    print(f'  [OK]     {name} — already in sync')
+for name in unmatched:
+    print(f'  [SKIP]   {name} — in Notion but not in data.js')
+print('─' * 62)
+print(f'  {len(changed)} updated, {len(unchanged)} already in sync, {len(unmatched)} skipped')
+print('─' * 62)
+
+if changed:
+    with open(data_path, 'w') as f:
+        f.write('\n'.join(lines))
+PYSYNC
+
+  echo ""
+  echo "── Git diff ──────────────────────────────────────────────────────────"
+  git diff src/data.js
+
+  if git diff --quiet src/data.js; then
+    echo "  No changes — data.js dish values already match Notion."
+    exit 0
+  fi
+
+  echo ""
+  echo "Type 'approve' to commit and push the dish sync."
+  echo "Type anything else to abort (changes to src/data.js will be reverted)."
+  printf "> "
+  read -r RESPONSE
+  if [ "$RESPONSE" != "approve" ]; then
+    echo "Aborted — reverting src/data.js."
+    git checkout -- src/data.js
+    exit 0
+  fi
+
+  echo "  Pulling latest remote changes before commit..."
+  git stash
+  git pull --rebase origin main
+  git stash pop
+  git add src/data.js
+  git commit -m "Sync restaurant dish arrays from Notion Dish property"
+  git push origin main
+  echo "  Pushed to main."
+  exit 0
 fi
 
 # ── 1. Fetch from Notion ──────────────────────────────────────────────────────
