@@ -3,6 +3,7 @@
 function ReviewsPage({ navigate }) {
   const [view, setView] = useState("list");
   const [cuisine, setCuisine] = useState("All");
+  const [dish, setDish] = useState("All");
   const [city, setCity] = useState("All");
   const [michelin, setMichelin] = useState("All");
   const [minTasti, setMinTasti] = useState(0);
@@ -34,6 +35,7 @@ function ReviewsPage({ navigate }) {
       };
     }).
     filter((r) => cuisine === "All" || r.cuisine === cuisine).
+    filter((r) => dish === "All" || (r.dish || []).includes(dish)).
     filter((r) => city === "All" || r.location === city).
     filter((r) => michelin === "All" || r.michelin === michelin).
     filter((r) => r.tastiness >= minTasti).
@@ -47,10 +49,10 @@ function ReviewsPage({ navigate }) {
       // string keys: name, location
       return ((a[key] || "").toString().toLowerCase() < (b[key] || "").toString().toLowerCase() ? -1 : 1) * dir;
     });
-  }, [cuisine, city, michelin, minTasti, search, sortMode]);
+  }, [cuisine, dish, city, michelin, minTasti, search, sortMode]);
 
   // Reset to page 1 whenever filters/sort change
-  useEffect(() => { setPage(1); }, [cuisine, city, michelin, minTasti, search, sortMode, view]);
+  useEffect(() => { setPage(1); }, [cuisine, dish, city, michelin, minTasti, search, sortMode, view]);
 
   const totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
   const safePage = Math.min(page, totalPages);
@@ -58,6 +60,7 @@ function ReviewsPage({ navigate }) {
   const sortLabel = (SORT_OPTIONS.find((o) => o.value === sortMode) || {}).label || "";
 
   const cuisineOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.map((r) => r.cuisine))).sort()];
+  const dishOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.flatMap((r) => r.dish || []))).sort()];
   const cityOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.map((r) => r.location))).sort()];
   const michOpts = ["All", ...window.MICHELIN];
 
@@ -99,6 +102,12 @@ function ReviewsPage({ navigate }) {
                 </select>
               </div>
               <div className="filter-group">
+                <label>Dish</label>
+                <select value={dish} onChange={(e) => setDish(e.target.value)}>
+                  {dishOpts.map((o) => <option key={o}>{o}</option>)}
+                </select>
+              </div>
+              <div className="filter-group">
                 <label>Location</label>
                 <select value={city} onChange={(e) => setCity(e.target.value)}>
                   {cityOpts.map((o) => <option key={o}>{o}</option>)}
@@ -122,7 +131,7 @@ function ReviewsPage({ navigate }) {
               </div>
               <div className="filter-group">
                 <button className="btn--ghost btn" onClick={() => {
-                  setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+                  setCuisine("All");setDish("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
                 }}>Reset filters</button>
               </div>
             </div>
@@ -139,6 +148,12 @@ function ReviewsPage({ navigate }) {
           <label>Cuisine</label>
           <select value={cuisine} onChange={(e) => setCuisine(e.target.value)}>
             {cuisineOpts.map((o) => <option key={o}>{o}</option>)}
+          </select>
+        </div>
+        <div className="filter-group">
+          <label>Dish</label>
+          <select value={dish} onChange={(e) => setDish(e.target.value)}>
+            {dishOpts.map((o) => <option key={o}>{o}</option>)}
           </select>
         </div>
         <div className="filter-group">
@@ -164,7 +179,7 @@ function ReviewsPage({ navigate }) {
           </select>
         </div>
         <button className="filter-reset" onClick={() => {
-          setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+          setCuisine("All");setDish("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
         }}>Reset filters</button>
       </section>
 

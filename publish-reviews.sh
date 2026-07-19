@@ -183,6 +183,7 @@ for page in restaurants_data['results']:
     url        = (props.get('URL', {}) or {}).get('url') or ''
     phone      = (props.get('Phone', {}) or {}).get('phone_number') or ''
     michelin   = ((props.get('Michelin', {}).get('select')) or {}).get('name', 'None')
+    dish_tags  = [d.get('name', '') for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
     is_new     = name.lower() not in existing_name_to_id
 
     if is_new:
@@ -191,10 +192,11 @@ for page in restaurants_data['results']:
         lat_s       = str(lat) if lat is not None else 'null'
         lng_s       = str(lng) if lng is not None else 'null'
         phone_field = f', phone: "{js_str(phone)}"' if phone else ''
+        dish_js     = ', '.join(f'"{js_str(d)}"' for d in dish_tags)
         new_rest_entries.append(
             f'  {{ id: "{rest_id}", name: "{js_str(name)}", cuisine: "{cuisine}", '
             f'location: "{location}", address: "{js_str(address)}", '
-            f'website: "{url}"{phone_field}, michelin: "{michelin}", '
+            f'website: "{url}"{phone_field}, michelin: "{michelin}", dish: [{dish_js}], '
             f'value: 4, mapX: 0.50, mapY: 0.40, lat: {lat_s}, lng: {lng_s} }}'
         )
         existing_name_to_id[name.lower()] = rest_id
@@ -203,6 +205,7 @@ for page in restaurants_data['results']:
         summary.append(f'        {address}')
         if phone:
             summary.append(f'        Phone: {phone}')
+        summary.append(f'        Dish: {", ".join(dish_tags) if dish_tags else "(none)"}')
     else:
         rest_id = existing_name_to_id[name.lower()]
         summary.append(f'\n  [SKIP] {name} ({rest_id}) — already in data.js; skipping')
