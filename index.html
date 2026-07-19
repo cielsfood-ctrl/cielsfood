@@ -514,7 +514,17 @@ img { height: auto; display: block; }
 }
 .brand-logo {
   height: 52px; width: auto; display: block;
+  max-width: none; /* never squash horizontally when the header row tightens */
   filter: invert(1) brightness(1.1);
+}
+
+/* Narrow desktop (above the burger breakpoint): shrink logo/search/links
+   proportionally instead of letting the logo compress */
+@media (max-width: 1120px) and (min-width: 881px) {
+  .brand-logo { height: 42px; }
+  .nav-search-input { width: 130px; }
+  .nav-link { padding: 10px 12px; letter-spacing: 0.2em; }
+  .nav-top-bar { gap: 16px; }
 }
 
 .nav-links {
