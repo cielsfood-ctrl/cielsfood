@@ -140,7 +140,7 @@ function RecentList({ navigate }) {
     window.REVIEWS.forEach((r) => {
       if (!byRest[r.restaurantId] || r.date > byRest[r.restaurantId].date) byRest[r.restaurantId] = r;
     });
-    return Object.values(byRest).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6);
+    return Object.values(byRest).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
   }, []);
   return (
     <section style={{ borderTop: "1px solid var(--ink)", borderBottom: "1px solid var(--ink)" }}>
