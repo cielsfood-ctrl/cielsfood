@@ -100,7 +100,8 @@ for page in resp['results']:
     name = get_text((props.get('Restaurant', {}) or {}).get('title') or [])
     if not name:
         continue
-    tags = [d.get('name', '') for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
+    tags = [' '.join(w[:1].upper() + w[1:] for w in d.get('name', '').split())
+            for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
     arr = ', '.join(f'"{js_str(t)}"' for t in tags)
 
     found = False
@@ -307,7 +308,8 @@ for page in restaurants_data['results']:
     url        = (props.get('URL', {}) or {}).get('url') or ''
     phone      = (props.get('Phone', {}) or {}).get('phone_number') or ''
     michelin   = ((props.get('Michelin', {}).get('select')) or {}).get('name', 'None')
-    dish_tags  = [d.get('name', '') for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
+    dish_tags  = [' '.join(w[:1].upper() + w[1:] for w in d.get('name', '').split())
+                  for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
     is_new     = name.lower() not in existing_name_to_id
 
     if is_new:

@@ -39,7 +39,7 @@ function ReviewsPage({ navigate }) {
     filter((r) => city === "All" || r.location === city).
     filter((r) => michelin === "All" || r.michelin === michelin).
     filter((r) => r.tastiness >= minTasti).
-    filter((r) => !search.trim() || (r.name + r.cuisine + r.location).toLowerCase().includes(search.toLowerCase())).
+    filter((r) => !search.trim() || (r.name + r.cuisine + r.location + (r.dish || []).join(" ")).toLowerCase().includes(search.toLowerCase())).
     sort((a, b) => {
       const [key, dirRaw] = sortMode.split("-");
       const dir = dirRaw === "asc" ? 1 : -1;
