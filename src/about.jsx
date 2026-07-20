@@ -13,7 +13,7 @@ function AboutPage({ navigate }) {
             experience an incredible variety of global cuisines. My travels have taken me from Japan
             to France and beyond, with each journey deepening my love for exploring local food
             cultures. You can{" "}
-            <a className="link" href="#/categories" onClick={(e) => {e.preventDefault();navigate("categories");}}>learn more about my rating categories</a>.
+            <a className="link" href="/categories" onClick={(e) => {e.preventDefault();navigate("categories");}}>learn more about my rating categories</a>.
           </p>
           <p>
             Join me on{" "}

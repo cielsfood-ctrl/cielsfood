@@ -3,24 +3,40 @@
 const { useState: useS, useEffect: useE } = React;
 
 function App() {
-  // hash-based router: #/home, #/about, #/categories, #/restaurants, #/restaurant/r02
-  const parseHash = () => {
-    const h = (window.location.hash || "#/home").replace(/^#\/?/, "");
-    const [page, ...rest] = h.split("/");
-    return { page: page || "home", id: rest[0] || null };
+  // Clean-path router: /, /about, /categories, /restaurants,
+  // /restaurant/:slug, /search/:term (GitHub Pages SPA — see 404.html).
+  const parsePath = () => {
+    const path = window.location.pathname.replace(/^\/+|\/+$/g, "");
+    if (!path) return { page: "home", seg: null };
+    const [page, ...rest] = path.split("/");
+    let seg = null;
+    if (rest.length) {
+      try { seg = decodeURIComponent(rest.join("/")); }
+      catch (e) { seg = rest.join("/"); }
+    }
+    return { page, seg };
   };
-  const [route, setRoute] = useS(parseHash());
+  const [route, setRoute] = useS(parsePath());
 
   useE(() => {
-    const onHash = () => setRoute(parseHash());
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    const onPop = () => setRoute(parsePath());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  function pathFor(page, params = {}) {
+    if (page === "home") return "/";
+    if (page === "restaurant" && params.id) return `/restaurant/${window.slugForRestaurant(params.id)}`;
+    if (page === "search" && params.term) return `/search/${encodeURIComponent(params.term)}`;
+    return `/${page}`;
+  }
+
   function navigate(page, params = {}) {
-    if (page === "restaurant" && params.id) window.location.hash = `#/restaurant/${params.id}`;
-    else if (page === "search" && params.term) window.location.hash = `#/search/${encodeURIComponent(params.term)}`;
-    else window.location.hash = `#/${page}`;
+    const path = pathFor(page, params);
+    if (path !== window.location.pathname) {
+      window.history.pushState({}, "", path);
+    }
+    setRoute(parsePath());
     window.scrollTo({ top: 0 });
   }
 
@@ -52,8 +68,11 @@ function App() {
   else if (pageId === "about")      body = <AboutPage navigate={navigate}/>;
   else if (pageId === "categories") body = <CategoriesPage/>;
   else if (pageId === "restaurants") body = <ReviewsPage navigate={navigate}/>;
-  else if (pageId === "restaurant") body = <ReviewDetailPage restaurantId={route.id} navigate={navigate}/>;
-  else if (pageId === "search")     body = <SearchResultsPage query={decodeURIComponent(route.id || "")} navigate={navigate}/>;
+  else if (pageId === "restaurant") {
+    const rest = window.restaurantBySlug(route.seg);
+    body = <ReviewDetailPage restaurantId={rest ? rest.id : route.seg} navigate={navigate}/>;
+  }
+  else if (pageId === "search")     body = <SearchResultsPage query={route.seg || ""} navigate={navigate}/>;
 
   const navPage = (pageId === "restaurant" || pageId === "search") ? "restaurants" : pageId;
 

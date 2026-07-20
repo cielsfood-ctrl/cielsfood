@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-  <script>window.__resources = {"logo":"assets/logo-horizontal.png","belly-photo-0":"assets/belly-photo-0.jpg","belly-photo-1":"assets/belly-photo-1.jpg","belly-photo-2":"assets/belly-photo-2.jpg","belly-photo-3":"assets/belly-photo-3.jpg","belly-photo-4":"assets/belly-photo-4.jpg","belly-photo-5":"assets/belly-photo-5.jpg","belly-photo-6":"assets/belly-photo-6.jpg","tutto-apr-0":"assets/tutto-apr-0.jpg","tutto-apr-1":"assets/tutto-apr-1.jpg","tutto-apr-2":"assets/tutto-apr-2.jpg","tutto-apr-3":"assets/tutto-apr-3.jpg","tutto-sep-0":"assets/tutto-sep-0.jpg","tutto-sep-1":"assets/tutto-sep-1.jpg","tutto-sep-2":"assets/tutto-sep-2.jpg","tutto-sep-3":"assets/tutto-sep-3.jpg","tutto-sep-4":"assets/tutto-sep-4.jpg","tutto-sep-5":"assets/tutto-sep-5.jpg"};</script>
+  <base href="/">
+  <!-- GitHub Pages SPA: restore the real path from the ?/ redirect written by
+       404.html, so deep links and refreshes land on the right clean URL. -->
+  <script>
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+      }
+    }(window.location));
+  </script>
+  <!-- Back-compat: rewrite old hash links (#/restaurant/r22, #/about, …) to
+       clean paths so previously shared/bookmarked URLs still resolve. -->
+  <script>
+    (function (l) {
+      if (l.hash && l.hash.indexOf('#/') === 0) {
+        var clean = l.hash.slice(1);
+        if (clean === '/home') clean = '/';
+        window.history.replaceState(null, null, clean);
+      }
+    }(window.location));
+  </script>
+  <script>window.__resources ={"logo":"assets/logo-horizontal.png","belly-photo-0":"assets/belly-photo-0.jpg","belly-photo-1":"assets/belly-photo-1.jpg","belly-photo-2":"assets/belly-photo-2.jpg","belly-photo-3":"assets/belly-photo-3.jpg","belly-photo-4":"assets/belly-photo-4.jpg","belly-photo-5":"assets/belly-photo-5.jpg","belly-photo-6":"assets/belly-photo-6.jpg","tutto-apr-0":"assets/tutto-apr-0.jpg","tutto-apr-1":"assets/tutto-apr-1.jpg","tutto-apr-2":"assets/tutto-apr-2.jpg","tutto-apr-3":"assets/tutto-apr-3.jpg","tutto-sep-0":"assets/tutto-sep-0.jpg","tutto-sep-1":"assets/tutto-sep-1.jpg","tutto-sep-2":"assets/tutto-sep-2.jpg","tutto-sep-3":"assets/tutto-sep-3.jpg","tutto-sep-4":"assets/tutto-sep-4.jpg","tutto-sep-5":"assets/tutto-sep-5.jpg"};</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CieL's Food Guide - Honest Restaurant Reviews | cielsfood</title>

@@ -194,6 +194,28 @@ function latestReviewFor(restaurantId) {
 function restaurantById(id) {
   return RESTAURANTS.find(r => r.id === id);
 }
+// URL slug from a restaurant name, e.g. "Dim Sum Duck (King's Cross Road)"
+// → "dim-sum-duck-kings-cross-road".
+function slugify(str) {
+  return (str || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // strip accents (č->c, ý->y)
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+function slugForRestaurant(id) {
+  const r = restaurantById(id);
+  return r ? slugify(r.name) : id;
+}
+// Resolve a slug back to a restaurant; also accepts a raw id (e.g. "r12")
+// so any older /restaurant/r12 links keep working.
+function restaurantBySlug(slug) {
+  if (!slug) return null;
+  return RESTAURANTS.find(r => slugify(r.name) === slug)
+      || RESTAURANTS.find(r => r.id === slug)
+      || null;
+}
 function formatDate(iso) {
   const d = new Date(iso + "T00:00:00");
   const day = d.getDate();
@@ -210,5 +232,6 @@ function poundString(n) {
 Object.assign(window, {
   CUISINES, CITIES, MICHELIN, RESTAURANTS, REVIEWS, FAVORITE_ID,
   reviewsFor, latestReviewFor, restaurantById, formatDate, poundString,
+  slugify, slugForRestaurant, restaurantBySlug,
   photoPlaceholder
 });
