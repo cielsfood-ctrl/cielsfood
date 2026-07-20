@@ -143,7 +143,7 @@ function Footer() {
       <div className="foot shell">
         <span>© cielsfood.com | Words, Photography and Website Development by Cherrie Leung</span>
         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-          <a href="mailto:cielsfood@gmail.com" aria-label="Email" style={{ color: "inherit", display: "flex" }}>
+          <a href="mailto:cherrie@cielsfood.com" aria-label="Email" style={{ color: "inherit", display: "flex" }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 512 512" fill="none" stroke="currentColor" strokeWidth="28">
               <circle cx="256" cy="256" r="236" />
               <rect x="112" y="160" width="288" height="196" rx="8" />
