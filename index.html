@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html lang="en"><head>
   <base href="/">
-  <!-- GitHub Pages SPA: restore the real path from the ?/ redirect written by
-       404.html, so deep links and refreshes land on the right clean URL. -->
+  <!-- URL normaliser — runs before the app so every entry point resolves to a
+       clean path. Handles two cases:
+         1. 404.html SPA redirect:  /?/<path>&<query>  →  /<path>?<query>
+         2. Legacy hash links shared externally (Instagram, bookmarks) such as
+            #/restaurant/slug, #/restaurants, #/about, #/home  →  clean path.
+       Both funnel through a single history.replaceState so refreshes and deep
+       links land on the equivalent clean URL. -->
   <script>
     (function (l) {
-      if (l.search[1] === '/') {
-        var decoded = l.search.slice(1).split('&').map(function (s) {
+      var path = l.pathname;
+      var query = '';
+      var hash = '';
+
+      // 1. Restore the real path from the 404.html "?/" redirect.
+      if (l.search && l.search.charAt(1) === '/') {
+        var parts = l.search.slice(1).split('&').map(function (s) {
           return s.replace(/~and~/g, '&');
-        }).join('?');
-        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        });
+        path = l.pathname.replace(/\/$/, '') + parts.shift();
+        query = parts.length ? '?' + parts.join('&') : '';
       }
-    }(window.location));
-  </script>
-  <!-- Back-compat: rewrite old hash links (#/restaurant/r22, #/about, …) to
-       clean paths so previously shared/bookmarked URLs still resolve. -->
-  <script>
-    (function (l) {
+
+      // 2. Legacy "#/..." hash routes take over as the route (#/home → root).
       if (l.hash && l.hash.indexOf('#/') === 0) {
-        var clean = l.hash.slice(1);
-        if (clean === '/home') clean = '/';
-        window.history.replaceState(null, null, clean);
+        var route = l.hash.slice(1);
+        path = (route === '/home' || route === '/') ? '/' : route;
+        query = '';
+      } else {
+        hash = l.hash || ''; // keep any genuine anchor hash
+      }
+
+      var target = (path || '/') + query + hash;
+      if (target !== l.pathname + l.search + l.hash) {
+        window.history.replaceState(null, null, target);
       }
     }(window.location));
   </script>
