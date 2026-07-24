@@ -82,8 +82,9 @@ function ReviewsPage({ navigate }) {
         </div>
       </section>
 
-      {/* Mobile: filter bottom sheet */}
-      {filtersOpen && (
+      {/* Mobile: filter bottom sheet — portalled to <body> so it escapes the
+          .shell stacking context (z-index:1) and layers above the nav/footer */}
+      {filtersOpen && ReactDOM.createPortal(
         <div className="filter-sheet-overlay" onClick={() => setFiltersOpen(false)}>
           <div className="filter-sheet" onClick={(e) => e.stopPropagation()}>
             <div className="filter-sheet-head">
@@ -136,7 +137,8 @@ function ReviewsPage({ navigate }) {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <section className="filters">
