@@ -63,6 +63,23 @@ function App() {
   const known = ["home", "about", "categories", "restaurants", "restaurant", "search"];
   if (!known.includes(pageId)) pageId = "home";
 
+  // Per-page document.title. Runs in an effect (a tick after any pushState) so
+  // the browser tab reliably reflects it on both direct loads and in-app nav.
+  useE(() => {
+    const SITE = "CieL's Food Guide";
+    let label;
+    if (pageId === "about")            label = "About";
+    else if (pageId === "restaurants") label = "Restaurants";
+    else if (pageId === "categories")  label = "Categories";
+    else if (pageId === "search")      label = "Search";
+    else if (pageId === "restaurant") {
+      const rest = window.restaurantBySlug(route.seg);
+      label = rest ? `Review of ${rest.name}` : "Restaurants";
+    }
+    else label = "Home";
+    document.title = `${label} - ${SITE}`;
+  }, [pageId, route.seg]);
+
   let body;
   if (pageId === "home")            body = <HomePage navigate={navigate}/>;
   else if (pageId === "about")      body = <AboutPage navigate={navigate}/>;
