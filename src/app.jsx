@@ -80,6 +80,21 @@ function App() {
     document.title = `${label} - ${SITE}`;
   }, [pageId, route.seg]);
 
+  // GA4 page_view for in-app navigation. The initial load's page_view is sent
+  // by gtag('config') in index.html, so skip the first run to avoid double
+  // counting; fire on every subsequent route change (pushState + popstate).
+  // Ordered after the title effect so page_title is already current.
+  const gaFirstRun = React.useRef(true);
+  useE(() => {
+    if (gaFirstRun.current) { gaFirstRun.current = false; return; }
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", "page_view", {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname + window.location.search
+    });
+  }, [pageId, route.seg]);
+
   let body;
   if (pageId === "home")            body = <HomePage navigate={navigate}/>;
   else if (pageId === "about")      body = <AboutPage navigate={navigate}/>;
