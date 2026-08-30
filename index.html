@@ -1169,6 +1169,21 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   transition: transform 240ms ease;
 }
 .detail-link:hover .detail-link-label::after { transform: scaleX(1); }
+
+/* Address link: non-italic, with the same left-to-right sliding underline
+   as the phone/website links (not the instant text-decoration underline) */
+.detail-addr { text-decoration: none; color: var(--muted); }
+.detail-addr-label {
+  position: relative;
+  font-family: var(--serif); font-size: 16px; font-style: normal;
+}
+.detail-addr-label::after {
+  content: ""; position: absolute; left: 0; bottom: -2px;
+  width: 100%; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 240ms ease;
+}
+.detail-addr:hover .detail-addr-label::after { transform: scaleX(1); }
 .detail-grid {
   display: grid; grid-template-columns: 2fr 1fr; gap: 56px;
   padding: 40px 0 80px;
@@ -1463,7 +1478,7 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
   /* Address on its own row; phone + website as icon-only links on the next
      row (labels hidden, tel:/website behaviour unchanged) */
   .detail-action-row { flex-wrap: wrap; align-items: center; gap: 14px 28px; }
-  .detail-action-row .kicker { width: 100%; }
+  .detail-action-row .detail-addr { width: 100%; }
   .detail-link .detail-link-label { display: none; }
   .detail-link svg { width: 20px; height: 20px; }
   .detail-side .info-table .row { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 12px 0; }
