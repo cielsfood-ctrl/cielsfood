@@ -257,10 +257,11 @@ function MapView({ rows, navigate }) {
       worldCopyJump: true,
       attributionControl: true
     }).setView([51.5135, -0.1], 12);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19,
-      subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    // Esri "Light Gray Canvas" — free, no API key; minimal light basemap.
+    // Note: Esri tiles use {z}/{y}/{x} order and have no {s} subdomains.
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 16,
+      attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     mapRef.current = map;
     setTimeout(() => map.invalidateSize(), 60);
