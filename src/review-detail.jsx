@@ -60,7 +60,9 @@ function ReviewDetailPage({ restaurantId, navigate }) {
     <main className="shell">
       <section className="detail-head">
         <div className="detail-meta">
-          <button className="link" onClick={() => navigate("restaurants")} style={{ font: "inherit", letterSpacing: "0.22em" }}>← Back to Reviews</button>
+          <button className="back-link" onClick={() => navigate("restaurants")}>
+            <span className="back-link-label">← Back to Reviews</span>
+          </button>
           <span>{"\n"}</span>
           <span>{"\n"}</span>
           <span>{"\n"}</span>

@@ -1,15 +1,23 @@
 // CIELSFOOD — Reviews page (List + Map view)
 
+// Remembered list UI state so "Back to Reviews" returns to the same filters,
+// sort, view AND pagination page. Persists across ReviewsPage remounts within
+// the SPA session (module-level, reset on full page reload).
+let savedReviewsState = {
+  view: "list", cuisine: "All", dish: "All", city: "All", michelin: "All",
+  minTasti: 0, search: "", sortMode: "date-desc", page: 1
+};
+
 function ReviewsPage({ navigate }) {
-  const [view, setView] = useState("list");
-  const [cuisine, setCuisine] = useState("All");
-  const [dish, setDish] = useState("All");
-  const [city, setCity] = useState("All");
-  const [michelin, setMichelin] = useState("All");
-  const [minTasti, setMinTasti] = useState(0);
-  const [search, setSearch] = useState("");
-  const [sortMode, setSortMode] = useState("date-desc");
-  const [page, setPage] = useState(1);
+  const [view, setView] = useState(savedReviewsState.view);
+  const [cuisine, setCuisine] = useState(savedReviewsState.cuisine);
+  const [dish, setDish] = useState(savedReviewsState.dish);
+  const [city, setCity] = useState(savedReviewsState.city);
+  const [michelin, setMichelin] = useState(savedReviewsState.michelin);
+  const [minTasti, setMinTasti] = useState(savedReviewsState.minTasti);
+  const [search, setSearch] = useState(savedReviewsState.search);
+  const [sortMode, setSortMode] = useState(savedReviewsState.sortMode);
+  const [page, setPage] = useState(savedReviewsState.page);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const PER_PAGE = 10;
 
@@ -51,8 +59,18 @@ function ReviewsPage({ navigate }) {
     });
   }, [cuisine, dish, city, michelin, minTasti, search, sortMode]);
 
-  // Reset to page 1 whenever filters/sort change
-  useEffect(() => { setPage(1); }, [cuisine, dish, city, michelin, minTasti, search, sortMode, view]);
+  // Reset to page 1 whenever filters/sort change — but NOT on the initial
+  // mount, so a page restored from "Back to Reviews" isn't clobbered.
+  const isFirstRun = useRef(true);
+  useEffect(() => {
+    if (isFirstRun.current) { isFirstRun.current = false; return; }
+    setPage(1);
+  }, [cuisine, dish, city, michelin, minTasti, search, sortMode, view]);
+
+  // Remember the list UI state for return navigation.
+  useEffect(() => {
+    savedReviewsState = { view, cuisine, dish, city, michelin, minTasti, search, sortMode, page };
+  }, [view, cuisine, dish, city, michelin, minTasti, search, sortMode, page]);
 
   const totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
   const safePage = Math.min(page, totalPages);
