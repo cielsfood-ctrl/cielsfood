@@ -109,7 +109,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
 
           <div className="body" style={{ marginTop: 32 }}>
             {review.body.split(/\n\n+/).map((para, i) =>
-            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", fontSize: "14px", marginTop: i === 0 ? 0 : "1.8em" }}>
+            <p key={i} style={{ fontFamily: "var(--serif)", color: "var(--ink-2)", width: "100%", fontSize: "16px", lineHeight: "1.7", marginTop: i === 0 ? 0 : "1.8em" }}>
                 {para}
               </p>
             )}
@@ -207,7 +207,7 @@ function ImageSlider({ photos }) {
         }
       </div>
       <div className="slider-meta">
-        <span className="slider-cap" style={{ padding: 0, fontSize: "13px", width: "100%", maxWidth: "500px", fontWeight: 400, fontStyle: "normal" }}>{photos[idx].caption}</span>
+        <span className="slider-cap" style={{ padding: 0, fontSize: "13px", width: "100%", maxWidth: "100%", fontWeight: 400, fontStyle: "normal" }}>{photos[idx].caption}</span>
         <div className="slider-dots">
           {photos.map((_, i) =>
           <span key={i}
