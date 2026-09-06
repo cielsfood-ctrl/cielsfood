@@ -15,6 +15,25 @@ function ReviewDetailPage({ restaurantId, navigate }) {
   const [selectedId, setSelectedId] = useState(reviews[0].id);
   const review = reviews.find((r) => r.id === selectedId) || reviews[0];
 
+  // Desktop only: measure the rendered height of the image slider block
+  // (image + caption/dots) so the sticky sidebar can match its bottom edge.
+  const sliderWrapRef = useRef(null);
+  const [sidebarHeight, setSidebarHeight] = useState(null);
+  useEffect(() => {
+    const el = sliderWrapRef.current;
+    if (!el) return;
+    const desktopQuery = window.matchMedia("(min-width: 881px)");
+    const measure = () => setSidebarHeight(desktopQuery.matches ? el.getBoundingClientRect().height : null);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    desktopQuery.addEventListener("change", measure);
+    return () => {
+      ro.disconnect();
+      desktopQuery.removeEventListener("change", measure);
+    };
+  }, []);
+
   // SEO: inject Restaurant / Review / AggregateRating JSON-LD for this page
   useEffect(() => {
     const avg = reviews.reduce((s, r) => s + r.tastiness, 0) / reviews.length;
@@ -105,7 +124,9 @@ function ReviewDetailPage({ restaurantId, navigate }) {
 
       <section className="detail-grid">
         <div>
-          <ImageSlider photos={review.photos} />
+          <div ref={sliderWrapRef}>
+            <ImageSlider photos={review.photos} />
+          </div>
 
           <div className="body" style={{ marginTop: 32 }}>
             {review.body.split(/\n\n+/).map((para, i) =>
@@ -116,7 +137,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           </div>
         </div>
 
-        <aside className="detail-side">
+        <aside className="detail-side" style={sidebarHeight ? { height: `${sidebarHeight}px` } : undefined}>
           <div className="eyebrow" style={{ fontSize: "14px" }}>At a glance</div>
           <div className="info-table">
             <div className="row"><span className="k">Cuisine</span><span className="v">{rest.cuisine}</span></div>
@@ -140,7 +161,6 @@ function ReviewDetailPage({ restaurantId, navigate }) {
             )}
           </div>
 
-          <div className="eyebrow" style={{ marginTop: 36, marginBottom: 8, fontSize: "14px" }}>Location</div>
           <div className="mini-map" style={{ padding: 0, background: "var(--paper-2)" }}>
             <iframe
               title={`Map of ${rest.name}`}

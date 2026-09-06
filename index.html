@@ -1204,6 +1204,17 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 }
 @media (max-width: 880px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
 
+/* Desktop: sidebar sticks alongside the review body, sized to match the
+   image slider's rendered height (see sliderWrapRef in review-detail.jsx). */
+@media (min-width: 881px) {
+  .detail-side {
+    position: sticky; top: 100px; align-self: start;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .detail-side .mini-map { flex: 1; min-height: 160px; height: auto; }
+}
+
 .slider { position: relative; background: var(--paper-2); border: 1px solid var(--rule); width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
 .slider-track {
   display: flex; height: 100%;
