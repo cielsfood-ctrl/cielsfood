@@ -16,7 +16,8 @@ function ReviewDetailPage({ restaurantId, navigate }) {
   const review = reviews.find((r) => r.id === selectedId) || reviews[0];
 
   // Desktop only: measure the rendered height of the image slider block
-  // (image + caption/dots) so the sticky sidebar can match its bottom edge.
+  // (image + caption/dots) as a floor for the sidebar, so the map fills
+  // down toward the slider's bottom edge without ever being clipped.
   const sliderWrapRef = useRef(null);
   const [sidebarHeight, setSidebarHeight] = useState(null);
   useEffect(() => {
@@ -137,7 +138,7 @@ function ReviewDetailPage({ restaurantId, navigate }) {
           </div>
         </div>
 
-        <aside className="detail-side" style={sidebarHeight ? { height: `${sidebarHeight}px` } : undefined}>
+        <aside className="detail-side" style={sidebarHeight ? { minHeight: `${sidebarHeight}px` } : undefined}>
           <div className="eyebrow" style={{ fontSize: "14px" }}>At a glance</div>
           <div className="info-table">
             <div className="row"><span className="k">Cuisine</span><span className="v">{rest.cuisine}</span></div>
