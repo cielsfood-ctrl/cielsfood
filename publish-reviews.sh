@@ -245,7 +245,24 @@ def get_text(arr):
 
 def parse_urls(arr):
     raw = get_text(arr)
-    return [p.strip() for p in re.split(r';\s*', raw) if p.strip().startswith('http')]
+    urls = [p.strip() for p in re.split(r';\s*', raw) if p.strip().startswith('http')]
+    return [apply_watermark_transform(u) for u in urls]
+
+# Standard 4:3 crop + watermark overlay applied to every review photo — must
+# match the transformation already baked into existing src/data.js URLs.
+CLOUDINARY_TRANSFORM = (
+    'c_fill,ar_4:3,g_auto/l_cielsfood_watermark/'
+    'c_scale,fl_relative,h_0.07,w_0.25/'
+    'fl_layer_apply,fl_no_overflow,g_south_east,x_20,y_20/'
+)
+
+def apply_watermark_transform(url):
+    # Only touch Cloudinary delivery URLs, and only if the watermark layer
+    # isn't already present — re-publishing an already-transformed URL
+    # (e.g. on a later sync) must not double-stack the transformation.
+    if 'res.cloudinary.com' not in url or '/upload/' not in url or 'l_cielsfood_watermark' in url:
+        return url
+    return url.replace('/upload/', f'/upload/{CLOUDINARY_TRANSFORM}', 1)
 
 def parse_captions(arr):
     raw = get_text(arr)
