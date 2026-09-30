@@ -1206,14 +1206,18 @@ table.reviews-table tr.row:hover { background: rgba(0,0,0,0.03); }
 
 /* Desktop: sidebar flows with the page (not sticky), sized to at least
    match the image slider's rendered height (see sliderWrapRef in
-   review-detail.jsx) so the map fills down toward the slider's bottom
-   edge — but never clipped if its content needs more room. */
+   review-detail.jsx). The map itself uses a solid, definite height
+   (not flex-grow) so the iframe + address overlay always render in
+   full — flex-grow's available space depends on the sidebar's min-height
+   vs. its content height, which isn't reliable enough to size the map
+   against; overflow:visible is a defensive fallback in case content
+   (e.g. a long address) ever needs more room than the box provides. */
 @media (min-width: 881px) {
   .detail-side {
     align-self: start;
     display: flex; flex-direction: column;
   }
-  .detail-side .mini-map { flex: 1; min-height: 220px; height: auto; }
+  .detail-side .mini-map { flex: 0 0 auto; height: 260px; overflow: visible; }
 }
 
 .slider { position: relative; background: var(--paper-2); border: 1px solid var(--rule); width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
