@@ -1,21 +1,22 @@
 #!/usr/bin/env bash
 # publish-reviews.sh — Notion → data.js automated publisher
-# Usage: ./publish-reviews.sh [--dry-run | --sync-dishes]
-#   --dry-run      Fetch, parse, show diff, test Notion PATCH calls,
-#                  but do NOT write src/data.js or commit/push.
-#   --sync-dishes  Read the Dish multi-select for ALL restaurants in the
-#                  Notion DB and refresh the dish arrays of matching
-#                  entries in src/data.js (shows diff, asks approval).
+# Usage: ./publish-reviews.sh [--dry-run | --sync-cuisines]
+#   --dry-run        Fetch, parse, show diff, test Notion PATCH calls,
+#                    but do NOT write src/data.js or commit/push.
+#   --sync-cuisines  Read the Cuisine multi-select for ALL restaurants in
+#                    the Notion DB and refresh the cuisine/cuisines fields
+#                    of matching entries in src/data.js (shows diff, asks
+#                    approval).
 # Requires: $NOTION_KEY, curl, python3, git
 
 set -euo pipefail
 
 DRY_RUN=0
-SYNC_DISHES=0
+SYNC_CUISINES=0
 if [ "${1:-}" = "--dry-run" ]; then
   DRY_RUN=1
-elif [ "${1:-}" = "--sync-dishes" ]; then
-  SYNC_DISHES=1
+elif [ "${1:-}" = "--sync-cuisines" ]; then
+  SYNC_CUISINES=1
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -59,10 +60,10 @@ if [ "$DRY_RUN" = "1" ]; then
   echo "  Notion PATCH calls will run to test connectivity."
 fi
 
-# ── Sync-dishes mode: refresh dish arrays in data.js from Notion ──────────────
-if [ "$SYNC_DISHES" = "1" ]; then
+# ── Sync-cuisines mode: refresh cuisine/cuisines fields in data.js ─────────────
+if [ "$SYNC_CUISINES" = "1" ]; then
   echo ""
-  echo "── Syncing Dish values from Notion ───────────────────────────────────"
+  echo "── Syncing Cuisine values from Notion ────────────────────────────────"
 
   # No status filter: match every Notion restaurant against data.js by name;
   # pages not yet in data.js are reported and skipped.
@@ -100,8 +101,11 @@ for page in resp['results']:
     name = get_text((props.get('Restaurant', {}) or {}).get('title') or [])
     if not name:
         continue
-    tags = [' '.join(w[:1].upper() + w[1:] for w in d.get('name', '').split())
-            for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
+    # Cuisine is a multi-select; Notion preserves selection order, so the
+    # first tag is the "primary" cuisine shown throughout the site, and the
+    # full list backs the Cuisine filter (matches on any selected tag).
+    tags = [d.get('name', '') for d in ((props.get('Cuisine', {}) or {}).get('multi_select') or []) if d.get('name')]
+    first = tags[0] if tags else ''
     arr = ', '.join(f'"{js_str(t)}"' for t in tags)
 
     found = False
@@ -110,17 +114,25 @@ for page in resp['results']:
         if not m or m.group(1).lower() != js_str(name).lower():
             continue
         found = True
-        old_m = re.search(r'dish: \[([^\]]*)\]', line)
-        if old_m:
-            old = old_m.group(1)
-            new_line = line[:old_m.start()] + f'dish: [{arr}]' + line[old_m.end():]
+        new_line = line
+
+        cm = re.search(r'cuisine: "([^"]*)"', new_line)
+        old_cuisine = cm.group(1) if cm else '(missing)'
+        if cm:
+            new_line = new_line[:cm.start()] + f'cuisine: "{js_str(first)}"' + new_line[cm.end():]
+
+        csm = re.search(r'cuisines: \[([^\]]*)\]', new_line)
+        old_cuisines = csm.group(1) if csm else '(missing)'
+        if csm:
+            new_line = new_line[:csm.start()] + f'cuisines: [{arr}]' + new_line[csm.end():]
         else:
-            old = '(missing)'
-            new_line = re.sub(r'(michelin: "[^"]*")',
-                              lambda mm: mm.group(1) + f', dish: [{arr}]', line, count=1)
+            cm2 = re.search(r'cuisine: "[^"]*"', new_line)
+            if cm2:
+                new_line = new_line[:cm2.end()] + f', cuisines: [{arr}]' + new_line[cm2.end():]
+
         if new_line != line:
             lines[i] = new_line
-            changed.append((name, old, arr))
+            changed.append((name, old_cuisine, first, old_cuisines, arr))
         else:
             unchanged.append(name)
         break
@@ -129,11 +141,12 @@ for page in resp['results']:
 
 print('')
 print('─' * 62)
-print('  DISH SYNC SUMMARY')
+print('  CUISINE SYNC SUMMARY')
 print('─' * 62)
-for name, old, new in changed:
+for name, old_c, new_c, old_arr, new_arr in changed:
     print(f'  [UPDATE] {name}')
-    print(f'           dish: [{old}] → [{new}]')
+    print(f'           cuisine: "{old_c}" → "{new_c}"')
+    print(f'           cuisines: [{old_arr}] → [{new_arr}]')
 for name in unchanged:
     print(f'  [OK]     {name} — already in sync')
 for name in unmatched:
@@ -152,12 +165,12 @@ PYSYNC
   git diff src/data.js
 
   if git diff --quiet src/data.js; then
-    echo "  No changes — data.js dish values already match Notion."
+    echo "  No changes — data.js cuisine values already match Notion."
     exit 0
   fi
 
   echo ""
-  echo "Type 'approve' to commit and push the dish sync."
+  echo "Type 'approve' to commit and push the cuisine sync."
   echo "Type anything else to abort (changes to src/data.js will be reverted)."
   printf "> "
   read -r RESPONSE
@@ -172,7 +185,7 @@ PYSYNC
   git pull --rebase origin main
   git stash pop
   git add src/data.js
-  git commit -m "Sync restaurant dish arrays from Notion Dish property"
+  git commit -m "Sync restaurant cuisine/cuisines fields from Notion Cuisine property"
   git push origin main
   echo "  Pushed to main."
   exit 0
@@ -316,7 +329,10 @@ for page in restaurants_data['results']:
     props      = page['properties']
     notion_pid = page['id']
     name       = get_text(props.get('Restaurant', {}).get('title') or [])
-    cuisine    = ((props.get('Cuisine', {}).get('select')) or {}).get('name', '')
+    # Cuisine is a multi-select; first tag is the "primary" cuisine shown
+    # throughout the site, the full list backs the Cuisine filter.
+    cuisine_tags = [d.get('name', '') for d in ((props.get('Cuisine', {}) or {}).get('multi_select') or []) if d.get('name')]
+    cuisine    = cuisine_tags[0] if cuisine_tags else ''
     location   = ((props.get('Location', {}).get('select')) or {}).get('name', '')
     place      = (props.get('Address', {}) or {}).get('place') or {}
     address    = place.get('address', '')
@@ -325,8 +341,6 @@ for page in restaurants_data['results']:
     url        = (props.get('URL', {}) or {}).get('url') or ''
     phone      = (props.get('Phone', {}) or {}).get('phone_number') or ''
     michelin   = ((props.get('Michelin', {}).get('select')) or {}).get('name', 'None')
-    dish_tags  = [' '.join(w[:1].upper() + w[1:] for w in d.get('name', '').split())
-                  for d in ((props.get('Dish', {}) or {}).get('multi_select') or []) if d.get('name')]
     is_new     = name.lower() not in existing_name_to_id
 
     if is_new:
@@ -335,20 +349,20 @@ for page in restaurants_data['results']:
         lat_s       = str(lat) if lat is not None else 'null'
         lng_s       = str(lng) if lng is not None else 'null'
         phone_field = f', phone: "{js_str(phone)}"' if phone else ''
-        dish_js     = ', '.join(f'"{js_str(d)}"' for d in dish_tags)
+        cuisines_js = ', '.join(f'"{js_str(c)}"' for c in cuisine_tags)
         new_rest_entries.append(
-            f'  {{ id: "{rest_id}", name: "{js_str(name)}", cuisine: "{cuisine}", '
+            f'  {{ id: "{rest_id}", name: "{js_str(name)}", cuisine: "{js_str(cuisine)}", '
+            f'cuisines: [{cuisines_js}], '
             f'location: "{location}", address: "{js_str(address)}", '
-            f'website: "{url}"{phone_field}, michelin: "{michelin}", dish: [{dish_js}], '
+            f'website: "{url}"{phone_field}, michelin: "{michelin}", '
             f'value: 4, mapX: 0.50, mapY: 0.40, lat: {lat_s}, lng: {lng_s} }}'
         )
         existing_name_to_id[name.lower()] = rest_id
         summary.append(f'\n  [NEW] {name} ({rest_id})')
-        summary.append(f'        {cuisine} · {location} · Michelin: {michelin}')
+        summary.append(f'        {", ".join(cuisine_tags) if cuisine_tags else "(no cuisine)"} · {location} · Michelin: {michelin}')
         summary.append(f'        {address}')
         if phone:
             summary.append(f'        Phone: {phone}')
-        summary.append(f'        Dish: {", ".join(dish_tags) if dish_tags else "(none)"}')
     else:
         rest_id = existing_name_to_id[name.lower()]
         summary.append(f'\n  [SKIP] {name} ({rest_id}) — already in data.js; skipping')

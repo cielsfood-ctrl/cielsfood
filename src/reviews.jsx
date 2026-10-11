@@ -4,14 +4,13 @@
 // sort, view AND pagination page. Persists across ReviewsPage remounts within
 // the SPA session (module-level, reset on full page reload).
 let savedReviewsState = {
-  view: "list", cuisine: "All", dish: "All", city: "All", michelin: "All",
+  view: "list", cuisine: "All", city: "All", michelin: "All",
   minTasti: 0, search: "", sortMode: "date-desc", page: 1
 };
 
 function ReviewsPage({ navigate }) {
   const [view, setView] = useState(savedReviewsState.view);
   const [cuisine, setCuisine] = useState(savedReviewsState.cuisine);
-  const [dish, setDish] = useState(savedReviewsState.dish);
   const [city, setCity] = useState(savedReviewsState.city);
   const [michelin, setMichelin] = useState(savedReviewsState.michelin);
   const [minTasti, setMinTasti] = useState(savedReviewsState.minTasti);
@@ -43,12 +42,11 @@ function ReviewsPage({ navigate }) {
         latestId: latest.id
       };
     }).
-    filter((r) => cuisine === "All" || r.cuisine === cuisine).
-    filter((r) => dish === "All" || (r.dish || []).includes(dish)).
+    filter((r) => cuisine === "All" || (r.cuisines || [r.cuisine]).includes(cuisine)).
     filter((r) => city === "All" || r.location === city).
     filter((r) => michelin === "All" || r.michelin === michelin).
     filter((r) => r.tastiness >= minTasti).
-    filter((r) => !search.trim() || (r.name + r.cuisine + r.location + (r.dish || []).join(" ")).toLowerCase().includes(search.toLowerCase())).
+    filter((r) => !search.trim() || (r.name + (r.cuisines || [r.cuisine]).join(" ") + r.location).toLowerCase().includes(search.toLowerCase())).
     sort((a, b) => {
       const [key, dirRaw] = sortMode.split("-");
       const dir = dirRaw === "asc" ? 1 : -1;
@@ -58,7 +56,7 @@ function ReviewsPage({ navigate }) {
       // string keys: name, location
       return ((a[key] || "").toString().toLowerCase() < (b[key] || "").toString().toLowerCase() ? -1 : 1) * dir;
     });
-  }, [cuisine, dish, city, michelin, minTasti, search, sortMode]);
+  }, [cuisine, city, michelin, minTasti, search, sortMode]);
 
   // Reset to page 1 whenever filters/sort change — but NOT on the initial
   // mount, so a page restored from "Back to Reviews" isn't clobbered.
@@ -66,20 +64,19 @@ function ReviewsPage({ navigate }) {
   useEffect(() => {
     if (isFirstRun.current) { isFirstRun.current = false; return; }
     setPage(1);
-  }, [cuisine, dish, city, michelin, minTasti, search, sortMode, view]);
+  }, [cuisine, city, michelin, minTasti, search, sortMode, view]);
 
   // Remember the list UI state for return navigation.
   useEffect(() => {
-    savedReviewsState = { view, cuisine, dish, city, michelin, minTasti, search, sortMode, page };
-  }, [view, cuisine, dish, city, michelin, minTasti, search, sortMode, page]);
+    savedReviewsState = { view, cuisine, city, michelin, minTasti, search, sortMode, page };
+  }, [view, cuisine, city, michelin, minTasti, search, sortMode, page]);
 
   const totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
   const safePage = Math.min(page, totalPages);
   const pageRows = view === "list" ? rows.slice((safePage - 1) * PER_PAGE, safePage * PER_PAGE) : rows;
   const sortLabel = (SORT_OPTIONS.find((o) => o.value === sortMode) || {}).label || "";
 
-  const cuisineOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.map((r) => r.cuisine))).sort()];
-  const dishOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.flatMap((r) => r.dish || []))).sort()];
+  const cuisineOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.flatMap((r) => r.cuisines || [r.cuisine]))).sort()];
   const cityOpts = ["All", ...Array.from(new Set(window.RESTAURANTS.map((r) => r.location))).sort()];
   const michOpts = ["All", ...window.MICHELIN];
 
@@ -122,12 +119,6 @@ function ReviewsPage({ navigate }) {
                 </select>
               </div>
               <div className="filter-group">
-                <label>Dish</label>
-                <select value={dish} onChange={(e) => setDish(e.target.value)}>
-                  {dishOpts.map((o) => <option key={o}>{o}</option>)}
-                </select>
-              </div>
-              <div className="filter-group">
                 <label>Location</label>
                 <select value={city} onChange={(e) => setCity(e.target.value)}>
                   {cityOpts.map((o) => <option key={o}>{o}</option>)}
@@ -151,7 +142,7 @@ function ReviewsPage({ navigate }) {
               </div>
               <div className="filter-group">
                 <button className="btn--ghost btn" onClick={() => {
-                  setCuisine("All");setDish("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+                  setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
                 }}>Reset filters</button>
               </div>
             </div>
@@ -169,12 +160,6 @@ function ReviewsPage({ navigate }) {
           <label>Cuisine</label>
           <select value={cuisine} onChange={(e) => setCuisine(e.target.value)}>
             {cuisineOpts.map((o) => <option key={o}>{o}</option>)}
-          </select>
-        </div>
-        <div className="filter-group">
-          <label>Dish</label>
-          <select value={dish} onChange={(e) => setDish(e.target.value)}>
-            {dishOpts.map((o) => <option key={o}>{o}</option>)}
           </select>
         </div>
         <div className="filter-group">
@@ -200,7 +185,7 @@ function ReviewsPage({ navigate }) {
           </select>
         </div>
         <button className="filter-reset" onClick={() => {
-          setCuisine("All");setDish("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
+          setCuisine("All");setCity("All");setMichelin("All");setMinTasti(0);setSearch("");setSortMode("date-desc");
         }}>Reset filters</button>
       </section>
 
