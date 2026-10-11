@@ -32,6 +32,7 @@ function ReviewsPage({ navigate }) {
 
   const rows = useMemo(() => {
     return window.RESTAURANTS.
+    filter((r) => window.latestReviewFor(r.id)).
     map((r) => {
       const latest = window.latestReviewFor(r.id);
       return {

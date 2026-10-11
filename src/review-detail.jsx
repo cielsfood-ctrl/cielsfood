@@ -12,6 +12,15 @@ function ReviewDetailPage({ restaurantId, navigate }) {
 
   }
   const reviews = window.reviewsFor(rest.id);
+  if (reviews.length === 0) {
+    return (
+      <main className="shell">
+        <p style={{ padding: "80px 0" }}>No review published for {rest.name} yet.{" "}
+          <button className="btn--ghost btn" onClick={() => navigate("restaurants")}>Back to index →</button>
+        </p>
+      </main>);
+
+  }
   const [selectedId, setSelectedId] = useState(reviews[0].id);
   const review = reviews.find((r) => r.id === selectedId) || reviews[0];
 
